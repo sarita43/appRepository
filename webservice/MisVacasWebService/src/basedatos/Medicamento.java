@@ -10,6 +10,8 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 
+//Clase en la que se describe el medicamento
+
 public class Medicamento {
 
 	private int id_medicamento;
