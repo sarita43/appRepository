@@ -1,14 +1,12 @@
 package com.example.misvacasapp;
 
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.llamadaWS.UsuarioVista;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
