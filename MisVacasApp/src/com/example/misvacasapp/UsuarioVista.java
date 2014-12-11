@@ -9,17 +9,21 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class UsuarioVista extends ActionBarActivity {
 	
 	private String id_usuario;
 	private ListView listaVista;
-
+	private AdapterVaca adapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,8 +60,25 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 	
 	private void setAdapter(ArrayList<Vaca> lista){
-		AdapterVaca adapter= new AdapterVaca(this, lista);
+		adapter= new AdapterVaca(this, lista);
 		listaVista.setAdapter(adapter);
+		
+		listaVista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String id_vaca = adapter.getItem(position).getId_vaca();
+				lanzarVaca(id_vaca);
+			}	
+		});
+	}
+	
+	private void lanzarVaca(String id_vaca){
+		Intent i = new Intent(this, VacaVista.class);
+		i.putExtra("id_vaca",id_vaca);
+		startActivity(i);
+		finish();
 	}
 	
 	@Override
