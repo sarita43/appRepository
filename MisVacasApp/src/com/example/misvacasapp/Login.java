@@ -1,12 +1,61 @@
 package com.example.misvacasapp;
 
+import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class Login extends ActionBarActivity {
+	
+	private String usuario;
+	private String contraseña;
 
+	public void clickAceptar(View v){
+		
+		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
+		contraseña = ((TextView) findViewById(R.id.contrasena)).getText().toString();
+		
+		Thread hilo = new Thread() {
+			String res = "";
+			
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+			
+			public void run() {
+				
+				System.out.println("usuario: "+usuario);
+				res = llamada.LlamadaUsuarioExistente(usuario, contraseña);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (res.compareTo("true") == 0) {
+							Toast.makeText(Login.this, "Conectando...",
+									Toast.LENGTH_LONG).show();
+							rol();
+						} else if(res.compareTo("false")==0){
+							Toast.makeText(Login.this,
+									"Usuario no existe", Toast.LENGTH_LONG)
+									.show();
+						}else{
+							Toast.makeText(Login.this,
+									"Problemas de conexión", Toast.LENGTH_LONG)
+									.show();
+						}
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+	
+	private void rol(){
+		
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

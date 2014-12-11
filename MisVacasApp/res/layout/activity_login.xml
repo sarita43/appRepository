@@ -27,6 +27,7 @@
         android:layout_alignRight="@+id/contrasena"
         android:layout_marginBottom="18dp"
         android:ems="10"
+         android:inputType="text"
         android:text="@string/usuario" >
     </EditText>  
     
@@ -69,6 +70,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="17dp"
+        android:onClick="clickAceptar"
         android:text="@string/botonAceptar" />
   
 </RelativeLayout>
