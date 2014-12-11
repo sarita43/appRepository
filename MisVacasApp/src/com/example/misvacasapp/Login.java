@@ -1,8 +1,10 @@
 package com.example.misvacasapp;
 
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.llamadaWS.UsuarioVista;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,8 +29,6 @@ public class Login extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 			
 			public void run() {
-				Log.i("INFO","usuario: "+usuario);
-				System.out.println("usuario: "+usuario);
 				res = llamada.LlamadaUsuarioExistente(usuario, contraseña);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -54,7 +54,34 @@ public class Login extends ActionBarActivity {
 	}
 	
 	private void rol(){
-		
+		Thread hilo = new Thread() {
+			String res = "";
+			
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+			
+			public void run() {
+				
+				res=llamada.LlamadaUsuario(usuario, contraseña);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if(res.compareTo("1")==0){
+							//Admin
+						}else if(res.compareTo("0")==0){
+							lanzarUsuario();
+						}
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+	
+	private void lanzarUsuario(){
+		Intent i = new Intent(this, UsuarioVista.class);
+		i.putExtra("id_usuario",usuario);
+		startActivity(i);
+		finish();
 	}
 	
 	@Override
