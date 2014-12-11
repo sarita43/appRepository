@@ -70,7 +70,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="17dp"
-        android:onClick="clickAceptar"
+        android:onClick="onClick"
         android:text="@string/botonAceptar" />
   
 </RelativeLayout>

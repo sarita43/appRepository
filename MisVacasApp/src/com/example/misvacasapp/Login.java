@@ -2,6 +2,8 @@ package com.example.misvacasapp;
 
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.llamadaWS.UsuarioVista;
+import com.example.misvacasapp.modelo.Usuario;
+import com.google.gson.Gson;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -18,7 +20,7 @@ public class Login extends ActionBarActivity {
 	private String usuario;
 	private String contraseña;
 
-	public void clickAceptar(View v){
+	public void onClick(View v){
 		
 		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
 		contraseña = ((TextView) findViewById(R.id.contrasena)).getText().toString();
@@ -56,18 +58,19 @@ public class Login extends ActionBarActivity {
 	private void rol(){
 		Thread hilo = new Thread() {
 			String res = "";
-			
+			Gson json = new Gson();
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 			
 			public void run() {
 				
 				res=llamada.LlamadaUsuario(usuario, contraseña);
+				final Usuario usuario = json.fromJson(res, Usuario.class);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						if(res.compareTo("1")==0){
+						if(usuario.getRol()==1){
 							//Admin
-						}else if(res.compareTo("0")==0){
+						}else if(usuario.getRol()==0){
 							lanzarUsuario();
 						}
 					}

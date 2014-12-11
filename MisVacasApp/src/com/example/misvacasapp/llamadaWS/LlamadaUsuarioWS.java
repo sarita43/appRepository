@@ -23,7 +23,6 @@ public class LlamadaUsuarioWS {
 	private static SoapPrimitive resultsRequestSOAP = null;
 	
 	public String LlamadaUsuario(String usuario,String contraseña){
-		
 		String res= "";
 		
 		METHOD_NAME = "Usuario";
