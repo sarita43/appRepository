@@ -45,7 +45,7 @@ public class UsuarioVista extends ActionBarActivity {
 			
 			public void run() {
 				
-				res=llamada.LlamadaVaca(id_usuario);
+				res=llamada.LlamadaListaVacas(id_usuario);
 				
 				runOnUiThread(new Runnable() {
 					@Override
@@ -77,6 +77,7 @@ public class UsuarioVista extends ActionBarActivity {
 	private void lanzarVaca(String id_vaca){
 		Intent i = new Intent(this, VacaVista.class);
 		i.putExtra("id_vaca",id_vaca);
+		i.putExtra("id_usuario",this.id_usuario);
 		startActivity(i);
 		finish();
 	}

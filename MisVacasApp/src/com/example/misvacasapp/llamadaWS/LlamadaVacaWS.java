@@ -14,7 +14,7 @@ public class LlamadaVacaWS {
 	private static final String NAMESPACE = "http://service.web";
 	private static String URL = "http://10.0.2.2:8090/axis2/services/VacaWebService?wsdl";
 
-	//private static String URL = "http://192.168.1.100:8090/axis2/services/UsuarioWebService?wsdl";
+	//private static String URL = "http://192.168.1.100:8090/axis2/services/VacaWebService?wsdl";
 	private static String METHOD_NAME;
 	private static String SOAP_ACTION;
 
@@ -22,7 +22,7 @@ public class LlamadaVacaWS {
 	private static SoapSerializationEnvelope envelope = null;
 	private static SoapPrimitive resultsRequestSOAP = null;
 	
-	public String LlamadaVaca(String usuario){
+	public String LlamadaListaVacas(String usuario){
 		String res= "";
 		
 		METHOD_NAME = "listaVacas";
@@ -30,6 +30,33 @@ public class LlamadaVacaWS {
 
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
 		request.addProperty("id_usuario", usuario);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+			res = resultsRequestSOAP.toString();
+		} catch (IOException
+				| XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		return res;
+	}
+	
+	public String LlamadaVaca(String id_vaca,String id_usuario){
+		String res= "";
+		
+		METHOD_NAME = "Vaca";
+		SOAP_ACTION = "urn:Vaca";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_vaca", id_vaca);
+		request.addProperty("id_usuario", id_usuario);
 
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
