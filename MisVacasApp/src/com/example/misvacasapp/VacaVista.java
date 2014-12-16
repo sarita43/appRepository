@@ -29,7 +29,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	public void onClickMedicamentos(View v) {
-		Intent i = new Intent(this, MedicamentoVista.class);
+		Intent i = new Intent(this, MedicamentosVista.class);
 		i.putExtra("id_vaca", id_vaca);
 		startActivity(i);
 		finish();

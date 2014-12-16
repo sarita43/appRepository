@@ -25,6 +25,7 @@
         </activity>
         <activity android:name="com.example.misvacasapp.UsuarioVista"></activity>
         <activity android:name="VacaVista"></activity>
+        <activity android:name="MedicamentosVista"></activity>
         <activity android:name="MedicamentoVista"></activity>
     </application>
 
