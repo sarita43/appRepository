@@ -18,7 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/imageView1"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="60dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -28,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/idVaca"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/idVaca"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -38,9 +42,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/raza"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/raza"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
-        android:text=""        
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -48,9 +54,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/fechaNacimiento"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/fechaNacimiento"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/botonMedicamentos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/idMadre"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="30dp"
+        android:onClick="onClickMedicamentos"
+        android:text="@string/botonMedicamentos" />
 
 </RelativeLayout>

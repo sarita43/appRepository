@@ -27,19 +27,16 @@ public class AdapterMedicamento extends BaseAdapter{
 	
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return this.lista.size();
 	}
 
 	@Override
 	public Medicamento getItem(int position) {
-		// TODO Auto-generated method stub
 		return this.lista.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

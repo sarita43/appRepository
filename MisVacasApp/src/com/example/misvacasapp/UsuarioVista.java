@@ -19,38 +19,40 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class UsuarioVista extends ActionBarActivity {
-	
+
 	private String id_usuario;
 	private ListView listaVista;
 	private AdapterVaca adapter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_usuario_vista);
-		
-		Bundle bundle=getIntent().getExtras();
+
+		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		
-		listaVista  = (ListView) findViewById(R.id.lista_usuario_vista);
-		
+
+		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
+
 		mostrarListado();
 	}
 
-	private void mostrarListado(){
+	private void mostrarListado() {
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			
+
 			public void run() {
-				
-				res=llamada.LlamadaListaVacas(id_usuario);
-				
+
+				res = llamada.LlamadaListaVacas(id_usuario);
+
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						ArrayList<Vaca> lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>(){}.getType());
+						ArrayList<Vaca> lista = json.fromJson(res,
+								new TypeToken<ArrayList<Vaca>>() {
+								}.getType());
 						setAdapter(lista);
 					}
 				});
@@ -58,30 +60,31 @@ public class UsuarioVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-	
-	private void setAdapter(ArrayList<Vaca> lista){
-		adapter= new AdapterVaca(this, lista);
-		listaVista.setAdapter(adapter);
-		
-		listaVista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				String id_vaca = adapter.getItem(position).getId_vaca();
-				lanzarVaca(id_vaca);
-			}	
-		});
+	private void setAdapter(ArrayList<Vaca> lista) {
+		adapter = new AdapterVaca(this, lista);
+		listaVista.setAdapter(adapter);
+
+		listaVista
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						String id_vaca = adapter.getItem(position).getId_vaca();
+						lanzarVaca(id_vaca);
+					}
+				});
 	}
-	
-	private void lanzarVaca(String id_vaca){
+
+	private void lanzarVaca(String id_vaca) {
 		Intent i = new Intent(this, VacaVista.class);
-		i.putExtra("id_vaca",id_vaca);
-		i.putExtra("id_usuario",this.id_usuario);
+		i.putExtra("id_vaca", id_vaca);
+		i.putExtra("id_usuario", this.id_usuario);
 		startActivity(i);
 		finish();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

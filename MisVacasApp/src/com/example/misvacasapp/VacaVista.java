@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +26,13 @@ public class VacaVista extends ActionBarActivity {
 		id_vaca = bundle.getString("id_vaca");
 		id_usuario = bundle.getString("id_usuario");
 		rellenarCamposVaca();
+	}
+
+	public void onClickMedicamentos(View v) {
+		Intent i = new Intent(this, MedicamentoVista.class);
+		i.putExtra("id_vaca", id_vaca);
+		startActivity(i);
+		finish();
 	}
 
 	private void rellenarCamposVaca() {

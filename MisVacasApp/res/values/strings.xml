@@ -9,5 +9,6 @@
     <string name="contrasena"></string>
     <string name="autologinTexto">Recordar</string>
     <string name="botonAceptar">Aceptar</string>
+    <string name="botonMedicamentos">Medicamentos</string>
 
 </resources>
