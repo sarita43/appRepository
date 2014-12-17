@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">MisVacasApp</string>
-    <string name="action_settings">Settings</string>
     <string name="contrasenaTexto">Contraseña</string>
     <string name="usuarioTexto">Usuario</string>
     <string name="usuario"></string>
@@ -10,5 +9,12 @@
     <string name="autologinTexto">Recordar</string>
     <string name="botonAceptar">Aceptar</string>
     <string name="botonMedicamentos">Medicamentos</string>
+    <string name="menu_ayuda">Ayuda</string>
+    <string name="buscar_vaca">Buscar Vaca</string>
+    <string name="menu_administrar_cuenta">Administrar cuenta</string>
+    <string name="menu_cerrar_sesion">Cerrar sesión</string>
+    <string name="eliminar_cuenta">Eliminar cuenta</string>
+    <string name="cambiar_contrasena">Cambiar contraseña</string>
+    <string name="modificar_usuario">Modificar usuario</string>
 
 </resources>

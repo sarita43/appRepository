@@ -7,14 +7,17 @@ import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import android.app.ActionBar.LayoutParams;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 
 public class MedicamentosVista extends ActionBarActivity {
 
@@ -69,6 +72,7 @@ public class MedicamentosVista extends ActionBarActivity {
 							int position, long id) {
 						int id_medicamento = adapter.getItem(position).getId_medicamento();
 						lanzarMedicamento(id_medicamento);
+						
 					}
 				});
 	}
@@ -78,7 +82,6 @@ public class MedicamentosVista extends ActionBarActivity {
 		i.putExtra("id_medicamento", id_medicamento);
 		i.putExtra("id_vaca", idVaca);
 		startActivity(i);
-		finish();
 	}
 
 	@Override
@@ -94,7 +97,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.ayuda) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

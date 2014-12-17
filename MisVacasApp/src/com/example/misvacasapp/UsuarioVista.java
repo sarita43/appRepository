@@ -9,6 +9,8 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -82,13 +84,12 @@ public class UsuarioVista extends ActionBarActivity {
 		i.putExtra("id_vaca", id_vaca);
 		i.putExtra("id_usuario", this.id_usuario);
 		startActivity(i);
-		finish();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.menu_usuario, menu);
 		return true;
 	}
 
@@ -98,7 +99,10 @@ public class UsuarioVista extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.administrar_cuenta) {
+			Intent i = new Intent(this, AdministrarCuentaVista.class);
+			i.putExtra("id_usuario", this.id_usuario);
+			startActivity(i); 
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

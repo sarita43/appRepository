@@ -32,7 +32,6 @@ public class VacaVista extends ActionBarActivity {
 		Intent i = new Intent(this, MedicamentosVista.class);
 		i.putExtra("id_vaca", id_vaca);
 		startActivity(i);
-		finish();
 	}
 
 	private void rellenarCamposVaca() {
@@ -82,7 +81,7 @@ public class VacaVista extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.ayuda) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
