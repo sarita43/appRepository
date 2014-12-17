@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item 
+
+    <item
         android:id="@+id/buscar_vaca"
-        android:orderInCategory="100"
         android:title="@string/buscar_vaca">
     </item>
-    <item android:id="@+id/administrar_cuenta" android:title="@string/menu_administrar_cuenta"></item>
-    <item android:id="@+id/ayuda" android:title="@string/menu_ayuda"></item>
-    <item android:id="@+id/cerrar_sesion" android:title="@string/menu_cerrar_sesion"></item>
-    
+    <item
+        android:id="@+id/administrar_cuenta"
+        android:title="@string/menu_administrar_cuenta">
+    </item>
+    <item
+        android:id="@+id/ayuda"
+        android:title="@string/menu_ayuda">
+    </item>
+    <item
+        android:id="@+id/cerrar_sesion"
+        android:title="@string/menu_cerrar_sesion">
+    </item>
 
 </menu>

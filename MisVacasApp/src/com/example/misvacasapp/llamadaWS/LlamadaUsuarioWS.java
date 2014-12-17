@@ -12,9 +12,9 @@ import org.xmlpull.v1.XmlPullParserException;
 public class LlamadaUsuarioWS {
 
 	private static final String NAMESPACE = "http://service.web";
-	private static String URL = "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
+	//private static String URL = "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
 
-	//private static String URL = "http://192.168.1.100:8090/axis2/services/UsuarioWebService?wsdl";
+	private static String URL = "http://81.172.100.87:8090/axis2/services/UsuarioWebService?wsdl";
 	private static String METHOD_NAME;
 	private static String SOAP_ACTION;
 
