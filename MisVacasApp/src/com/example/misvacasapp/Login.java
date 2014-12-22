@@ -81,6 +81,7 @@ public class Login extends ActionBarActivity {
 	private void lanzarUsuario(){
 		Intent i = new Intent(this, UsuarioVista.class);
 		i.putExtra("id_usuario",usuario);
+		i.putExtra("contraseña",contraseña);
 		startActivity(i);
 		finish();
 	}

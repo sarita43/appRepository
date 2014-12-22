@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.menus.AdministrarCuentaVista;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -23,6 +22,7 @@ import android.widget.ListView;
 public class UsuarioVista extends ActionBarActivity {
 
 	private String id_usuario;
+	private String contraseña;
 	private ListView listaVista;
 	private AdapterVaca adapter;
 
@@ -33,6 +33,7 @@ public class UsuarioVista extends ActionBarActivity {
 
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
+		contraseña = bundle.getString("contraseña");
 
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 
@@ -102,6 +103,7 @@ public class UsuarioVista extends ActionBarActivity {
 		if (id == R.id.administrar_cuenta) {
 			Intent i = new Intent(this, AdministrarCuentaVista.class);
 			i.putExtra("id_usuario", this.id_usuario);
+			i.putExtra("contraseña", this.contraseña);
 			startActivity(i); 
 			return true;
 		}

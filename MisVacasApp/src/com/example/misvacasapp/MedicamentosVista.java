@@ -7,17 +7,14 @@ import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import android.app.ActionBar.LayoutParams;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 public class MedicamentosVista extends ActionBarActivity {
 

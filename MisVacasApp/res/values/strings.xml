@@ -16,5 +16,8 @@
     <string name="eliminar_cuenta">Eliminar cuenta</string>
     <string name="cambiar_contrasena">Cambiar contraseña</string>
     <string name="modificar_usuario">Modificar usuario</string>
+    <string name="contrasena_actual">Contraseña actual</string>
+    <string name="nueva_contrasena">Nueva contraseña</string>
+    <string name="repita_nueva_contrasena">Repita la nueva contraseña</string>
 
 </resources>
