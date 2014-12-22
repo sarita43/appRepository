@@ -4,51 +4,10 @@
     android:layout_height="match_parent" 
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/modificar_usuario"
+    <ListView
+        android:id="@+id/listaAdministracionCuenta"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/modificar_usuario"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="5dp"
-        android:minWidth="5dp" />
-
-    <TextView
-        android:id="@+id/cambiar_contrasena"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/cambiar_contrasena"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ProgressBar
-        android:id="@+id/progressBar2"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/eliminar_cuenta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/eliminar_cuenta"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ProgressBar
-        android:id="@+id/progressBar3"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
