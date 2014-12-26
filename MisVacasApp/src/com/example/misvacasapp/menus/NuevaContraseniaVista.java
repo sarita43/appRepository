@@ -1,7 +1,6 @@
 package com.example.misvacasapp.menus;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.VacaVista;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;

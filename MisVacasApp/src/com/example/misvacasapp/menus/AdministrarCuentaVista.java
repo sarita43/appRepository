@@ -3,7 +3,6 @@ package com.example.misvacasapp.menus;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
 
 import android.content.Intent;
@@ -49,12 +48,16 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 	}
 
 	private void elegirMenu(String item) {
+		Intent i;
 		switch (item) {
 		case "\n Modificar usuario\n":
-			System.out.println("\n Modificar usuario\n");
+			i = new Intent(this, ModificarUsuarioVista.class);
+			i.putExtra("id_usuario",id_usuario);
+			i.putExtra("contraseña",contraseña);
+			startActivity(i);
 			break;
 		case "\n Cambiar contraseña\n":
-			Intent i = new Intent(this, NuevaContraseniaVista.class);
+			i = new Intent(this, NuevaContraseniaVista.class);
 			i.putExtra("id_usuario",id_usuario);
 			i.putExtra("contraseña",contraseña);
 			startActivity(i);

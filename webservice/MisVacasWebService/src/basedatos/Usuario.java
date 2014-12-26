@@ -109,6 +109,7 @@ public class Usuario {
 		}
 		return usuario;
 	}
+
 	public String usuarioString(String dni, String contraseña) {
 		Usuario u = getUsuario(dni, contraseña);
 		Gson gson = new Gson();
@@ -142,24 +143,50 @@ public class Usuario {
 		return existe;
 	}
 
-	public void actualizarUsuario(String dni,String contraseña){
+	public void actualizarUsuario(String dni, String nombre, String apellido1,
+			String apellido2, String direccion, String poblacion, int telefono) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
-	
+
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
-						.executeQuery("UPDATE usuario SET contraseña ='"+contraseña +"' where dni='"+dni+"'");
+						.executeQuery("UPDATE usuario SET nombre ='" + nombre
+								+ "',apellido1 ='" + apellido1
+								+ "',apellido2 ='" + apellido2
+								+ "',direccion ='" + direccion
+								+ "',poblacion ='" + poblacion
+								+ "',telefono ='" + telefono + "'where dni='"
+								+ dni + "'");
 				while (result.next()) {
-					
+
 				}
-				
+
 			} catch (SQLException e) {
 			}
 		}
 	}
-	
+
+	public void actualizarContraseña(String dni, String contraseña) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				ResultSet result = select
+						.executeQuery("UPDATE usuario SET contraseña ='"
+								+ contraseña + "' where dni='" + dni + "'");
+				while (result.next()) {
+
+				}
+
+			} catch (SQLException e) {
+			}
+		}
+	}
+
 	public String getNombre() {
 		return nombre;
 	}

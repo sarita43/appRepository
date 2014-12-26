@@ -19,5 +19,10 @@
     <string name="contrasena_actual">Contraseña actual</string>
     <string name="nueva_contrasena">Nueva contraseña</string>
     <string name="repita_nueva_contrasena">Repita la nueva contraseña</string>
+    <string name="nombre_usuario">Nombre</string>
+    <string name="primer_apellido">Primer apellido</string>
+    <string name="segundo_apellido">Segundo apellido</string>
+    <string name="direccion">Dirección</string>
+    <string name="telefono">Teléfono</string>
 
 </resources>
