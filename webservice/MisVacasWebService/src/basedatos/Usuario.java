@@ -19,10 +19,7 @@ public class Usuario {
 	private String contraseña;
 	private int rol;
 
-	private static ArrayList<Usuario> lista;
-
 	public Usuario() {
-		lista = new ArrayList<Usuario>();
 	}
 
 	public Usuario(String nombre, String apellido1, String apellido2,
@@ -41,18 +38,17 @@ public class Usuario {
 		setDni(dni);
 		setContraseña(contraseña);
 		setRol(rol);
-		lista = new ArrayList<Usuario>();
 	}
 
 	public Usuario(String dni, String contraseña, int rol) {
 		setDni(dni);
 		setContraseña(contraseña);
 		setRol(rol);
-		lista = new ArrayList<Usuario>();
 	}
 
 	public ArrayList<Usuario> listaUsuarios() {
 		OracleConection c = new OracleConection();
+		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		c.Conectar();
 
 		Usuario usuario = new Usuario();
@@ -146,6 +142,24 @@ public class Usuario {
 		return existe;
 	}
 
+	public void actualizarUsuario(String dni,String contraseña){
+		OracleConection c = new OracleConection();
+		c.Conectar();
+	
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				ResultSet result = select
+						.executeQuery("UPDATE usuario SET contraseña ='"+contraseña +"' where dni='"+dni+"'");
+				while (result.next()) {
+					
+				}
+				
+			} catch (SQLException e) {
+			}
+		}
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

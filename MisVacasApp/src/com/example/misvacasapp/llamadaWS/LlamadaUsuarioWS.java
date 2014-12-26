@@ -49,7 +49,7 @@ public class LlamadaUsuarioWS {
 		return res;
 	}
 	
-public String LlamadaUsuarioExistente(String usuario,String contraseña){
+	public String LlamadaUsuarioExistente(String usuario,String contraseña){
 		
 		String res= "";
 		
@@ -75,5 +75,26 @@ public String LlamadaUsuarioExistente(String usuario,String contraseña){
 		}	
 		
 		return res;
+	}
+	
+	public void actualizarContraseña(String dni,String contraseña){
+		METHOD_NAME = "actualizarUsuario";
+		SOAP_ACTION = "urn:actualizarUsuario";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("dni", dni);
+		request.addProperty("contraseña", contraseña);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
 	}
 }

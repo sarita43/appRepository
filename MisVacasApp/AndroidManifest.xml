@@ -27,7 +27,8 @@
         <activity android:name="VacaVista"></activity>
         <activity android:name="MedicamentosVista"></activity>
         <activity android:name="MedicamentoVista"></activity>
-        <activity android:name="AdministrarCuentaVista"></activity>
+        <activity android:name=".menus.AdministrarCuentaVista"></activity>
+        <activity android:name="com.example.misvacasapp.menus.NuevaContraseniaVista"></activity>
     </application>
 
 </manifest>

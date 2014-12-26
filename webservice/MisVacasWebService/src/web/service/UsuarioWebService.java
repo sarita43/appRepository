@@ -12,4 +12,8 @@ public class UsuarioWebService {
 		return new Usuario().usuarioString(dni, contraseña);
 	}
 	
+	public void actualizarUsuario(String dni,String contraseña){
+		new Usuario().actualizarUsuario(dni,contraseña);
+	}
+	
 }

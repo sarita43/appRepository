@@ -54,7 +54,7 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 			System.out.println("\n Modificar usuario\n");
 			break;
 		case "\n Cambiar contraseña\n":
-			Intent i = new Intent(this, NuevaContraseñaVista.class);
+			Intent i = new Intent(this, NuevaContraseniaVista.class);
 			i.putExtra("id_usuario",id_usuario);
 			i.putExtra("contraseña",contraseña);
 			startActivity(i);
