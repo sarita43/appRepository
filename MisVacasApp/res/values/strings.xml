@@ -24,5 +24,6 @@
     <string name="segundo_apellido">Segundo apellido</string>
     <string name="direccion">Dirección</string>
     <string name="telefono">Teléfono</string>
+    <string name="poblacion">Poblacion</string>
 
 </resources>

@@ -78,12 +78,39 @@ public class LlamadaUsuarioWS {
 	}
 	
 	public void actualizarContraseña(String dni,String contraseña){
+		METHOD_NAME = "actualizarContraseña";
+		SOAP_ACTION = "urn:actualizarContraseña";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("dni", dni);
+		request.addProperty("contraseña", contraseña);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public void actualizarUsuario(String dni, String nombre, String apellido1,
+			String apellido2, String direccion, String poblacion, int telefono){
 		METHOD_NAME = "actualizarUsuario";
 		SOAP_ACTION = "urn:actualizarUsuario";
 
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
 		request.addProperty("dni", dni);
-		request.addProperty("contraseña", contraseña);
+		request.addProperty("nombre", nombre);
+		request.addProperty("apellido1",apellido1);
+		request.addProperty("apellido2", apellido2);
+		request.addProperty("direccion", direccion);
+		request.addProperty("poblacion", poblacion);
+		request.addProperty("telefono", telefono);
 
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
