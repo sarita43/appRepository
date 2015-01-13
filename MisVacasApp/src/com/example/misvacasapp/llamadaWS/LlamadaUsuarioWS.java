@@ -98,6 +98,26 @@ public class LlamadaUsuarioWS {
 		}	
 	}
 	
+	public void eliminarUsuario(String id_usuario){
+		METHOD_NAME = "eliminarUsuario";
+		SOAP_ACTION = "urn:eliminarUsuario";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_usuario", id_usuario);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
 			String apellido2, String direccion, String poblacion, int telefono){
 		METHOD_NAME = "actualizarUsuario";

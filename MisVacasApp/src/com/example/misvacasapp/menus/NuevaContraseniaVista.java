@@ -62,7 +62,6 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 									"Contraseña incorrecta", Toast.LENGTH_LONG)
 									.show();
 						}
-
 					}
 				});
 			}

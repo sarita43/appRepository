@@ -22,4 +22,7 @@ public class UsuarioWebService {
 		new Usuario().actualizarContraseña(dni, contraseña);
 	}
 
+	public void eliminarUsuario(String id_usuario){
+		new Usuario().eliminarUsuario(id_usuario);
+	}
 }

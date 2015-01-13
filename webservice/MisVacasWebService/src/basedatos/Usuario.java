@@ -133,7 +133,6 @@ public class Usuario {
 					try {
 						existe = true;
 					} catch (NumberFormatException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -175,12 +174,22 @@ public class Usuario {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
-				ResultSet result = select
-						.executeQuery("UPDATE usuario SET contraseña ='"
-								+ contraseña + "' where dni='" + dni + "'");
-				while (result.next()) {
+				select.executeQuery("UPDATE usuario SET contraseña ='"
+						+ contraseña + "' where dni='" + dni + "'");
+			} catch (SQLException e) {
+			}
+		}
+	}
 
-				}
+	public void eliminarUsuario(String id_usuario) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE usuario where dni='" + id_usuario
+						+ "'");
 
 			} catch (SQLException e) {
 			}

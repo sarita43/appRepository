@@ -75,18 +75,16 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				
+
 				if (telefono.getText().toString().trim().length() == 0) {
-					
+
 				} else {
-					int tel = Integer.parseInt(telefono.getText().toString());
-					System.out.println(tel);
-					llamada.actualizarUsuario(id_usuario, nombre
-							.getText().toString(), apellido1.getText()
-							.toString(),
-							apellido2.getText().toString(), direccion
-									.getText().toString(), poblacion
-									.getText().toString(),tel);
+					llamada.actualizarUsuario(id_usuario, nombre.getText()
+							.toString(), apellido1.getText().toString(),
+							apellido2.getText().toString(), direccion.getText()
+									.toString(),
+							poblacion.getText().toString(), Integer
+									.parseInt(telefono.getText().toString()));
 					modificarUsuarioOk();
 				}
 
@@ -97,8 +95,9 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 							Toast.makeText(ModificarUsuarioVista.this,
 									"Telefono no puede ser vacio",
 									Toast.LENGTH_LONG).show();
-						}else{
-							Toast.makeText(ModificarUsuarioVista.this,
+						} else {
+							Toast.makeText(
+									ModificarUsuarioVista.this,
 									"El usuario ha sido modificado correctamente",
 									Toast.LENGTH_LONG).show();
 						}

@@ -2,15 +2,24 @@ package com.example.misvacasapp.menus;
 
 import java.util.ArrayList;
 
+import com.example.misvacasapp.Login;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
+import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.modelo.Usuario;
+import com.google.gson.Gson;
 
+import android.app.AlertDialog;
+import android.content.ClipData.Item;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class AdministrarCuentaVista extends ActionBarActivity{
 	
@@ -48,26 +57,66 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 	}
 
 	private void elegirMenu(String item) {
-		Intent i;
 		switch (item) {
 		case "\n Modificar usuario\n":
-			i = new Intent(this, ModificarUsuarioVista.class);
-			i.putExtra("id_usuario",id_usuario);
-			i.putExtra("contraseña",contraseña);
-			startActivity(i);
+			nuevaVentana(ModificarUsuarioVista.class);
 			break;
 		case "\n Cambiar contraseña\n":
-			i = new Intent(this, NuevaContraseniaVista.class);
-			i.putExtra("id_usuario",id_usuario);
-			i.putExtra("contraseña",contraseña);
-			startActivity(i);
+			nuevaVentana(NuevaContraseniaVista.class);
 			break;
 		case "\n Eliminar cuenta\n":
-			System.out.println("\n Eliminar cuenta\n");
+			AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+			dialogo.setMessage("¿Quiere eliminar la cuenta?");
+			dialogo.setPositiveButton("Si", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					eliminarCuenta();
+				}
+			});
+			dialogo.setNegativeButton("No", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			});
+			
+			dialogo.show();
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void nuevaVentana(Class ventanaNombre){
+		Intent i = new Intent(this, ventanaNombre);
+		i.putExtra("id_usuario",id_usuario);
+		i.putExtra("contraseña",contraseña);
+		startActivity(i);
+	}
+	
+	private void eliminarCuenta(){
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+			
+			public void run() {
+				
+				llamada.eliminarUsuario(id_usuario);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						
+						nuevaVentana(Login.class);
+						Toast.makeText(AdministrarCuentaVista.this,
+								"Usuario elimidado", Toast.LENGTH_LONG)
+								.show();
+						finish();
+					}
+				});
+			}
+		};
+		hilo.start();
 	}
 
 }
