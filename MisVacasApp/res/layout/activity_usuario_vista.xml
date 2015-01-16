@@ -9,8 +9,36 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
+        android:layout_below="@+id/aniadir" >
 
     </ListView>
+
+    <Button
+        android:id="@+id/aniadir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="17dp"
+        android:onClick="añadirVaca"
+        android:text="Añadir" />
+
+    <Button
+        android:id="@+id/eliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="eliminarVaca"
+        android:text="Eliminar" />
+
+    <Button
+        android:id="@+id/buscar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lista_usuario_vista"
+        android:layout_toRightOf="@+id/eliminar"
+        android:onClick="buscarVaca"
+        android:text="Buscar" />
 
 </RelativeLayout>

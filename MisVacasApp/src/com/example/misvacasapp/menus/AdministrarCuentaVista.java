@@ -6,11 +6,8 @@ import com.example.misvacasapp.Login;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.modelo.Usuario;
-import com.google.gson.Gson;
 
 import android.app.AlertDialog;
-import android.content.ClipData.Item;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -19,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AdministrarCuentaVista extends ActionBarActivity{
@@ -65,24 +63,7 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 			nuevaVentana(NuevaContraseniaVista.class);
 			break;
 		case "\n Eliminar cuenta\n":
-			AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-			dialogo.setMessage("¿Quiere eliminar la cuenta?");
-			dialogo.setPositiveButton("Si", new OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					eliminarCuenta();
-				}
-			});
-			dialogo.setNegativeButton("No", new OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					finish();
-				}
-			});
-			
-			dialogo.show();
+			alertaEliminarUsuario();
 			break;
 		default:
 			break;
@@ -118,5 +99,25 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 		};
 		hilo.start();
 	}
-
+	
+	private void alertaEliminarUsuario(){
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setMessage("¿Quiere eliminar la cuenta?");
+		dialogo.setPositiveButton("Si", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				eliminarCuenta();
+			}
+		});
+		dialogo.setNegativeButton("No", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+		
+		dialogo.show();
+	}
 }

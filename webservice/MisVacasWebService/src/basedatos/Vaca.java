@@ -24,12 +24,12 @@ public class Vaca {
 	private String id_usuario;
 
 	public Vaca() {
-	
+
 	}
 
 	public Vaca(String id_usuario) {
 		setId_usuario(id_usuario);
-		
+
 	}
 
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
@@ -46,7 +46,7 @@ public class Vaca {
 		OracleConection c = new OracleConection();
 		ArrayList<Vaca> lista = new ArrayList<Vaca>();
 		c.Conectar();
-		
+
 		Vaca vaca = new Vaca();
 		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss.S");
@@ -76,11 +76,11 @@ public class Vaca {
 		}
 		return lista;
 	}
-	
-	public Vaca getVaca(String id_vaca,String id_usuario){
+
+	public Vaca getVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
-		
+
 		Vaca vaca = new Vaca();
 		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss.S");
@@ -89,7 +89,8 @@ public class Vaca {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
 						.executeQuery("SELECT * from vaca where id_usuario='"
-								+ id_usuario + "' and id_vaca='"+id_vaca+"'");
+								+ id_usuario + "' and id_vaca='" + id_vaca
+								+ "'");
 
 				while (result.next()) {
 					try {
@@ -99,7 +100,6 @@ public class Vaca {
 								result.getString(4), result.getString(5),
 								result.getString(6));
 					} catch (NumberFormatException | ParseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -108,19 +108,61 @@ public class Vaca {
 		}
 		return vaca;
 	}
-	
-	public String vacaString(String id_vaca,String id_usuario){
+
+	public String vacaString(String id_vaca, String id_usuario) {
 		Vaca v = getVaca(id_vaca, id_usuario);
 		Gson gson = new Gson();
 		String vaca = gson.toJson(v);
 		return vaca;
 	}
-	
-	public String listaVacasString(String id_usuario){
+
+	public String listaVacasString(String id_usuario) {
 		ArrayList<Vaca> lista = listaVacas(id_usuario);
 		Gson json = new Gson();
 		String listaVacas = json.toJson(lista);
 		return listaVacas;
+	}
+
+	public void añadirVaca(String id_vaca, String raza, Date fecha_nacimiento,
+			String id_madre, String foto, String id_usuario) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("INSERT INTO vaca(id_vaca,raza,fecha_nacimiento,id_madre,foto,id_usuario) VALUES('"
+						+ id_vaca
+						+ "','"
+						+ raza
+						+ "','"
+						+ fecha_nacimiento
+						+ "','"
+						+ id_madre
+						+ "','"
+						+ foto
+						+ "','"
+						+ id_usuario
+						+ "')");
+
+			} catch (SQLException e) {
+			}
+		}
+	}
+
+	public void eliminarVaca(String id_vaca, String id_usuario) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
+						+ id_vaca + "' AND id_usuario='" + id_usuario + "'");
+
+			} catch (SQLException e) {
+			}
+		}
 	}
 
 	public String getId_vaca() {

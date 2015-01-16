@@ -10,14 +10,21 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class UsuarioVista extends ActionBarActivity {
 
@@ -25,6 +32,7 @@ public class UsuarioVista extends ActionBarActivity {
 	private String contraseña;
 	private ListView listaVista;
 	private AdapterVaca adapter;
+	private ArrayList<Vaca> lista;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +47,62 @@ public class UsuarioVista extends ActionBarActivity {
 
 		mostrarListado();
 	}
+	
+	public void añadirVaca(View v){
+		
+	}
+	
+	public void eliminarVaca(View v){
+		
+	}
+	
+	public void buscarVaca(View v){
+		alertaBuscar();
+	}
 
+	private void alertaBuscar(){
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View layout = inflater.inflate(R.layout.buscar_layout, null);
+		
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setView(layout);
+		dialogo.setMessage("Buscar");
+
+		final EditText texto =  (EditText)layout.findViewById(R.id.busca);
+		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				seleccionarEnLista(texto.getText().toString());
+			}
+		});
+		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+		
+		dialogo.show();
+	}
+	
+	public void seleccionarEnLista(String item){
+		
+		int i=0;
+		while(lista.size()>i){
+			listaVista.getChildAt(i).setBackgroundColor(Color.WHITE);
+			i++;
+		}
+		i=0;
+		while(lista.size()>i){
+			if(item.equals(lista.get(i).getId_vaca())){
+				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
+			}
+			i++;
+		}
+	}
+	
 	private void mostrarListado() {
 		Thread hilo = new Thread() {
 			String res = "";
@@ -53,7 +116,7 @@ public class UsuarioVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						ArrayList<Vaca> lista = json.fromJson(res,
+						lista = json.fromJson(res,
 								new TypeToken<ArrayList<Vaca>>() {
 								}.getType());
 						setAdapter(lista);
@@ -69,7 +132,7 @@ public class UsuarioVista extends ActionBarActivity {
 		listaVista.setAdapter(adapter);
 
 		listaVista
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+  				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
