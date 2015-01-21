@@ -1,6 +1,7 @@
 package com.example.misvacasapp.llamadaWS;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -73,6 +74,56 @@ public class LlamadaVacaWS {
 		}	
 		
 		return res;
+	}
+	
+	public void LLamadaAñadirVaca(String id_vaca, String raza, Date fecha_nacimiento,
+			String id_madre, String foto, String id_usuario){
+		
+		METHOD_NAME = "añadirVaca";
+		SOAP_ACTION = "urn:añadirVaca";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_vaca", id_vaca);
+		request.addProperty("raza", raza);
+		request.addProperty("fecha_nacimiento", fecha_nacimiento);
+		request.addProperty("id_madre", id_madre);
+		request.addProperty("foto", foto);
+		request.addProperty("id_usuario", id_usuario);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public void LLamadaEliminarVaca(String id_vaca, String id_usuario) {
+	
+		METHOD_NAME = "eliminarVaca";
+		SOAP_ACTION = "urn:eliminarVaca";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_vaca", id_vaca);
+		request.addProperty("id_usuario", id_usuario);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	
 }

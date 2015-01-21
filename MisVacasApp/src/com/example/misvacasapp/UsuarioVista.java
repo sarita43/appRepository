@@ -55,17 +55,29 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	public void eliminarVaca(View v) {
-		int i = 0;
-		while (lista.size() > i) {
-			System.out.println(listaVista.getChildAt(i).isSelected());
-			if (listaVista.getChildAt(i).getBackground().equals(Color.RED)) {
-				listaVista.getChildAt(i).setBackgroundColor(Color.WHITE);
-				// Button botonEliminar = (Button)findViewById(R.id.eliminar);
-				// botonEliminar.setEnabled(true);
+		for(int i=0;i<seleccionado.getTable().size();i++){
+			if(seleccionado.getTable().get(i)){
+				eliminar(lista.get(i).getId_vaca());
 			}
-			i++;
 		}
 	}
+	
+	public void eliminar(final String id_vaca ){
+		Thread hilo = new Thread() {
+			LlamadaVacaWS llamada = new LlamadaVacaWS();
+			
+			public void run() {
+				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						mostrarListado();
+					}
+				});
+			}
+		};
+		hilo.start();
+	}	
 
 	public void buscarVaca(View v) {
 		alertaBuscar();
