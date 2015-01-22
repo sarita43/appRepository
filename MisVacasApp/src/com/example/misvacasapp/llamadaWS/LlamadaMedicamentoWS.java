@@ -1,6 +1,7 @@
 package com.example.misvacasapp.llamadaWS;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -71,5 +72,48 @@ public class LlamadaMedicamentoWS {
 		}
 
 		return res;
+	}
+	
+	public void LLamadaAñadirMedicamento(String medicamento){
+		
+		METHOD_NAME = "añadirMedicamento";
+		SOAP_ACTION = "urn:añadirMedicamento";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("medicamento", medicamento);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public void LLamadaEliminarMedicamento(String id_medicamento, String id_vaca) {
+	
+		METHOD_NAME = "eliminarMedicamento";
+		SOAP_ACTION = "urn:eliminarMedicamento";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_medicamento", id_medicamento);
+		request.addProperty("id_vaca", id_vaca);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
 	}
 }

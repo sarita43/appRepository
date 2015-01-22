@@ -3,24 +3,35 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.adapter.AdapterMedicamento;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 public class MedicamentosVista extends ActionBarActivity {
 
 	private String idVaca;
 	private ListView listaVista;
 	private AdapterMedicamento adapter;
+	private TableSeleccionado seleccionado;
+	private ArrayList<Medicamento> lista;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +47,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	private void mostrarListado() {
+		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
@@ -47,9 +59,14 @@ public class MedicamentosVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						ArrayList<Medicamento> lista = json.fromJson(res,
+						lista = json.fromJson(res,
 								new TypeToken<ArrayList<Medicamento>>() {
 								}.getType());
+						for (int i = 0; i < lista.size(); i++) {
+							seleccionado.getTable().put(i, false);
+						}
+						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+						botonEliminar.setEnabled(false);
 						setAdapter(lista);
 					}
 				});
@@ -61,17 +78,62 @@ public class MedicamentosVista extends ActionBarActivity {
 	private void setAdapter(ArrayList<Medicamento> lista) {
 		adapter = new AdapterMedicamento(this, lista);
 		listaVista.setAdapter(adapter);
+		
+		clickLista();
+		clickLargoLista();
+		
+	}
+	
+	private void clickLista() {
 		listaVista
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						int id_medicamento = adapter.getItem(position).getId_medicamento();
-						lanzarMedicamento(id_medicamento);
-						
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				int id_medicamento = adapter.getItem(position).getId_medicamento();
+				lanzarMedicamento(id_medicamento);
+				
+			}
+		});
+	}
+
+	private void clickLargoLista() {
+		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				if (seleccionado.getTable().get(position)) {
+					seleccionado.getTable().put(position, false);
+					listaVista.getChildAt(position).setBackgroundColor(
+							Color.TRANSPARENT);
+					if (!activarBoton()) {
+						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+						botonEliminar.setEnabled(false);
 					}
-				});
+				} else {
+					seleccionado.getTable().put(position, true);
+					listaVista.getChildAt(position).setBackgroundColor(
+							Color.RED);
+					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+					botonEliminar.setEnabled(true);
+				}
+				return true;
+			}
+
+		});
+	}
+
+	private boolean activarBoton() {
+		boolean resultado = false;
+		for (int i = 0; i < lista.size(); i++) {
+			if (seleccionado.getTable().get(i)) {
+				resultado = true;
+			}
+		}
+		return resultado;
 	}
 	
 	private void lanzarMedicamento(int id_medicamento){
@@ -79,6 +141,87 @@ public class MedicamentosVista extends ActionBarActivity {
 		i.putExtra("id_medicamento", id_medicamento);
 		i.putExtra("id_vaca", idVaca);
 		startActivity(i);
+	}
+
+	public void añadirMedicamento(View v){
+		
+	}
+	
+	public void eliminarMedicamento(View v){
+		for(int i=0;i<seleccionado.getTable().size();i++){
+			if(seleccionado.getTable().get(i)){
+				eliminar(lista.get(i).getId_medicamento());
+			}
+		}
+	}
+	
+	public void eliminar(final int id_medicamento ){
+		Thread hilo = new Thread() {
+			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+			
+			public void run() {
+				llamada.LLamadaEliminarMedicamento(Integer.toString(id_medicamento), idVaca);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						mostrarListado();
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+	
+	public void buscarMedicamento(View v){
+		alertaBuscar();
+	}
+
+	private void alertaBuscar() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View layout = inflater.inflate(R.layout.buscar_layout, null);
+
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setView(layout);
+		dialogo.setMessage("Buscar");
+
+		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				seleccionarEnLista(Integer.parseInt(texto.getText().toString()));
+			}
+		});
+		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+
+		dialogo.show();
+	}
+
+	public void seleccionarEnLista(int item) {
+
+		int i = 0;
+		while (lista.size() > i) {
+			listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+			seleccionado.getTable().put(i, false);
+			i++;
+		}
+		i = 0;
+		while (lista.size() > i) {
+			System.out.println(item+"     "+lista.get(i).getId_medicamento());
+			if (item==(lista.get(i).getId_medicamento())) {
+				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
+				seleccionado.getTable().put(i, true);
+				Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+				botonEliminar.setEnabled(true);
+			}
+			i++;
+		}
 	}
 
 	@Override

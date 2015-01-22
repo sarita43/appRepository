@@ -9,8 +9,36 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
+        android:layout_below="@+id/aniadir_medicamento" >
 
     </ListView>
+
+    <Button
+        android:id="@+id/aniadir_medicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:onClick="añadirMedicamento"
+        android:text="Añadir" />
+
+    <Button
+        android:id="@+id/eliminar_medicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="eliminarMedicamento"
+        android:text="Eliminar" />
+
+    <Button
+        android:id="@+id/buscar_medicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/eliminar_medicamento"
+        android:onClick="buscarMedicamento"
+        android:text="Buscar" />
 
 </RelativeLayout>

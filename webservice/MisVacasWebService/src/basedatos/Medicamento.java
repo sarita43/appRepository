@@ -66,10 +66,10 @@ public class Medicamento {
 		}
 		return lista;
 	}
-	
-	public Medicamento getMedicamento(String id_vaca,String id_medicamento) {
+
+	public Medicamento getMedicamento(String id_vaca, String id_medicamento) {
 		OracleConection c = new OracleConection();
-		Medicamento medicamento= new Medicamento();
+		Medicamento medicamento = new Medicamento();
 		c.Conectar();
 
 		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
@@ -79,7 +79,9 @@ public class Medicamento {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
 						.executeQuery("SELECT * from medicamento where id_vaca='"
-								+ id_vaca + "' and id_medicamento='"+id_medicamento+"'");
+								+ id_vaca
+								+ "' and id_medicamento='"
+								+ id_medicamento + "'");
 
 				while (result.next()) {
 					try {
@@ -104,12 +106,55 @@ public class Medicamento {
 		String listaMedicamentos = json.toJson(lista);
 		return listaMedicamentos;
 	}
-	
-	public String medicamentoString(String id_vaca,String id_medicamento) {
+
+	public String medicamentoString(String id_vaca, String id_medicamento) {
 		Medicamento me = getMedicamento(id_vaca, id_medicamento);
 		Gson json = new Gson();
 		String medicamento = json.toJson(me);
 		return medicamento;
+	}
+	
+	public void eliminarMedicamento(String id_medicamento, String id_vaca) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE FROM medicamento WHERE id_medicamento='"
+						+ id_medicamento + "' AND id_vaca='" + id_vaca + "'");
+
+			} catch (SQLException e) {
+			}
+		}
+	}
+
+	public void añadirMedicamento(String medicamento) {
+		Gson json = new Gson();
+		Medicamento m = json.fromJson(medicamento, Medicamento.class);
+
+		OracleConection c = new OracleConection();
+		c.Conectar();
+
+		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss.S");
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES('"
+						+ m.getId_medicamento()
+						+ "','"
+						+ m.getFecha()
+						+ "','"
+						+ m.getTipo()
+						+ "','"
+						+ m.getDescripcion()
+						+ "','"
+						+ m.getId_vaca() + "')");
+
+			} catch (SQLException e) {
+			}
+		}
 	}
 
 	public int getId_medicamento() {
