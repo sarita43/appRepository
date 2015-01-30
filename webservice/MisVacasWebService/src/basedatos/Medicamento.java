@@ -1,14 +1,14 @@
 package basedatos;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 //Clase en la que se describe el medicamento
 
@@ -38,9 +38,6 @@ public class Medicamento {
 		ArrayList<Medicamento> lista = new ArrayList<Medicamento>();
 		c.Conectar();
 
-		Medicamento medicamento = new Medicamento();
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.S");
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
@@ -49,13 +46,14 @@ public class Medicamento {
 								+ id_vaca + "'");
 
 				while (result.next()) {
+					Medicamento medicamento = new Medicamento();
 					try {
-						medicamento = new Medicamento(Integer.parseInt(result
-								.getString(1)), formatoDeFecha.parse(result
-								.getString(2)), result.getString(3),
-								result.getString(4), result.getString(5));
-					} catch (NumberFormatException | ParseException e) {
-						// TODO Auto-generated catch block
+						medicamento.setId_medicamento(result.getInt(1));
+						medicamento.setFecha(result.getDate(2));
+						medicamento.setTipo(result.getString(3));
+						medicamento.setDescripcion(result.getString(4));
+						medicamento.setId_vaca(result.getString(5));
+					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 					lista.add(medicamento);
@@ -72,8 +70,6 @@ public class Medicamento {
 		Medicamento medicamento = new Medicamento();
 		c.Conectar();
 
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.S");
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
@@ -85,12 +81,12 @@ public class Medicamento {
 
 				while (result.next()) {
 					try {
-						medicamento = new Medicamento(Integer.parseInt(result
-								.getString(1)), formatoDeFecha.parse(result
-								.getString(2)), result.getString(3),
-								result.getString(4), result.getString(5));
-					} catch (NumberFormatException | ParseException e) {
-						// TODO Auto-generated catch block
+						medicamento.setId_medicamento(result.getInt(1));
+						medicamento.setFecha(result.getDate(2));
+						medicamento.setTipo(result.getString(3));
+						medicamento.setDescripcion(result.getString(4));
+						medicamento.setId_vaca(result.getString(5));
+					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 				}
@@ -101,15 +97,21 @@ public class Medicamento {
 	}
 
 	public String listaMedicamentoString(String id_vaca) {
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		ArrayList<Medicamento> lista = listaMedicamento(id_vaca);
-		Gson json = new Gson();
-		String listaMedicamentos = json.toJson(lista);
-		return listaMedicamentos;
+		if (lista.size() == 0) {
+			lista.add(new Medicamento());
+			String listaMedicamentos = json.toJson(lista);
+			return listaMedicamentos;
+		} else {
+			String listaMedicamentos = json.toJson(lista);
+			return listaMedicamentos;
+		}
 	}
 
 	public String medicamentoString(String id_vaca, String id_medicamento) {
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		Medicamento me = getMedicamento(id_vaca, id_medicamento);
-		Gson json = new Gson();
 		String medicamento = json.toJson(me);
 		return medicamento;
 	}
@@ -130,33 +132,27 @@ public class Medicamento {
 	}
 
 	public void añadirMedicamento(String medicamento) {
-		Gson json = new Gson();
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES(?,?,?,?,?)";
 		Medicamento m = json.fromJson(medicamento, Medicamento.class);
-
 		OracleConection c = new OracleConection();
 		c.Conectar();
 
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.S");
 		if (c.getConexion() != null) {
 			try {
-				Statement select = c.getConexion().createStatement();
-				select.executeQuery("INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES('"
-						+ m.getId_medicamento()
-						+ "','"
-						+ m.getFecha()
-						+ "','"
-						+ m.getTipo()
-						+ "','"
-						+ m.getDescripcion()
-						+ "','"
-						+ m.getId_vaca() + "')");
+				PreparedStatement pstmt = c.getConexion().prepareStatement(INSERT_RECORD);
+				 pstmt.setInt(1, m.getId_medicamento());
+				 pstmt.setDate(2,m.getFecha() );
+				 pstmt.setString(3, m.getTipo());
+				 pstmt.setString(4, m.getDescripcion());
+				 pstmt.setString(5, m.getId_vaca());
+				 pstmt.executeUpdate();
 
 			} catch (SQLException e) {
 			}
 		}
 	}
-
+	
 	public int getId_medicamento() {
 		return id_medicamento;
 	}

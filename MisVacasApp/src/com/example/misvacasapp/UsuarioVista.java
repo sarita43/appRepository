@@ -8,6 +8,7 @@ import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.menus.AdministrarCuentaVista;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import android.app.AlertDialog;
@@ -134,13 +135,12 @@ public class UsuarioVista extends ActionBarActivity {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
 
 				res = llamada.LlamadaListaVacas(id_usuario);
-
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -150,7 +150,11 @@ public class UsuarioVista extends ActionBarActivity {
 						for (int i = 0; i < lista.size(); i++) {
 							seleccionado.getTable().put(i, false);
 						}
-						setAdapter(lista);
+						if(lista.get(0).getId_vaca().equals("0")){
+							
+						}else{
+							setAdapter(lista);
+						}
 					}
 				});
 			}

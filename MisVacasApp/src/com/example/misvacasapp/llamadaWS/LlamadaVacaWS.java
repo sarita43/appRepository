@@ -76,20 +76,13 @@ public class LlamadaVacaWS {
 		return res;
 	}
 	
-	public void LLamadaAñadirVaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String foto, String id_usuario){
+	public void LLamadaAñadirVaca(String vaca){
 		
 		METHOD_NAME = "añadirVaca";
 		SOAP_ACTION = "urn:añadirVaca";
 
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
-		request.addProperty("id_vaca", id_vaca);
-		request.addProperty("raza", raza);
-		request.addProperty("fecha_nacimiento", fecha_nacimiento);
-		request.addProperty("id_madre", id_madre);
-		request.addProperty("foto", foto);
-		request.addProperty("id_usuario", id_usuario);
-
+		request.addProperty("vaca", vaca);
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
 		envelope.setOutputSoapObject(request);
@@ -121,7 +114,6 @@ public class LlamadaVacaWS {
 			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
 		} catch (IOException
 				| XmlPullParserException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}

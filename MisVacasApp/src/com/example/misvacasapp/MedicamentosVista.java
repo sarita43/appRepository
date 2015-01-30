@@ -2,10 +2,11 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.adapter.AdapterMedicamento;
+import com.example.misvacasapp.aniadir.AniadirMedicamentoVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
-import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import android.app.AlertDialog;
@@ -50,11 +51,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
 
 			public void run() {
-
 				res = llamada.LlamadaListaMedicamentos(idVaca);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -67,7 +68,8 @@ public class MedicamentosVista extends ActionBarActivity {
 						}
 						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 						botonEliminar.setEnabled(false);
-						setAdapter(lista);
+						if (lista.get(0).getId_medicamento() != 0)
+							setAdapter(lista);
 					}
 				});
 			}
@@ -78,24 +80,25 @@ public class MedicamentosVista extends ActionBarActivity {
 	private void setAdapter(ArrayList<Medicamento> lista) {
 		adapter = new AdapterMedicamento(this, lista);
 		listaVista.setAdapter(adapter);
-		
+
 		clickLista();
 		clickLargoLista();
-		
+
 	}
-	
+
 	private void clickLista() {
 		listaVista
-		.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				int id_medicamento = adapter.getItem(position).getId_medicamento();
-				lanzarMedicamento(id_medicamento);
-				
-			}
-		});
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						int id_medicamento = adapter.getItem(position)
+								.getId_medicamento();
+						lanzarMedicamento(id_medicamento);
+
+					}
+				});
 	}
 
 	private void clickLargoLista() {
@@ -135,32 +138,41 @@ public class MedicamentosVista extends ActionBarActivity {
 		}
 		return resultado;
 	}
-	
-	private void lanzarMedicamento(int id_medicamento){
+
+	private void lanzarMedicamento(int id_medicamento) {
 		Intent i = new Intent(this, MedicamentoVista.class);
 		i.putExtra("id_medicamento", id_medicamento);
 		i.putExtra("id_vaca", idVaca);
 		startActivity(i);
 	}
 
-	public void añadirMedicamento(View v){
-		
+	public void añadirMedicamento(View v) {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+
+		String listaMedicamentos = json.toJson(lista);
+
+		Intent i = new Intent(this, AniadirMedicamentoVista.class);
+		i.putExtra("id_vaca", idVaca);
+		i.putExtra("listaMedicamentos", listaMedicamentos);
+		startActivity(i);
 	}
-	
-	public void eliminarMedicamento(View v){
-		for(int i=0;i<seleccionado.getTable().size();i++){
-			if(seleccionado.getTable().get(i)){
+
+	public void eliminarMedicamento(View v) {
+		for (int i = 0; i < seleccionado.getTable().size(); i++) {
+			if (seleccionado.getTable().get(i)) {
 				eliminar(lista.get(i).getId_medicamento());
 			}
 		}
 	}
-	
-	public void eliminar(final int id_medicamento ){
+
+	public void eliminar(final int id_medicamento) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-			
+
 			public void run() {
-				llamada.LLamadaEliminarMedicamento(Integer.toString(id_medicamento), idVaca);
+				llamada.LLamadaEliminarMedicamento(
+						Integer.toString(id_medicamento), idVaca);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -171,8 +183,8 @@ public class MedicamentosVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-	
-	public void buscarMedicamento(View v){
+
+	public void buscarMedicamento(View v) {
 		alertaBuscar();
 	}
 
@@ -207,14 +219,17 @@ public class MedicamentosVista extends ActionBarActivity {
 
 		int i = 0;
 		while (lista.size() > i) {
-			listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
-			seleccionado.getTable().put(i, false);
+			if (seleccionado.getTable().get(i)) {
+				seleccionado.getTable().put(i, false);
+				listaVista.getChildAt(i).setBackgroundColor(
+						Color.TRANSPARENT);
+			}
 			i++;
 		}
+
 		i = 0;
 		while (lista.size() > i) {
-			System.out.println(item+"     "+lista.get(i).getId_medicamento());
-			if (item==(lista.get(i).getId_medicamento())) {
+			if (item == (lista.get(i).getId_medicamento())) {
 				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);

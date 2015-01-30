@@ -18,5 +18,5 @@ public class MedicamentoWebService {
 	public void eliminarMedicamento(String id_medicamento, String id_vaca) {
 		new Medicamento().eliminarMedicamento(id_medicamento, id_vaca);
 	}
-
+	
 }

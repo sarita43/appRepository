@@ -30,6 +30,7 @@
         <activity android:name=".menus.AdministrarCuentaVista"></activity>
         <activity android:name="com.example.misvacasapp.menus.NuevaContraseniaVista"></activity>
         <activity android:name=".menus.ModificarUsuarioVista"></activity>
+        <activity android:name=".aniadir.AniadirMedicamentoVista"></activity>
     </application>
 
 </manifest>

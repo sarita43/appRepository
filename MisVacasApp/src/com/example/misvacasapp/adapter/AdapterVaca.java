@@ -52,11 +52,10 @@ public class AdapterVaca extends BaseAdapter{
             LayoutInflater inf = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inf.inflate(R.layout.lista_vacas, null);
         }
- 
-    
+
         Vaca vaca = this.lista.get(position);
         
-        ImageView nombre = (ImageView) v.findViewById(R.id.imagenVaca);
+        ImageView imagen = (ImageView) v.findViewById(R.id.imagenVaca);
        
         TextView cargo = (TextView) v.findViewById(R.id.idVaca_texto);
         cargo.setText("Id: "+vaca.getId_vaca());

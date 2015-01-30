@@ -1,16 +1,14 @@
 package basedatos;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
-
-//http://www.adictosaltrabajo.com/tutoriales/tutoriales.php?pagina=GsonJavaJSON
+import com.google.gson.GsonBuilder;
 
 //Clase que se comunica con la base de datos para obtener los datos
 
@@ -24,12 +22,7 @@ public class Vaca {
 	private String id_usuario;
 
 	public Vaca() {
-
-	}
-
-	public Vaca(String id_usuario) {
-		setId_usuario(id_usuario);
-
+		setId_vaca("0");
 	}
 
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
@@ -48,8 +41,6 @@ public class Vaca {
 		c.Conectar();
 
 		Vaca vaca = new Vaca();
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.S");
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
@@ -60,12 +51,10 @@ public class Vaca {
 				while (result.next()) {
 					try {
 						vaca = new Vaca(result.getString(1),
-								result.getString(2),
-								formatoDeFecha.parse(result.getString(3)),
+								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
 								result.getString(6));
-					} catch (NumberFormatException | ParseException e) {
-						// TODO Auto-generated catch block
+					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 					lista.add(vaca);
@@ -82,8 +71,6 @@ public class Vaca {
 		c.Conectar();
 
 		Vaca vaca = new Vaca();
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"yyyy-MM-dd HH:mm:ss.S");
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
@@ -95,11 +82,10 @@ public class Vaca {
 				while (result.next()) {
 					try {
 						vaca = new Vaca(result.getString(1),
-								result.getString(2),
-								formatoDeFecha.parse(result.getString(3)),
+								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
 								result.getString(6));
-					} catch (NumberFormatException | ParseException e) {
+					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 				}
@@ -110,40 +96,43 @@ public class Vaca {
 	}
 
 	public String vacaString(String id_vaca, String id_usuario) {
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		Vaca v = getVaca(id_vaca, id_usuario);
-		Gson gson = new Gson();
-		String vaca = gson.toJson(v);
+		String vaca = json.toJson(v);
 		return vaca;
 	}
 
 	public String listaVacasString(String id_usuario) {
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		ArrayList<Vaca> lista = listaVacas(id_usuario);
-		Gson json = new Gson();
-		String listaVacas = json.toJson(lista);
-		return listaVacas;
+		if (lista.size() == 0) {
+			lista.add(new Vaca());
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		} else {
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		}
 	}
 
-	public void añadirVaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String foto, String id_usuario) {
+	public void añadirVaca(String vaca) {
+		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+		String INSERT_RECORD = "INSERT INTO vaca(id_vaca,raza,fecha_nacimiento,id_madre,foto,id_usuario) VALUES(?,?,?,?,?)";
+		Vaca v = json.fromJson(vaca, Vaca.class);
 		OracleConection c = new OracleConection();
 		c.Conectar();
 
 		if (c.getConexion() != null) {
 			try {
-				Statement select = c.getConexion().createStatement();
-				select.executeQuery("INSERT INTO vaca(id_vaca,raza,fecha_nacimiento,id_madre,foto,id_usuario) VALUES('"
-						+ id_vaca
-						+ "','"
-						+ raza
-						+ "','"
-						+ fecha_nacimiento
-						+ "','"
-						+ id_madre
-						+ "','"
-						+ foto
-						+ "','"
-						+ id_usuario
-						+ "')");
+				PreparedStatement pstmt = c.getConexion().prepareStatement(
+						INSERT_RECORD);
+				pstmt.setString(1, v.getId_vaca());
+				pstmt.setString(2, v.getRaza());
+				pstmt.setDate(3, v.getFecha_nacimiento());
+				pstmt.setString(4, v.getId_madre());
+				pstmt.setString(5, v.getFoto());
+				pstmt.setString(5, v.getId_usuario());
+				pstmt.executeUpdate();
 
 			} catch (SQLException e) {
 			}

@@ -1,7 +1,6 @@
 package com.example.misvacasapp.llamadaWS;
 
 import java.io.IOException;
-import java.util.Date;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -115,5 +114,29 @@ public class LlamadaMedicamentoWS {
 				| XmlPullParserException e) {
 			e.printStackTrace();
 		}	
+	}
+	
+	public String LLamadaGetId_Medicamentos(String id_vaca) {
+		
+		String resultado = "";
+		METHOD_NAME = "getId_medicamentos";
+		SOAP_ACTION = "urn:getId_medicamentos";
+
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_vaca", id_vaca);
+
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+			resultado = resultsRequestSOAP.toString();
+		} catch (IOException
+				| XmlPullParserException e) {
+			e.printStackTrace();
+		}	
+		return resultado;
 	}
 }

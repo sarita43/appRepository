@@ -1,7 +1,5 @@
 package web.service;
 
-import java.util.Date;
-
 import basedatos.*;
 
 public class VacaWebService {
@@ -14,9 +12,8 @@ public class VacaWebService {
 		return new Vaca().listaVacasString(id_usuario);
 	}
 	
-	public void añadirVaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String foto, String id_usuario) {
-		new Vaca().añadirVaca(id_vaca, raza, fecha_nacimiento, id_madre, foto, id_usuario);
+	public void añadirVaca(String vaca) {
+		new Vaca().añadirVaca(vaca);
 	}
 	
 	public void eliminarVaca(String id_vaca, String id_usuario) {

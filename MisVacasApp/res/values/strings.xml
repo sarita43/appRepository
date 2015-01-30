@@ -25,5 +25,8 @@
     <string name="direccion">Dirección</string>
     <string name="telefono">Teléfono</string>
     <string name="poblacion">Poblacion</string>
+    <string name="fecha">Fecha</string>
+    <string name="tipo">Tipo</string>
+    <string name="descripcion">Descripción</string>
 
 </resources>

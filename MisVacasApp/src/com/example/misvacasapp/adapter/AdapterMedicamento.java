@@ -1,6 +1,5 @@
 package com.example.misvacasapp.adapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
@@ -42,8 +41,6 @@ public class AdapterMedicamento extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		SimpleDateFormat formatoDeFecha = new SimpleDateFormat(
-				"dd-MM-yyyy");
 		 
         //Asociamos el layout de la lista que hemos creado
         if(convertView == null){
@@ -58,7 +55,7 @@ public class AdapterMedicamento extends BaseAdapter{
         tipo.setText("Tipo: "+medicamento.getTipo());
        
         TextView fecha = (TextView) v.findViewById(R.id.fechaTexto);
-        fecha.setText("	Fecha: "+formatoDeFecha.format(medicamento.getFecha()));
+        fecha.setText("	Fecha: "+medicamento.getFecha());
  
         return v;
 	}

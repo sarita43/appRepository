@@ -1,9 +1,9 @@
 package com.example.misvacasapp;
 
-import java.text.SimpleDateFormat;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,13 +36,13 @@ public class VacaVista extends ActionBarActivity {
 	private void rellenarCamposVaca() {
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd-MM-yyyy");
 			Vaca vaca = new Vaca();
 
 			public void run() {
 				res = llamada.LlamadaVaca(id_vaca, id_usuario);
+				System.out.println(res);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -52,9 +52,7 @@ public class VacaVista extends ActionBarActivity {
 						TextView raza = (TextView) findViewById(R.id.raza);
 						raza.setText("RAZA: " + vaca.getRaza());
 						TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
-						fechaNacimiento.setText("FECHA DE NACIMIENTO: "
-								+ formatoDeFecha.format(vaca
-										.getFecha_nacimiento()));
+						fechaNacimiento.setText("FECHA DE NACIMIENTO: "+vaca.getFecha_nacimiento());
 						TextView idMadre = (TextView) findViewById(R.id.idMadre);
 						idMadre.setText("ID MADRE: " + vaca.getId_madre());
 						// ImageView imagen =

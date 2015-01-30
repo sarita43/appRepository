@@ -1,10 +1,9 @@
 package com.example.misvacasapp;
 
-import java.text.SimpleDateFormat;
-
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,9 +31,8 @@ public class MedicamentoVista extends ActionBarActivity{
 	private void rellenarCampos(){
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-			SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd-MM-yyyy");
 			Medicamento medicamento = new Medicamento();
 
 			public void run() {
@@ -42,13 +40,12 @@ public class MedicamentoVista extends ActionBarActivity{
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						System.out.println(res);
 						medicamento = json.fromJson(res, Medicamento.class);
 						TextView idMedicamento = (TextView) findViewById(R.id.id_medicamento);
 						idMedicamento.setText("ID MEDICAMENTO: " + medicamento.getId_medicamento());
 						TextView fecha = (TextView) findViewById(R.id.fecha_medicamento);
-						fecha.setText("FECHA: "
-								+ formatoDeFecha.format(medicamento
-										.getFecha()));
+						fecha.setText("FECHA: "+medicamento.getFecha());
 						TextView tipo = (TextView) findViewById(R.id.tipo_medicamento);
 						tipo.setText("TIPO: " + medicamento.getTipo());
 						
