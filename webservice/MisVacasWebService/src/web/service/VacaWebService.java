@@ -19,4 +19,5 @@ public class VacaWebService {
 	public void eliminarVaca(String id_vaca, String id_usuario) {
 		new Vaca().eliminarVaca(id_vaca, id_usuario);
 	}
+	
 }

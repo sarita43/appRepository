@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
@@ -31,50 +30,111 @@ public class AniadirVacaVista extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aniadir_vaca);
-
 		json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
-
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		lista = json.fromJson(bundle.getString("listaVacas"),
-				new TypeToken<ArrayList<Vaca>>() {
-				}.getType());
-
+		lista = new ArrayList<Vaca>();
+		listaVacas();
 	}
 
-	private String idVacaNuevo() {
+	private void listaVacas() {
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaVacaWS llamada = new LlamadaVacaWS();
+
+			public void run() {
+
+				res = llamada.LlamadaListaVacas(id_usuario);
+				lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
+				}.getType());
+
+			}
+		};
+		hilo.start();
+	}
+
+	private boolean comprobarIdVaca() {
+		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
+
 		for (int i = 0; lista.size() > i; i++) {
 			if (id_vaca.equals(lista.get(i).getId_vaca())) {
-				id_vaca = "";
-				Toast.makeText(AniadirVacaVista.this, "Id ya existe",
-						Toast.LENGTH_LONG).show();
+				id_correcto = false;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+						Toast.makeText(AniadirVacaVista.this, "Id ya existe",
+								Toast.LENGTH_SHORT).show();
+						Intent i = new Intent(getApplicationContext(),
+								AniadirVacaVista.class);
+						i.putExtra("id_usuario", id_usuario);
+						startActivity(i);
+						finish();
+					}
+				});
+			} else if (id_vaca.equals("")) {
+				id_correcto = false;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(AniadirVacaVista.this, "Id vacio",
+								Toast.LENGTH_SHORT).show();
+						Intent i = new Intent(getApplicationContext(),
+								AniadirVacaVista.class);
+						i.putExtra("id_usuario", id_usuario);
+						startActivity(i);
+						finish();
+					}
+				});
 			}
 		}
-
-		return id_vaca;
+		return id_correcto;
 	}
 
 	private Vaca crearVaca() {
-		int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
-				.getText().toString());
-		int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
-				.getText().toString()) - 1;
-		int año = Integer.parseInt(((TextView) findViewById(R.id.anio_vaca))
-				.getText().toString()) - 1900;
-		@SuppressWarnings("deprecation")
-		Date fecha = new Date(año, mes, dia);
-
-		String raza = ((TextView) findViewById(R.id.raza_nuevo_texto))
-				.getText().toString();
-		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
-				.getText().toString();
-
 		Vaca vaca = new Vaca();
-		vaca = new Vaca(idVacaNuevo(), raza, fecha, id_madre, "", id_madre);
+		vaca.setId_vaca(((TextView) findViewById(R.id.id_vaca_nuevo_texto))
+				.getText().toString());
+		if (((TextView) findViewById(R.id.dia_vaca)).getText().toString()
+				.equals("")) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Fecha incorrecta",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+			Intent i = new Intent(this, AniadirVacaVista.class);
+			i.putExtra("id_usuario", id_usuario);
+			startActivity(i);
+			finish();
+		} else {
+			int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
+					.getText().toString());
+			int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
+					.getText().toString()) - 1;
+			int año = Integer
+					.parseInt(((TextView) findViewById(R.id.anio_vaca))
+							.getText().toString()) - 1900;
+			@SuppressWarnings("deprecation")
+			Date fecha = new Date(año, mes, dia);
+			vaca.setFecha_nacimiento(fecha);
 
+			String raza = ((TextView) findViewById(R.id.raza_nuevo_texto))
+					.getText().toString();
+			vaca.setRaza(raza);
+			String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
+					.getText().toString();
+			vaca.setId_madre(id_madre);
+			String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca))
+					.getText().toString();
+			vaca.setSexo(sexo);
+		}
 		return vaca;
 	}
 
@@ -83,25 +143,50 @@ public class AniadirVacaVista extends ActionBarActivity {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-				Vaca v = crearVaca();
-				if (v.getId_vaca().equals("")) {
+				if (comprobarIdVaca()) {
+					Vaca v = crearVaca();
+					if (((TextView) findViewById(R.id.dia_vaca)).getText()
+							.toString().equals("")) {
+					} else if (v.getSexo().equals("M")
+							|| v.getSexo().equals("H")) {
 
-				} else {
-					String m = json.toJson(v);
-					llamada.LLamadaAñadirVaca(m);
-				}
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
+						String vaca = json.toJson(v);
+						llamada.LLamadaAñadirVaca(vaca);
+						System.out.println(vaca);
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(AniadirVacaVista.this,
+										"Añadido correctamente",
+										Toast.LENGTH_SHORT).show();
+								Intent i = new Intent(getApplicationContext(),
+										UsuarioVista.class);
+								i.putExtra("id_usuario", id_usuario);
+								startActivity(i);
+								finish();
+							}
+						});
+					} else {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(AniadirVacaVista.this,
+										"Mal sexo. M o H", Toast.LENGTH_SHORT)
+										.show();
+
+								Intent i = new Intent(getApplicationContext(),
+										AniadirVacaVista.class);
+								i.putExtra("id_usuario", id_usuario);
+								startActivity(i);
+								finish();
+							}
+						});
 					}
-				});
+				}
+
 			}
 		};
 		hilo.start();
-		Intent i = new Intent(this, UsuarioVista.class);
-		i.putExtra("id_usuario", id_usuario);
-		startActivity(i);
-		finish();
 	}
 
 	@Override

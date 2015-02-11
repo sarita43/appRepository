@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="25dp"
         android:text="@string/fecha"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView2"
         android:layout_below="@+id/textView2"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="30dp"
         android:text="@string/descripcion"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="30dp"
         android:text="@string/tipo"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -45,17 +45,6 @@
         android:inputType="text"
         android:ems="10" />
 
-    <Button
-        android:id="@+id/boton_aceptar_nuevo_medicamento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="14dp"
-        android:layout_marginRight="32dp"
-        android:onClick="nuevoMedicamento"
-        android:text="@string/botonAceptar" />
-
     <EditText
         android:id="@+id/descripcion_medicamento_texto"
         android:layout_width="wrap_content"
@@ -63,7 +52,7 @@
         android:layout_alignLeft="@+id/textView3"
         android:layout_alignRight="@+id/tipo_medicamento_texto"
         android:layout_below="@+id/textView3"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textMultiLine" />
 
@@ -73,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"
-        android:text="/"
+        android:text="@string/barra"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -83,7 +72,9 @@
         android:layout_above="@+id/textView2"
         android:layout_toLeftOf="@+id/textView4"
         android:layout_toRightOf="@+id/textView1"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:inputType="number"
         android:ems="10" >
 		  <requestFocus />
     </EditText>
@@ -94,7 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/boton_aceptar_nuevo_medicamento"
-        android:text="/"
+        android:layout_marginLeft="15dp"
+        android:text="@string/barra"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -103,9 +95,11 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/fecha_medicamento_dia"
         android:layout_alignBottom="@+id/fecha_medicamento_dia"
-        android:layout_toLeftOf="@+id/textView5"
+        android:layout_alignRight="@+id/textView5"
         android:layout_toRightOf="@+id/textView4"
-        android:ems="10" >
+        android:layout_marginRight="5dp"
+        android:inputType="number"
+        android:width="100dp" >
 
     </EditText>
 
@@ -116,6 +110,18 @@
         android:layout_alignBottom="@+id/textView5"
         android:layout_alignRight="@+id/tipo_medicamento_texto"
         android:layout_toRightOf="@+id/textView5"
+        android:inputType="number"
         android:ems="10" />
+
+    <Button
+        android:id="@+id/boton_aceptar_nuevo_medicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="30dp"
+        android:onClick="nuevoMedicamento"
+        android:text="@string/botonAceptar" />
 
 </RelativeLayout>

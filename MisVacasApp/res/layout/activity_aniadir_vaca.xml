@@ -10,8 +10,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="28dp"
-        android:layout_marginTop="21dp"
-        android:text="Id Vaca"
+        android:layout_marginTop="20dp"
+        android:text="@string/aniadir_vaca_id_vaca"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -19,10 +19,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/raza_nuevo_texto"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="18dp"
-        android:ems="10" >
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
@@ -33,18 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/id_vaca_nuevo_texto"
         android:layout_below="@+id/id_vaca_nuevo_texto"
-        android:layout_marginTop="30dp"
-        android:text="Raza"
+        android:layout_marginTop="20dp"
+        android:text="@string/aniadir_vaca_rara"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/raza_nuevo_texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_toRightOf="@+id/textView1"
-        android:ems="10" />
 
     <TextView
         android:id="@+id/textView3"
@@ -52,8 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView2"
         android:layout_below="@+id/raza_nuevo_texto"
-        android:layout_marginTop="41dp"
-        android:text="Fecha nacimiento"
+        android:layout_marginTop="20dp"
+        android:text="@string/aniadir_vaca_fecha_nacimiento"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -61,10 +53,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView3"
-        android:layout_alignRight="@+id/textView2"
         android:layout_below="@+id/textView3"
-        android:layout_marginTop="28dp"
-        android:ems="10" />
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/textView4"
+        android:layout_marginLeft="15dp"
+        android:ems="10"
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/textView4"
@@ -72,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/dia_vaca"
         android:layout_alignLeft="@+id/raza_nuevo_texto"
-        android:text="/"
+        android:text="@string/barra"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -83,6 +78,9 @@
         android:layout_alignBottom="@+id/dia_vaca"
         android:layout_alignRight="@+id/textView3"
         android:layout_toRightOf="@+id/textView4"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:inputType="number"
         android:ems="10" />
 
     <TextView
@@ -92,7 +90,7 @@
         android:layout_alignBottom="@+id/mes_vaca"
         android:layout_alignTop="@+id/textView4"
         android:layout_toRightOf="@+id/mes_vaca"
-        android:text="/"
+        android:text="@string/barra"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -101,16 +99,19 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView6"
         android:layout_toRightOf="@+id/textView5"
-        android:ems="10" />
+        android:ems="10"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="10dp"
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/dia_vaca"
+        android:layout_alignLeft="@+id/textView3"
         android:layout_below="@+id/dia_vaca"
-        android:layout_marginTop="28dp"
-        android:text="Id madre"
+        android:layout_marginTop="20dp"
+        android:text="@string/aniadir_vaca_id_madre"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -120,16 +121,50 @@
         android:layout_alignLeft="@+id/textView6"
         android:layout_alignRight="@+id/botonNuevaVaca"
         android:layout_below="@+id/textView6"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="20dp"
+        android:inputType="text"
         android:ems="10" />
 
     <Button
         android:id="@+id/botonNuevaVaca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/anio_vaca"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="22dp"
+        android:layout_alignRight="@+id/anio_vaca"
+        android:layout_marginBottom="25dp"
+        android:onClick="nuevaVaca"
         android:text="@string/botonAceptar" />
+
+    <EditText
+        android:id="@+id/raza_nuevo_texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView1"
+        android:layout_marginRight="120dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/sexo_nuevo_vaca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textView7"
+        android:layout_alignBottom="@+id/textView7"
+        android:layout_alignRight="@+id/anio_vaca"
+        android:layout_toRightOf="@+id/textView7"
+        android:inputType="textCapWords"
+        android:singleLine="true"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView3"
+        android:layout_alignLeft="@+id/botonNuevaVaca"
+        android:text="@string/sexo"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

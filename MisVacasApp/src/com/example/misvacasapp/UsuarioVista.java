@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
+import com.example.misvacasapp.aniadir.AniadirVacaVista;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.menus.AdministrarCuentaVista;
 import com.example.misvacasapp.modelo.Vaca;
@@ -21,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -48,11 +50,14 @@ public class UsuarioVista extends ActionBarActivity {
 
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 
+		scroolLista();
 		mostrarListado();
 	}
 
 	public void añadirVaca(View v) {
-
+		Intent i = new Intent(this, AniadirVacaVista.class);
+		i.putExtra("id_usuario", id_usuario);	
+		startActivity(i);
 	}
 
 	public void eliminarVaca(View v) {
@@ -97,17 +102,21 @@ public class UsuarioVista extends ActionBarActivity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				if(texto.getText().toString().equals("")){
+					dialog.cancel();
+				}else{
+				System.out.println("1: "+texto.getText().toString());
 				seleccionarEnLista(texto.getText().toString());
+				}
 			}
 		});
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				finish();
+				dialog.cancel();
 			}
 		});
-
 		dialogo.show();
 	}
 
@@ -115,13 +124,18 @@ public class UsuarioVista extends ActionBarActivity {
 
 		int i = 0;
 		while (lista.size() > i) {
-			listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+			listaVista.getSelectedView().setBackgroundColor(Color.BLUE);
+//			System.out.println("ENTRA: "+i);
+//			System.out.println(listaVista.getChildAt(i));
+//			listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 			seleccionado.getTable().put(i, false);
 			i++;
 		}
 		i = 0;
 		while (lista.size() > i) {
 			if (item.equals(lista.get(i).getId_vaca())) {
+				listaVista.getChildAt(i).setVisibility(i);
+				System.out.println("3: "+i);
 				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar);
@@ -168,9 +182,33 @@ public class UsuarioVista extends ActionBarActivity {
 
 		clickLista();
 		clickLargoLista();
-
 	}
 
+	private void scroolLista(){
+		listaVista.setOnTouchListener(new ListView.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				 int action = event.getAction();
+		            switch (action) {
+		            case MotionEvent.ACTION_DOWN:
+		                // Disallow ScrollView to intercept touch events.
+		                v.getParent().requestDisallowInterceptTouchEvent(true);
+		                break;
+
+		            case MotionEvent.ACTION_UP:
+		                // Allow ScrollView to intercept touch events.
+		                v.getParent().requestDisallowInterceptTouchEvent(false);
+		                break;
+		            }
+
+		            // Handle ListView touch events.
+		            v.onTouchEvent(event);
+		            return true;
+			}
+	    });
+	}
+	
 	private void clickLista() {
 		listaVista
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
