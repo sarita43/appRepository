@@ -30,15 +30,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * Clase de la actividad del usuario
+ * En ella se implementan los métodos que se utilizan para manejar la vista del usuario
+ * @author Sara Martinez Lopez
+ * */
 public class UsuarioVista extends ActionBarActivity {
 
+	//Atributos
+	/** Id del usuario*/
 	private String id_usuario;
-	private String contrase�a;
+	/** Contraseña del usuario*/
+	private String contraseña;
+	/** Vista de la lista de vacas a mostrar en la vista del usuario*/
 	private ListView listaVista;
+	/** Adaptador de la lista*/
 	private AdapterVaca adapter;
+	/** Lista de las vacas que tiene el usuario*/
 	private ArrayList<Vaca> lista;
+	/** Tabla hash que indica que vaca esta seleccionada*/
 	private TableSeleccionado seleccionado;
 
+	//Métodos
+	
+	/**
+	 * Añade la vista usuario
+	 * Recoge el usuario y la contraseña de la vista login
+	 * Inicializa parametros
+	 * /
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +65,7 @@ public class UsuarioVista extends ActionBarActivity {
 
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		contrase�a = bundle.getString("contrase�a");
+		contraseña = bundle.getString("contraseña");
 
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 
@@ -54,7 +73,10 @@ public class UsuarioVista extends ActionBarActivity {
 		mostrarListado();
 	}
 
-	public void a�adirVaca(View v) {
+	/**
+	 * Método 
+	 * /
+	public void añadirVaca(View v) {
 		Intent i = new Intent(this, AniadirVacaVista.class);
 		i.putExtra("id_usuario", id_usuario);	
 		startActivity(i);
@@ -283,7 +305,7 @@ public class UsuarioVista extends ActionBarActivity {
 		if (id == R.id.administrar_cuenta) {
 			Intent i = new Intent(this, AdministrarCuentaVista.class);
 			i.putExtra("id_usuario", this.id_usuario);
-			i.putExtra("contrase�a", this.contrase�a);
+			i.putExtra("contraseña", this.contraseña);
 			startActivity(i);
 			return true;
 		}
