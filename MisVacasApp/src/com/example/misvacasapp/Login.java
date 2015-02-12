@@ -13,11 +13,30 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+/**
+ * Clase de la actividad Login
+ * En ella se implementan los métodos que se utilizan para hacer el login
+ * @author Sara Martinez Lopez
+ * */
 public class Login extends ActionBarActivity {
 	
+	
+	//Atributos
+	/*
+	* Id usuario que introduce a traves de la pantalla login
+	*/
 	private String usuario;
+	/*
+	* Contraseña del usuario que introduce a traves de la pantalla login
+	*/
 	private String contraseña;
 
+	//Metodos
+	/**
+	* Recoge el usuario y contraseña introducidos por el usuario y comprueba si existen y son correctos
+	* @param v Vista que hace el click en el boton
+	*/
 	public void onClick(View v){
 		
 		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
@@ -53,6 +72,10 @@ public class Login extends ActionBarActivity {
 		hilo.start();
 	}
 	
+	/**
+	* Comprueba el rol del usuario
+	* Si es administrador o no
+	*/
 	private void rol(){
 		Thread hilo = new Thread() {
 			String res = "";
@@ -78,6 +101,9 @@ public class Login extends ActionBarActivity {
 		hilo.start();
 	}
 	
+	/**
+	 * Cambia a la vista del usuario
+	 * */
 	private void lanzarUsuario(){
 		Intent i = new Intent(this, UsuarioVista.class);
 		i.putExtra("id_usuario",usuario);
@@ -86,12 +112,21 @@ public class Login extends ActionBarActivity {
 		finish();
 	}
 	
-	@Override
+
+	/**
+	 * Añade la vista del login 
+	 * @param savedInstanceState
+	 */
+	 @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 	}
 
+	/**
+	 * Añade el menu a la vista login
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -99,6 +134,10 @@ public class Login extends ActionBarActivity {
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
