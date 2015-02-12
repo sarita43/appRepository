@@ -3,7 +3,6 @@ package com.example.misvacasapp;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
-
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,42 +12,41 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 /**
- * Clase de la actividad Login
- * En ella se implementan los mÃ©todos que se utilizan para hacer el login
+ * Clase de la actividad Login En ella se implementan los métodos que se
+ * utilizan para hacer el login
+ * 
  * @author Sara Martinez Lopez
  * */
 public class Login extends ActionBarActivity {
-	
-	
-	//Atributos
+	// Atributos
 	/*
-	* Id usuario que introduce a traves de la pantalla login
-	*/
+	 * Id usuario que introduce a traves de la pantalla login
+	 */
 	private String usuario;
 	/*
-	* ContraseÃ±a del usuario que introduce a traves de la pantalla login
-	*/
-	private String contraseÃ±a;
+	 * Contraseña del usuario que introduce a traves de la pantalla login
+	 */
+	private String contraseña;
 
-	//Metodos
+	// Metodos
 	/**
-	* Recoge el usuario y contraseÃ±a introducidos por el usuario y comprueba si existen y son correctos
-	* @param v Vista que hace el click en el boton
-	*/
-	public void onClick(View v){
-		
+	 * Recoge el usuario y contraseña introducidos por el usuario y comprueba si
+	 * existen y son correctos
+	 * 
+	 * @param v
+	 *            Vista que hace el click en el boton
+	 */
+	public void onClick(View v) {
 		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
-		contraseÃ±a = ((TextView) findViewById(R.id.contrasena)).getText().toString();
-		
+		contraseña = ((TextView) findViewById(R.id.contrasena)).getText()
+				.toString();
 		Thread hilo = new Thread() {
 			String res = "";
-			
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-			
+
 			public void run() {
-				res = llamada.LlamadaUsuarioExistente(usuario, contraseÃ±a);
+				res = llamada.LlamadaUsuarioExistente(usuario, contraseña);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -56,14 +54,12 @@ public class Login extends ActionBarActivity {
 							Toast.makeText(Login.this, "Conectando...",
 									Toast.LENGTH_SHORT).show();
 							rol();
-						} else if(res.compareTo("false")==0){
-							Toast.makeText(Login.this,
-									"Usuario no existe", Toast.LENGTH_SHORT)
-									.show();
-						}else{
-							Toast.makeText(Login.this,
-									"Problemas de conexiÃ³n", Toast.LENGTH_SHORT)
-									.show();
+						} else if (res.compareTo("false") == 0) {
+							Toast.makeText(Login.this, "Usuario no existe",
+									Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(Login.this, "Problemas de conexión",
+									Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -71,27 +67,25 @@ public class Login extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-	
+
 	/**
-	* Comprueba el rol del usuario
-	* Si es administrador o no
-	*/
-	private void rol(){
+	 * Comprueba el rol del usuario Si es administrador o no
+	 */
+	private void rol() {
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-			
+
 			public void run() {
-				
-				res=llamada.LlamadaUsuario(usuario, contraseÃ±a);
+				res = llamada.LlamadaUsuario(usuario, contraseña);
 				final Usuario usuario = json.fromJson(res, Usuario.class);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						if(usuario.getRol()==1){
-							//Admin
-						}else if(usuario.getRol()==0){
+						if (usuario.getRol() == 1) {
+							// Admin
+						} else if (usuario.getRol() == 0) {
 							lanzarUsuario();
 						}
 					}
@@ -100,31 +94,32 @@ public class Login extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-	
+
 	/**
 	 * Cambia a la vista del usuario
 	 * */
-	private void lanzarUsuario(){
+	private void lanzarUsuario() {
 		Intent i = new Intent(this, UsuarioVista.class);
-		i.putExtra("id_usuario",usuario);
-		i.putExtra("contraseÃ±a",contraseÃ±a);
+		i.putExtra("id_usuario", usuario);
+		i.putExtra("contraseña", contraseña);
 		startActivity(i);
 		finish();
 	}
-	
 
 	/**
-	 * AÃ±ade la vista del login 
+	 * Añade la vista del login
+	 * 
 	 * @param savedInstanceState
 	 */
-	 @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 	}
 
 	/**
-	 * AÃ±ade el menu a la vista login
+	 * Añade el menu a la vista login
+	 * 
 	 * @param menu
 	 * */
 	@Override
@@ -135,7 +130,8 @@ public class Login extends ActionBarActivity {
 	}
 
 	/**
-	 * AÃ±ade los item al menu
+	 * Añade los item al menu
+	 * 
 	 * @param item
 	 * */
 	@Override

@@ -98,8 +98,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 	private Vaca crearVaca() {
 		Vaca vaca = new Vaca();
-		vaca.setId_vaca(((TextView) findViewById(R.id.id_vaca_nuevo_texto))
-				.getText().toString());
 		if (((TextView) findViewById(R.id.dia_vaca)).getText().toString()
 				.equals("")) {
 			runOnUiThread(new Runnable() {
@@ -123,17 +121,15 @@ public class AniadirVacaVista extends ActionBarActivity {
 							.getText().toString()) - 1900;
 			@SuppressWarnings("deprecation")
 			Date fecha = new Date(año, mes, dia);
-			vaca.setFecha_nacimiento(fecha);
-
+			String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
+					.getText().toString());
 			String raza = ((TextView) findViewById(R.id.raza_nuevo_texto))
 					.getText().toString();
-			vaca.setRaza(raza);
 			String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
 					.getText().toString();
-			vaca.setId_madre(id_madre);
 			String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca))
 					.getText().toString();
-			vaca.setSexo(sexo);
+			vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo, null);	
 		}
 		return vaca;
 	}
@@ -144,12 +140,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 			public void run() {
 				if (comprobarIdVaca()) {
-					Vaca v = crearVaca();
+					final Vaca v = crearVaca();
 					if (((TextView) findViewById(R.id.dia_vaca)).getText()
 							.toString().equals("")) {
 					} else if (v.getSexo().equals("M")
 							|| v.getSexo().equals("H")) {
-
 						String vaca = json.toJson(v);
 						llamada.LLamadaAñadirVaca(vaca);
 						System.out.println(vaca);

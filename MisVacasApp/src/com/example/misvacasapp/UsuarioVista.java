@@ -1,7 +1,6 @@
 package com.example.misvacasapp;
 
 import java.util.ArrayList;
-
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.aniadir.AniadirVacaVista;
@@ -11,7 +10,6 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,69 +29,64 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 /**
- * Clase de la actividad del usuario
- * En ella se implementan los mÃ©todos que se utilizan para manejar la vista del usuario
+ * Clase de la actividad del usuario En ella se implementan los métodos que se
+ * utilizan para manejar la vista del usuario
+ * 
  * @author Sara Martinez Lopez
  * */
 public class UsuarioVista extends ActionBarActivity {
-
-	//Atributos
-	/** Id del usuario*/
+	// Atributos
+	/** Id del usuario */
 	private String id_usuario;
-	/** ContraseÃ±a del usuario*/
-	private String contraseÃ±a;
-	/** Vista de la lista de vacas a mostrar en la vista del usuario*/
+	/** Contraseña del usuario */
+	private String contraseña;
+	/** Vista de la lista de vacas a mostrar en la vista del usuario */
 	private ListView listaVista;
-	/** Adaptador de la lista*/
+	/** Adaptador de la lista */
 	private AdapterVaca adapter;
-	/** Lista de las vacas que tiene el usuario*/
+	/** Lista de las vacas que tiene el usuario */
 	private ArrayList<Vaca> lista;
-	/** Tabla hash que indica que vaca esta seleccionada*/
+	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
 
-	//MÃ©todos
-	
+	// Métodos
 	/**
-	 * AÃ±ade la vista usuario
-	 * Recoge el usuario y la contraseÃ±a de la vista login
-	 * Inicializa parametros
-	 * /
+	 * Añade la vista usuario Recoge el usuario y la contraseña de la vista
+	 * login Inicializa parametros
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_usuario_vista);
-
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		contraseÃ±a = bundle.getString("contraseÃ±a");
-
+		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-
 		scroolLista();
 		mostrarListado();
 	}
 
 	/**
-	 * MÃ©todo 
-	 * /
-	public void aÃ±adirVaca(View v) {
+	 * Método
+	 * */
+	public void añadirVaca(View v) {
 		Intent i = new Intent(this, AniadirVacaVista.class);
-		i.putExtra("id_usuario", id_usuario);	
+		i.putExtra("id_usuario", id_usuario);
 		startActivity(i);
 	}
 
 	public void eliminarVaca(View v) {
-		for(int i=0;i<seleccionado.getTable().size();i++){
-			if(seleccionado.getTable().get(i)){
+		for (int i = 0; i < seleccionado.getTable().size(); i++) {
+			if (seleccionado.getTable().get(i)) {
 				eliminar(lista.get(i).getId_vaca());
 			}
 		}
 	}
-	
-	public void eliminar(final String id_vaca ){
+
+	public void eliminar(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			
+
 			public void run() {
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
 				runOnUiThread(new Runnable() {
@@ -105,7 +98,7 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
-	}	
+	}
 
 	public void buscarVaca(View v) {
 		alertaBuscar();
@@ -114,26 +107,22 @@ public class UsuarioVista extends ActionBarActivity {
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View layout = inflater.inflate(R.layout.buscar_layout, null);
-
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 		dialogo.setView(layout);
 		dialogo.setMessage("Buscar");
-
 		final EditText texto = (EditText) layout.findViewById(R.id.busca);
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
-
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				if(texto.getText().toString().equals("")){
+				if (texto.getText().toString().equals("")) {
 					dialog.cancel();
-				}else{
-				System.out.println("1: "+texto.getText().toString());
-				seleccionarEnLista(texto.getText().toString());
+				} else {
+					System.out.println("1: " + texto.getText().toString());
+					seleccionarEnLista(texto.getText().toString());
 				}
 			}
 		});
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
-
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
@@ -143,13 +132,12 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	public void seleccionarEnLista(String item) {
-
 		int i = 0;
 		while (lista.size() > i) {
 			listaVista.getSelectedView().setBackgroundColor(Color.BLUE);
-//			System.out.println("ENTRA: "+i);
-//			System.out.println(listaVista.getChildAt(i));
-//			listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+			// System.out.println("ENTRA: "+i);
+			// System.out.println(listaVista.getChildAt(i));
+			// listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 			seleccionado.getTable().put(i, false);
 			i++;
 		}
@@ -157,7 +145,7 @@ public class UsuarioVista extends ActionBarActivity {
 		while (lista.size() > i) {
 			if (item.equals(lista.get(i).getId_vaca())) {
 				listaVista.getChildAt(i).setVisibility(i);
-				System.out.println("3: "+i);
+				System.out.println("3: " + i);
 				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar);
@@ -171,11 +159,11 @@ public class UsuarioVista extends ActionBarActivity {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-
 				res = llamada.LlamadaListaVacas(id_usuario);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -186,9 +174,8 @@ public class UsuarioVista extends ActionBarActivity {
 						for (int i = 0; i < lista.size(); i++) {
 							seleccionado.getTable().put(i, false);
 						}
-						if(lista.get(0).getId_vaca().equals("0")){
-							
-						}else{
+						if (lista.get(0).getId_vaca().equals("0")) {
+						} else {
 							setAdapter(lista);
 						}
 					}
@@ -201,40 +188,36 @@ public class UsuarioVista extends ActionBarActivity {
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista);
 		listaVista.setAdapter(adapter);
-
 		clickLista();
 		clickLargoLista();
 	}
 
-	private void scroolLista(){
+	private void scroolLista() {
 		listaVista.setOnTouchListener(new ListView.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
-				 int action = event.getAction();
-		            switch (action) {
-		            case MotionEvent.ACTION_DOWN:
-		                // Disallow ScrollView to intercept touch events.
-		                v.getParent().requestDisallowInterceptTouchEvent(true);
-		                break;
-
-		            case MotionEvent.ACTION_UP:
-		                // Allow ScrollView to intercept touch events.
-		                v.getParent().requestDisallowInterceptTouchEvent(false);
-		                break;
-		            }
-
-		            // Handle ListView touch events.
-		            v.onTouchEvent(event);
-		            return true;
+				int action = event.getAction();
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					// Disallow ScrollView to intercept touch events.
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					break;
+				case MotionEvent.ACTION_UP:
+					// Allow ScrollView to intercept touch events.
+					v.getParent().requestDisallowInterceptTouchEvent(false);
+					break;
+				}
+				// Handle ListView touch events.
+				v.onTouchEvent(event);
+				return true;
 			}
-	    });
+		});
 	}
-	
+
 	private void clickLista() {
 		listaVista
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
@@ -246,11 +229,9 @@ public class UsuarioVista extends ActionBarActivity {
 
 	private void clickLargoLista() {
 		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
-
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
 				if (seleccionado.getTable().get(position)) {
 					seleccionado.getTable().put(position, false);
 					listaVista.getChildAt(position).setBackgroundColor(
@@ -268,7 +249,6 @@ public class UsuarioVista extends ActionBarActivity {
 				}
 				return true;
 			}
-
 		});
 	}
 
@@ -305,7 +285,7 @@ public class UsuarioVista extends ActionBarActivity {
 		if (id == R.id.administrar_cuenta) {
 			Intent i = new Intent(this, AdministrarCuentaVista.class);
 			i.putExtra("id_usuario", this.id_usuario);
-			i.putExtra("contraseÃ±a", this.contraseÃ±a);
+			i.putExtra("contraseña", this.contraseña);
 			startActivity(i);
 			return true;
 		}
