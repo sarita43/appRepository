@@ -16,12 +16,12 @@ import android.widget.Toast;
 public class Login extends ActionBarActivity {
 	
 	private String usuario;
-	private String contraseña;
+	private String contraseÃ±a;
 
 	public void onClick(View v){
 		
 		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
-		contraseña = ((TextView) findViewById(R.id.contrasena)).getText().toString();
+		contraseÃ±a = ((TextView) findViewById(R.id.contrasena)).getText().toString();
 		
 		Thread hilo = new Thread() {
 			String res = "";
@@ -29,21 +29,21 @@ public class Login extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 			
 			public void run() {
-				res = llamada.LlamadaUsuarioExistente(usuario, contraseña);
+				res = llamada.LlamadaUsuarioExistente(usuario, contraseÃ±a);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						if (res.compareTo("true") == 0) {
 							Toast.makeText(Login.this, "Conectando...",
-									Toast.LENGTH_LONG).show();
+									Toast.LENGTH_SHORT).show();
 							rol();
 						} else if(res.compareTo("false")==0){
 							Toast.makeText(Login.this,
-									"Usuario no existe", Toast.LENGTH_LONG)
+									"Usuario no existe", Toast.LENGTH_SHORT)
 									.show();
 						}else{
 							Toast.makeText(Login.this,
-									"Problemas de conexión", Toast.LENGTH_LONG)
+									"Problemas de conexiÃ³n", Toast.LENGTH_SHORT)
 									.show();
 						}
 					}
@@ -61,7 +61,7 @@ public class Login extends ActionBarActivity {
 			
 			public void run() {
 				
-				res=llamada.LlamadaUsuario(usuario, contraseña);
+				res=llamada.LlamadaUsuario(usuario, contraseÃ±a);
 				final Usuario usuario = json.fromJson(res, Usuario.class);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -81,7 +81,7 @@ public class Login extends ActionBarActivity {
 	private void lanzarUsuario(){
 		Intent i = new Intent(this, UsuarioVista.class);
 		i.putExtra("id_usuario",usuario);
-		i.putExtra("contraseña",contraseña);
+		i.putExtra("contraseÃ±a",contraseÃ±a);
 		startActivity(i);
 		finish();
 	}
