@@ -2,6 +2,7 @@ package com.example.misvacasapp.aniadir;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	private String id_usuario;
 	private ArrayList<Vaca> lista;
 	private Gson json;
+	private Spinner spinnerRaza;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +41,23 @@ public class AniadirVacaVista extends ActionBarActivity {
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
 		lista = new ArrayList<Vaca>();
+		rellenarSpinner();
 		listaVacas();
 	}
 
+	private void rellenarSpinner(){
+		spinnerRaza = (Spinner) findViewById(R.id.raza_nuevo_texto);
+		ArrayList<String> listaRazas = new ArrayList<String>(Arrays.asList("Albera","Alistana Sanabresa","Asturiana de la Montaña",
+				"Asturiana de los Valles","Avileña Negra Ibérica","Avileña Negra Ibérica Bociblanca","Berrenda en Colorado",
+				"Berrenda en Negro","Betizu","Blanca Cacereña","Blonda de Aquitania","Bruna de los Pirineos","Cachena",
+				"Caldelá","Canaria","Cárdena Andaluza","Charolesa","Fleckvieh","Frieiresa","Frisona","Lidia","Limiá",
+				"Limusina","Mallorquina","Marismeña","Menorquina","Monchina","Morucha","Morucha Negra","Murciana Levantina",
+				"Negra Andaluza","Pajuna","Palmera","Parda","Parda de Montaña","Pasiega","Pirenaica","Retinto","Rubia Gallega",
+				"Sayaguesa","Serrana de Teruel","Serrana Negra","Terreña","Tudanca","Vianesa"));
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listaRazas);
+		spinnerRaza.setAdapter(adapter);
+	}
+	
 	private void listaVacas() {
 		Thread hilo = new Thread() {
 			String res = "";
@@ -123,8 +143,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 			Date fecha = new Date(año, mes, dia);
 			String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 					.getText().toString());
-			String raza = ((TextView) findViewById(R.id.raza_nuevo_texto))
-					.getText().toString();
+			String raza = spinnerRaza.getSelectedItem().toString();
+		
 			String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
 					.getText().toString();
 			String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca))
@@ -147,7 +167,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 							|| v.getSexo().equals("H")) {
 						String vaca = json.toJson(v);
 						llamada.LLamadaAñadirVaca(vaca);
-						System.out.println(vaca);
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
