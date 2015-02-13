@@ -11,11 +11,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+/**
+ * Clase de la actividad del medicamento En ella se implementan los métodos que se
+ * utilizan para manejar la vista del medicamento
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class MedicamentoVista extends ActionBarActivity{
 
+	//Atributos
+	/**Id del medicamento*/
 	private String id_medicamento;
+	/**Id de la vaca*/
 	private String id_vaca;
 	
+	//Metodos
+	/**
+	 * Añade la vista del medicamento 
+	 * Recoge el id del medicamento y el id de la vaca de la vista medicamento
+	 * Inicializa parametros
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,6 +43,11 @@ public class MedicamentoVista extends ActionBarActivity{
 		rellenarCampos();
 	}
 
+	/**
+	 * Rellena los campos de la vista del medicamento
+	 * Llama al servicio web para recoger los campos
+	 * @see onCreate
+	 * */
 	private void rellenarCampos(){
 		Thread hilo = new Thread() {
 			String res = "";
@@ -40,7 +60,6 @@ public class MedicamentoVista extends ActionBarActivity{
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						System.out.println(res);
 						medicamento = json.fromJson(res, Medicamento.class);
 						TextView idMedicamento = (TextView) findViewById(R.id.id_medicamento);
 						idMedicamento.setText("ID MEDICAMENTO: " + medicamento.getId_medicamento());
@@ -48,7 +67,6 @@ public class MedicamentoVista extends ActionBarActivity{
 						fecha.setText("FECHA: "+medicamento.getFecha());
 						TextView tipo = (TextView) findViewById(R.id.tipo_medicamento);
 						tipo.setText("TIPO: " + medicamento.getTipo());
-						
 						TextView descripcion = (TextView) findViewById(R.id.descripcion);
 						descripcion.setText("DESCRIPCION: " + medicamento.getDescripcion());
 					}
@@ -58,6 +76,11 @@ public class MedicamentoVista extends ActionBarActivity{
 		hilo.start();
 	}
 	
+	/**
+	 * Añade el menu a la vista login
+	 * 
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -65,6 +88,11 @@ public class MedicamentoVista extends ActionBarActivity{
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * 
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
