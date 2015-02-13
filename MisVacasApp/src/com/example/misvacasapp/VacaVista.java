@@ -20,9 +20,14 @@ import android.widget.TextView;
  * @author Sara Martinez Lopez
  * */
 public class VacaVista extends ActionBarActivity {
+	
+	//Atributos
+	/** Id de la vaca*/
 	private String id_vaca;
+	/** Id delusuario*/
 	private String id_usuario;
 
+	//Métodos
 	/**
 	 * Añade la vista de la vaca
 	 * 
