@@ -29,7 +29,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 /**
- * Clase de la actividad del usuario En ella se implementan los m�todos que se
+ * Clase de la actividad del usuario En ella se implementan los métodos que se
  * utilizan para manejar la vista del usuario
  * 
  * @author Sara Martinez Lopez
@@ -38,8 +38,8 @@ public class UsuarioVista extends ActionBarActivity {
 	// Atributos
 	/** Id del usuario */
 	private String id_usuario;
-	/** Contrase�a del usuario */
-	private String contrase�a;
+	/** Contraseña del usuario */
+	private String contraseña;
 	/** Vista de la lista de vacas a mostrar en la vista del usuario */
 	private ListView listaVista;
 	/** Adaptador de la lista */
@@ -49,10 +49,11 @@ public class UsuarioVista extends ActionBarActivity {
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
 
-	// M�todos
+	// Métodos
 	/**
-	 * A�ade la vista usuario Recoge el usuario y la contrase�a de la vista
-	 * login Inicializa parametros
+	 * Añade la vista usuario 
+	 * Recoge el usuario y la contraseña de la vista login 
+	 * Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +61,28 @@ public class UsuarioVista extends ActionBarActivity {
 		setContentView(R.layout.activity_usuario_vista);
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		contrase�a = bundle.getString("contrase�a");
+		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 		scroolLista();
 		mostrarListado();
 	}
 
 	/**
-	 * M�todo
+	 * Método que utiliza el botón añadir
+	 * Lanza la vista para añadir una vaca pasandole el parametro del id de usuario
+	 * @param v Vista
 	 * */
-	public void a�adirVaca(View v) {
+	public void añadirVaca(View v) {
 		Intent i = new Intent(this, AniadirVacaVista.class);
 		i.putExtra("id_usuario", id_usuario);
 		startActivity(i);
 	}
 
+	/**
+	 * Método que utiliza el botón eliminar
+	 * Busca las vacas que estan seleccionadas utilizando la tabla hash, para eliminarlas
+	 * @param v Vista
+	 * */
 	public void eliminarVaca(View v) {
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
@@ -83,10 +91,15 @@ public class UsuarioVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Método que llama al servicio web para eliminar a la vaca. 
+	 * Para eliminarla utiliza el id de la vaca y el del usuario
+	 * @see eliminarVaca
+	 * @param id_vaca Id de la vaca a eliminar
+	 * */
 	public void eliminar(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
 			public void run() {
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
 				runOnUiThread(new Runnable() {
@@ -100,10 +113,18 @@ public class UsuarioVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Método que utiliza el botón buscar
+	 * @param v Vista
+	 * */
 	public void buscarVaca(View v) {
 		alertaBuscar();
 	}
 
+	/**
+	 * Muestra un dialogo para introducir el id de la vaca a buscar
+	 * @see buscarVaca
+	 * */
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View layout = inflater.inflate(R.layout.buscar_layout, null);
@@ -111,6 +132,7 @@ public class UsuarioVista extends ActionBarActivity {
 		dialogo.setView(layout);
 		dialogo.setMessage("Buscar");
 		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+		/** Método del botón aceptar del dialogo */
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -122,6 +144,7 @@ public class UsuarioVista extends ActionBarActivity {
 				}
 			}
 		});
+		/** Método del botón cancelar del dialogo */
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -131,6 +154,11 @@ public class UsuarioVista extends ActionBarActivity {
 		dialogo.show();
 	}
 
+	/**
+	 * Método que selecciona un item de la lista
+	 * @param item Item a seleccionar
+	 * @see alertaBuscar
+	 * */
 	public void seleccionarEnLista(String item) {
 		int i = 0;
 		while (lista.size() > i) {
@@ -155,6 +183,11 @@ public class UsuarioVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Método que rellena la lista con las vacas del usuario
+	 * Llama al servicio web para recibir los datos
+	 * @see onCreate eliminar 
+	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
@@ -185,6 +218,9 @@ public class UsuarioVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Crea el adaptador de la lista de la vista del usuario y se la añade
+	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista);
 		listaVista.setAdapter(adapter);
@@ -192,6 +228,10 @@ public class UsuarioVista extends ActionBarActivity {
 		clickLargoLista();
 	}
 
+	/**
+	 * Genera el scrool de la lisa de la vista del usuario
+	 * @see onCreate
+	 * */
 	private void scroolLista() {
 		listaVista.setOnTouchListener(new ListView.OnTouchListener() {
 			@Override
@@ -215,6 +255,10 @@ public class UsuarioVista extends ActionBarActivity {
 		});
 	}
 
+	/**
+	 * Método que utiliza la lista para hacer el click en un item de la lista
+	 * @see setAdapter
+	 * */
 	private void clickLista() {
 		listaVista
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -227,6 +271,10 @@ public class UsuarioVista extends ActionBarActivity {
 				});
 	}
 
+	/**
+	 * Método que se utiliza para la selección larga en la lista
+	 * @see setAdapter
+	 * */
 	private void clickLargoLista() {
 		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
@@ -252,6 +300,11 @@ public class UsuarioVista extends ActionBarActivity {
 		});
 	}
 
+	/**
+	 * Cambia a la vista de la vaca
+	 * @param id_vaca id de la vaca
+	 * @see clickLista
+	 * */
 	private void lanzarVaca(String id_vaca) {
 		Intent i = new Intent(this, VacaVista.class);
 		i.putExtra("id_vaca", id_vaca);
@@ -259,6 +312,10 @@ public class UsuarioVista extends ActionBarActivity {
 		startActivity(i);
 	}
 
+	/**
+	 * Método que activa o desactiva el botón eliminar
+	 * @see clickLargoLista
+	 * */
 	private boolean activarBoton() {
 		boolean resultado = false;
 		for (int i = 0; i < lista.size(); i++) {
@@ -269,6 +326,11 @@ public class UsuarioVista extends ActionBarActivity {
 		return resultado;
 	}
 
+	/**
+	 * Añade el menu a la vista login
+	 * 
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -276,6 +338,11 @@ public class UsuarioVista extends ActionBarActivity {
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * 
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -285,7 +352,7 @@ public class UsuarioVista extends ActionBarActivity {
 		if (id == R.id.administrar_cuenta) {
 			Intent i = new Intent(this, AdministrarCuentaVista.class);
 			i.putExtra("id_usuario", this.id_usuario);
-			i.putExtra("contrase�a", this.contrase�a);
+			i.putExtra("contraseña", this.contraseña);
 			startActivity(i);
 			return true;
 		}
