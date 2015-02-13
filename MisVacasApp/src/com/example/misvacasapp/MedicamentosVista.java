@@ -26,14 +26,32 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+/**
+ * Clase de la actividad de los medicamentos En ella se implementan los métodos que se
+ * utilizan para manejar la vista de los medicamentos de una vaca
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class MedicamentosVista extends ActionBarActivity {
 
+	//Atributos
+	/** Id vaca*/
 	private String idVaca;
+	/**Vista de la lista de medicamentos a mostrar en la vista de medicamentos de una vaca*/ 
 	private ListView listaVista;
+	/** Adaptador de la lista */
 	private AdapterMedicamento adapter;
+	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
+	/** Lista de los medicamentos que tiene una vaca */
 	private ArrayList<Medicamento> lista;
 
+	// Métodos
+	/**
+	 * Añade la vista de los medicamentos
+	 * Recoge el id de la vaca de la vista de la vista
+	 * Inicializa parametros
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +65,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		mostrarListado();
 	}
 
+	/**
+	 * Método que rellena la lista con los medicamentos de la vaca
+	 * Llama al servicio web para recibir los datos
+	 * @see onCreate eliminar 
+	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
@@ -76,7 +99,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-
+	
+	/**
+	 * Crea el adaptador de la lista de la vista del usuario y se la añade
+	 * @see mostrarListado
+	 * */
 	private void setAdapter(ArrayList<Medicamento> lista) {
 		adapter = new AdapterMedicamento(this, lista);
 		listaVista.setAdapter(adapter);
@@ -86,6 +113,10 @@ public class MedicamentosVista extends ActionBarActivity {
 
 	}
 
+	/**
+	 * Método que utiliza la lista para hacer el click en un item de la lista
+	 * @see setAdapter
+	 * */
 	private void clickLista() {
 		listaVista
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -100,7 +131,11 @@ public class MedicamentosVista extends ActionBarActivity {
 					}
 				});
 	}
-
+	
+	/**
+	 * Método que se utiliza para la selección larga en la lista
+	 * @see setAdapter
+	 * */
 	private void clickLargoLista() {
 		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -129,6 +164,10 @@ public class MedicamentosVista extends ActionBarActivity {
 		});
 	}
 
+	/**
+	 * Método que activa o desactiva el botón eliminar
+	 * @see clickLargoLista
+	 * */
 	private boolean activarBoton() {
 		boolean resultado = false;
 		for (int i = 0; i < lista.size(); i++) {
@@ -139,6 +178,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		return resultado;
 	}
 
+	/**
+	 * Cambia a la vista de la vaca
+	 * @param id_vaca id de la vaca
+	 * @see clickLista
+	 * */
 	private void lanzarMedicamento(int id_medicamento) {
 		Intent i = new Intent(this, MedicamentoVista.class);
 		i.putExtra("id_medicamento", id_medicamento);
@@ -146,7 +190,13 @@ public class MedicamentosVista extends ActionBarActivity {
 		startActivity(i);
 	}
 
-	public void a�adirMedicamento(View v) {
+	/**
+	 * Método que utiliza el botón añadir
+	 * Lanza la vista para añadir un medicamento pasandole el parametro del id de la vaca y 
+	 * la lista de medicamentos que tiene esa vaca
+	 * @param v Vista
+	 * */
+	public void añadirMedicamento(View v) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 
@@ -158,6 +208,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		startActivity(i);
 	}
 
+	/**
+	 * Método que utiliza el botón eliminar
+	 * Busca los medicamentos que estan seleccionados utilizando la tabla hash, para eliminarlos
+	 * @param v Vista
+	 * */
 	public void eliminarMedicamento(View v) {
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
@@ -166,6 +221,12 @@ public class MedicamentosVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Método que llama al servicio web para eliminar un medicamento. 
+	 * Para eliminarlo utiliza el id de la vaca y el del medicamento
+	 * @see eliminarVaca
+	 * @param id_medicamento Id del medicamento a eliminar
+	 * */
 	public void eliminar(final int id_medicamento) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
@@ -184,10 +245,18 @@ public class MedicamentosVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Método que utiliza el botón buscar
+	 * @param v Vista
+	 * */
 	public void buscarMedicamento(View v) {
 		alertaBuscar();
 	}
 
+	/**
+	 * Muestra un dialogo para introducir el id de la vaca a buscar
+	 * @see buscarMedicamento
+	 * */
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View layout = inflater.inflate(R.layout.buscar_layout, null);
@@ -197,6 +266,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		dialogo.setMessage("Buscar");
 
 		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+		/** Método del botón aceptar del dialogo */
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 
 			@Override
@@ -204,6 +274,7 @@ public class MedicamentosVista extends ActionBarActivity {
 				seleccionarEnLista(Integer.parseInt(texto.getText().toString()));
 			}
 		});
+		/** Método del botón cancelar del dialogo */
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
 
 			@Override
@@ -215,6 +286,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		dialogo.show();
 	}
 
+	/**
+	 * Método que selecciona un item de la lista
+	 * @param item Item a seleccionar
+	 * @see alertaBuscar
+	 * */
 	public void seleccionarEnLista(int item) {
 
 		int i = 0;
@@ -239,6 +315,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Añade el menu a la vista login
+	 * 
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -246,6 +327,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * 
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
