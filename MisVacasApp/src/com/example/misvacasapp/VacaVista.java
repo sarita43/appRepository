@@ -13,10 +13,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Clase de la actividad de la vista de la vaca 
+ * En ella se implementan los métodos que se utilizan para la vista de la vaca
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class VacaVista extends ActionBarActivity {
 	private String id_vaca;
 	private String id_usuario;
 
+	/**
+	 * Añade la vista de la vaca
+	 * 
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,12 +38,22 @@ public class VacaVista extends ActionBarActivity {
 		rellenarCamposVaca();
 	}
 
+	/**
+	 * Método que se ejecuta al hacer click en el botón de los medicamentos
+	 * Cambia a la vista de medicamentos de la vaca
+	 * @param v
+	 * */
 	public void onClickMedicamentos(View v) {
 		Intent i = new Intent(this, MedicamentosVista.class);
 		i.putExtra("id_vaca", id_vaca);
 		startActivity(i);
 	}
 
+	/**
+	 * Rellena los campos de la vaca que se ha seleccionado anteriormente
+	 * Llama al web service para recoger los datos
+	 * @see onCreate
+	 * */
 	private void rellenarCamposVaca() {
 		Thread hilo = new Thread() {
 			String res = "";
@@ -42,7 +63,6 @@ public class VacaVista extends ActionBarActivity {
 
 			public void run() {
 				res = llamada.LlamadaVaca(id_vaca, id_usuario);
-				System.out.println(res);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -65,6 +85,11 @@ public class VacaVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Añade el menu a la vista login
+	 * 
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -72,6 +97,11 @@ public class VacaVista extends ActionBarActivity {
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * 
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
