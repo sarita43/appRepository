@@ -88,7 +88,7 @@ public class LlamadaVacaWS {
 		return res;
 	}
 	
-	public void LLamadaAñadirVaca(String vaca){
+	public void LLamadaA�adirVaca(String vaca){
 		
 		METHOD_NAME = "añadirVaca";
 		SOAP_ACTION = "urn:añadirVaca";
