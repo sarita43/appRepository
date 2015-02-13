@@ -220,6 +220,7 @@ public class UsuarioVista extends ActionBarActivity {
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
+	 * @see mostrarListado
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista);
