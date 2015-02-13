@@ -10,28 +10,16 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
-/**
- * Clase que hace las llamadas al servicio web de vaca
- * 
- * @author Sara Martinez Lopez
- * */
 public class LlamadaVacaWS {
 
-	//Atributos
-	/** Nombre del espacio de nombres*/
 	private static final String NAMESPACE = "http://service.web";
-	/**URL donde se encuentra el servicio web*/
 //	private static String URL = "http://10.0.2.2:8090/axis2/services/VacaWebService?wsdl";
 
 	private static String URL = "http://81.172.100.87:8090/axis2/services/VacaWebService?wsdl";
-	/** Nombre del m√©todo*/
 	private static String METHOD_NAME;
-	/** SOAP Action*/
 	private static String SOAP_ACTION;
 
-	/**Solicitud del objeto soap*/
 	private static SoapObject request = null;
-	/** */
 	private static SoapSerializationEnvelope envelope = null;
 	private static SoapPrimitive resultsRequestSOAP = null;
 	
@@ -90,8 +78,8 @@ public class LlamadaVacaWS {
 	
 	public void LLamadaAÒadirVaca(String vaca){
 		
-		METHOD_NAME = "a√±adirVaca";
-		SOAP_ACTION = "urn:a√±adirVaca";
+		METHOD_NAME = "aÒadirVaca";
+		SOAP_ACTION = "urn:aÒadirVaca";
 
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
 		request.addProperty("vaca", vaca);

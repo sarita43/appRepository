@@ -4,7 +4,6 @@ import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,22 +13,21 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Clase de la actividad de la vista de la vaca 
- * En ella se implementan los mÃ©todos que se utilizan para la vista de la vaca
+ * Clase de la actividad de la vista de la vaca En ella se implementan los
+ * métodos que se utilizan para la vista de la vaca
  * 
  * @author Sara Martinez Lopez
  * */
 public class VacaVista extends ActionBarActivity {
-	
-	//Atributos
-	/** Id de la vaca*/
+	// Atributos
+	/** Id de la vaca */
 	private String id_vaca;
-	/** Id delusuario*/
+	/** Id delusuario */
 	private String id_usuario;
 
-	//MÃ©todos
+	// Métodos
 	/**
-	 * AÃ±ade la vista de la vaca
+	 * Añade la vista de la vaca
 	 * 
 	 * @param savedInstanceState
 	 */
@@ -44,8 +42,9 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * MÃ©todo que se ejecuta al hacer click en el botÃ³n de los medicamentos
+	 * Método que se ejecuta al hacer click en el botón de los medicamentos
 	 * Cambia a la vista de medicamentos de la vaca
+	 * 
 	 * @param v
 	 * */
 	public void onClickMedicamentos(View v) {
@@ -55,14 +54,16 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Rellena los campos de la vaca que se ha seleccionado anteriormente
-	 * Llama al web service para recoger los datos
+	 * Rellena los campos de la vaca que se ha seleccionado anteriormente Llama
+	 * al web service para recoger los datos
+	 * 
 	 * @see onCreate
 	 * */
 	private void rellenarCamposVaca() {
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 			Vaca vaca = new Vaca();
 
@@ -77,7 +78,8 @@ public class VacaVista extends ActionBarActivity {
 						TextView raza = (TextView) findViewById(R.id.raza);
 						raza.setText("RAZA: " + vaca.getRaza());
 						TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
-						fechaNacimiento.setText("FECHA DE NACIMIENTO: "+vaca.getFecha_nacimiento());
+						fechaNacimiento.setText("FECHA DE NACIMIENTO: "
+								+ vaca.getFecha_nacimiento());
 						TextView idMadre = (TextView) findViewById(R.id.idMadre);
 						idMadre.setText("ID MADRE: " + vaca.getId_madre());
 						// ImageView imagen =
@@ -91,7 +93,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * AÃ±ade el menu a la vista login
+	 * Añade el menu a la vista login
 	 * 
 	 * @param menu
 	 * */
@@ -103,7 +105,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * AÃ±ade los item al menu
+	 * Añade los item al menu
 	 * 
 	 * @param item
 	 * */
