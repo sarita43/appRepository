@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="21" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,22 +17,50 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".Login"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.misvacasapp.UsuarioVista"></activity>
-        <activity android:name="VacaVista"></activity>
-        <activity android:name="MedicamentosVista"></activity>
-        <activity android:name="MedicamentoVista"></activity>
-        <activity android:name=".menus.AdministrarCuentaVista"></activity>
-        <activity android:name="com.example.misvacasapp.menus.NuevaContraseniaVista"></activity>
-        <activity android:name=".menus.ModificarUsuarioVista"></activity>
-        <activity android:name=".aniadir.AniadirMedicamentoVista"></activity>
-        <activity android:name=".aniadir.AniadirVacaVista"></activity>
+        <activity
+            android:name="com.example.misvacasapp.UsuarioVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="VacaVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="MedicamentosVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="MedicamentoVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".menus.AdministrarCuentaVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.example.misvacasapp.menus.NuevaContraseniaVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".menus.ModificarUsuarioVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".aniadir.AniadirMedicamentoVista"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".aniadir.AniadirVacaVista"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

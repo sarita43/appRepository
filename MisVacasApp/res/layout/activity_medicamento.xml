@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/fondos_layout" >
 
     <TextView
         android:id="@+id/id_medicamento"
@@ -9,7 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/fecha_medicamento"
@@ -17,23 +20,28 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/id_medicamento" />
-    
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/id_medicamento"
+        android:textSize="20sp" />
+
     <TextView
         android:id="@+id/tipo_medicamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/fecha_medicamento" />
-    
+        android:layout_below="@+id/fecha_medicamento"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/descripcion"
-       android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/tipo_medicamento" />
+        android:layout_below="@+id/tipo_medicamento"
+        android:layout_marginTop="15dp"
+        android:textSize="20sp" />
 
 </RelativeLayout>
