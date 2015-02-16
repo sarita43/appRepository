@@ -159,7 +159,7 @@ public class LlamadaUsuarioWS {
 	 * @param apellido2 Segundo apellido del usuario
 	 * @param direccion Direción del usuario
 	 * @param poblacion Población del usuario
-	 * @telefono Teléfono del usuario
+	 * @param telefono Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
 			String apellido2, String direccion, String poblacion, int telefono){
