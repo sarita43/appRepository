@@ -50,11 +50,12 @@ public class Login extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						
 						if (res.compareTo("true") == 0) {
 							Toast.makeText(Login.this, "Conectando...",
 									Toast.LENGTH_SHORT).show();
 							rol();
-						} else if (res.compareTo("false") == 0) {
+						} else if(res.compareTo("false")==0){
 							Toast.makeText(Login.this, "Usuario no existe",
 									Toast.LENGTH_SHORT).show();
 						} else {
