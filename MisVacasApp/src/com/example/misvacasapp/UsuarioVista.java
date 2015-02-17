@@ -62,6 +62,7 @@ public class UsuarioVista extends ActionBarActivity {
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 		// scroolLista();
+		seleccionado = new TableSeleccionado();
 		mostrarListado();
 	}
 
@@ -200,7 +201,6 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
-		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new GsonBuilder().setPrettyPrinting()
@@ -235,7 +235,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see mostrarListado
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
-		adapter = new AdapterVaca(this, lista);
+		adapter = new AdapterVaca(this, lista,seleccionado);
 		listaVista.setAdapter(adapter);
 		clickLista();
 		clickLargoLista();
@@ -295,11 +295,10 @@ public class UsuarioVista extends ActionBarActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				seleccionado = adapter.getSeleccionado();
 				if (seleccionado.getTable().get(position)) {
 					seleccionado.getTable().put(position, false);
-					listaVista.getChildAt(
-							position - listaVista.getFirstVisiblePosition())
-							.setBackgroundColor(Color.TRANSPARENT);
+					
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
 						botonEliminar.setEnabled(false);
@@ -308,12 +307,12 @@ public class UsuarioVista extends ActionBarActivity {
 					System.out.println(position
 							- listaVista.getFirstVisiblePosition());
 					seleccionado.getTable().put(position, true);
-					listaVista.getChildAt(
-							position - listaVista.getFirstVisiblePosition())
-							.setBackgroundColor(Color.RED);
+					
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
 				}
+				adapter.setSeleccionado(seleccionado);
+				setAdapter(lista);
 				return true;
 			}
 		});

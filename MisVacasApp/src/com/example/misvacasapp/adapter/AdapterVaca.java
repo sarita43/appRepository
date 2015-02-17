@@ -3,10 +3,12 @@ package com.example.misvacasapp.adapter;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.TableSeleccionado;
 import com.example.misvacasapp.modelo.Vaca;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +20,12 @@ public class AdapterVaca extends BaseAdapter{
 	
 	private Activity activity;
 	private ArrayList<Vaca> lista;
+	private TableSeleccionado seleccionado;
 
-	public AdapterVaca(Activity activity, ArrayList<Vaca> lista){
+	public AdapterVaca(Activity activity, ArrayList<Vaca> lista,TableSeleccionado seleccionado){
 		this.activity = activity;
 		this.lista = lista;
+		setSeleccionado(seleccionado);
 	}
 	
 	@Override
@@ -59,8 +63,17 @@ public class AdapterVaca extends BaseAdapter{
        
         TextView cargo = (TextView) v.findViewById(R.id.idVaca_texto);
         cargo.setText("Id: "+vaca.getId_vaca());
- 
+        System.out.println("POSICION: "+position+ "getSeleccionado().getTable().get(position):"+getSeleccionado().getTable().get(position));
+        v.setBackgroundResource(!getSeleccionado().getTable().get(position)?R.drawable.abc_item_background_holo_dark:R.drawable.abc_list_selector_disabled_holo_dark);
         return v;
+	}
+
+	public TableSeleccionado getSeleccionado() {
+		return seleccionado;
+	}
+
+	public void setSeleccionado(TableSeleccionado seleccionado) {
+		this.seleccionado = seleccionado;
 	}
 
 }
