@@ -2,51 +2,60 @@ package com.example.misvacasapp.modelo;
 
 /**
  * Clase usuario
+ * 
  * @author Sara Martinez Lopez
  * */
 public class Usuario {
-
-	//Atributos
-	/** Nombre del usuario*/
+	// Atributos
+	/** Nombre del usuario */
 	private String nombre;
-	/**Primer apellido*/
+	/** Primer apellido */
 	private String apellido1;
-	/**Segundo apellido*/
+	/** Segundo apellido */
 	private String apellido2;
-	/**DirecciÃ³n del usuario*/
+	/** Dirección del usuario */
 	private String direccion;
-	/**PoblaciÃ³n del usuario*/
+	/** Población del usuario */
 	private String poblacion;
-	/**TelÃ©fono del usuario*/
+	/** Teléfono del usuario */
 	private int telefono;
-	/**Dni o id del usuario*/
+	/** Dni o id del usuario */
 	private String dni;
-	/**ContraseÃ±a del usuario*/
-	private String contraseÃ±a;
-	/**Rol que tiene el usuario. Usuario o administrador*/
+	/** Contraseña del usuario */
+	private String contraseña;
+	/** Rol que tiene el usuario. Usuario o administrador */
 	private int rol;
 
-	//MÃ©todos
-	/**Constructor del usuario sin atributos*/
+	// Métodos
+	/** Constructor del usuario sin atributos */
 	public Usuario() {
-
 	}
 
 	/**
 	 * Constructor del usuario con atributos
-	 * @param nombre Nombre del usuario
-	 * @param apellido1 Primer apellido del usuario
-	 * @param apellido2 Segundo apellido del usuario
-	 * @param direccion DirecciÃ³n del usuario
-	 * @param poblacion PoblaciÃ³n del usuario
-	 * @param telefono TelÃ©fono del usuario
-	 * @param dni DNI o Id del usuario
-	 * @param contraseÃ±a ContraseÃ±a del usuario
-	 * @param rol Rol que tiene el usuario. Usuario o administrador
+	 * 
+	 * @param nombre
+	 *            Nombre del usuario
+	 * @param apellido1
+	 *            Primer apellido del usuario
+	 * @param apellido2
+	 *            Segundo apellido del usuario
+	 * @param direccion
+	 *            Dirección del usuario
+	 * @param poblacion
+	 *            Población del usuario
+	 * @param telefono
+	 *            Teléfono del usuario
+	 * @param dni
+	 *            DNI o Id del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
+	 * @param rol
+	 *            Rol que tiene el usuario. Usuario o administrador
 	 * */
 	public Usuario(String nombre, String apellido1, String apellido2,
 			String direccion, String poblacion, String telefono, String dni,
-			String contraseÃ±a, int rol) {
+			String contraseña, int rol) {
 		setNombre(nombre);
 		setApellido1(apellido1);
 		setApellido2(apellido2);
@@ -58,12 +67,13 @@ public class Usuario {
 			setTelefono(0);
 		}
 		setDni(dni);
-		setContraseÃ±a(contraseÃ±a);
+		setContraseña(contraseña);
 		setRol(rol);
 	}
-	
+
 	/**
 	 * Devuelve el nombre del usuario
+	 * 
 	 * @return String nombre
 	 * */
 	public String getNombre() {
@@ -72,14 +82,17 @@ public class Usuario {
 
 	/**
 	 * Guarda el nombre del usuario
-	 * @param nombre Nombre del usuario
+	 * 
+	 * @param nombre
+	 *            Nombre del usuario
 	 * */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-	/** 
+	/**
 	 * Devuelve el primer apellido
+	 * 
 	 * @return String Primer apellido
 	 * */
 	public String getApellido1() {
@@ -88,7 +101,9 @@ public class Usuario {
 
 	/**
 	 * Guarda el primero apellido
-	 * @param apellido1 Primer apellido
+	 * 
+	 * @param apellido1
+	 *            Primer apellido
 	 * */
 	public void setApellido1(String apellido1) {
 		this.apellido1 = apellido1;
@@ -96,7 +111,9 @@ public class Usuario {
 
 	/**
 	 * Devuelve el segundo apellido
-	 * @param String Segundo apellido
+	 * 
+	 * @param String
+	 *            Segundo apellido
 	 * */
 	public String getApellido2() {
 		return apellido2;
@@ -104,30 +121,36 @@ public class Usuario {
 
 	/**
 	 * Guarda el segundo apellido
-	 * @param apellido2 Segundo apellido
+	 * 
+	 * @param apellido2
+	 *            Segundo apellido
 	 * */
 	public void setApellido2(String apellido2) {
 		this.apellido2 = apellido2;
 	}
 
 	/**
-	 * Devuelve la direcciÃ³n del usuario
-	 * @return String DirecciÃ³n del ususario
+	 * Devuelve la dirección del usuario
+	 * 
+	 * @return String Dirección del ususario
 	 * */
 	public String getDireccion() {
 		return direccion;
 	}
 
 	/**
-	 * Guarda la direcciÃ³n del usuario
-	 * @param direccion DirecciÃ³n del usuario
+	 * Guarda la dirección del usuario
+	 * 
+	 * @param direccion
+	 *            Dirección del usuario
 	 * */
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
 
 	/**
-	 * Devuelve la poblaciÃ³n del usuario
+	 * Devuelve la población del usuario
+	 * 
 	 * @return String Poblacion del usuario
 	 * */
 	public String getPoblacion() {
@@ -135,24 +158,28 @@ public class Usuario {
 	}
 
 	/**
-	 * Guarda la poblaciÃ³n 
-	 * @param poblaciÃ³n
+	 * Guarda la población
+	 * 
+	 * @param población
 	 * */
 	public void setPoblacion(String poblacion) {
 		this.poblacion = poblacion;
 	}
 
 	/**
-	 * Devuelve el telÃ©fono
-	 * @return int TelÃ©fono del usuario
+	 * Devuelve el teléfono
+	 * 
+	 * @return int Teléfono del usuario
 	 * */
 	public int getTelefono() {
 		return telefono;
 	}
 
 	/**
-	 * Guarda el telÃ©fono 
-	 * @param telefono Telefono del usuario 
+	 * Guarda el teléfono
+	 * 
+	 * @param telefono
+	 *            Telefono del usuario
 	 * */
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
@@ -160,6 +187,7 @@ public class Usuario {
 
 	/**
 	 * Devuelve el dni o id del usuario
+	 * 
 	 * @return String Dni o id del usuario
 	 * */
 	public String getDni() {
@@ -168,30 +196,36 @@ public class Usuario {
 
 	/**
 	 * Guarda el dni o id del usuario
-	 * @param dni Dni o Id del usuario
+	 * 
+	 * @param dni
+	 *            Dni o Id del usuario
 	 * */
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
 
 	/**
-	 * Devuelve la contraseÃ±a del usuario
-	 * @return String ContraseÃ±a del usuario
+	 * Devuelve la contraseña del usuario
+	 * 
+	 * @return String Contraseña del usuario
 	 * */
-	public String getContraseÃ±a() {
-		return contraseÃ±a;
+	public String getContraseña() {
+		return contraseña;
 	}
 
 	/**
-	 * Guarda la contraseÃ±a del usuario
-	 * @param contraseÃ±a ContraseÃ±a del usuario
+	 * Guarda la contraseña del usuario
+	 * 
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * */
-	public void setContraseÃ±a(String contraseÃ±a) {
-		this.contraseÃ±a = contraseÃ±a;
+	public void setContraseña(String contraseña) {
+		this.contraseña = contraseña;
 	}
 
 	/**
 	 * Devuelve el rol del usuario
+	 * 
 	 * @return int Rol del usuario
 	 * */
 	public int getRol() {
@@ -200,7 +234,9 @@ public class Usuario {
 
 	/**
 	 * Guarda el rol del usuario
-	 * @param rol Rol del usuario
+	 * 
+	 * @param rol
+	 *            Rol del usuario
 	 * */
 	public void setRol(int rol) {
 		this.rol = rol;

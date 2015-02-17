@@ -20,7 +20,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -62,7 +61,7 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-		//scroolLista();
+		// scroolLista();
 		mostrarListado();
 	}
 
@@ -242,34 +241,33 @@ public class UsuarioVista extends ActionBarActivity {
 		clickLargoLista();
 	}
 
-//	/**
-//	 * Genera el scrool de la lisa de la vista del usuario
-//	 * 
-//	 * @see onCreate
-//	 * */
-//	private void scroolLista() {
-//		listaVista.setOnTouchListener(new ListView.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				// TODO Auto-generated method stub
-//				int action = event.getAction();
-//				switch (action) {
-//				case MotionEvent.ACTION_DOWN:
-//					// Disallow ScrollView to intercept touch events.
-//					v.getParent().requestDisallowInterceptTouchEvent(true);
-//					break;
-//				case MotionEvent.ACTION_UP:
-//					// Allow ScrollView to intercept touch events.
-//					v.getParent().requestDisallowInterceptTouchEvent(false);
-//					break;
-//				}
-//				// Handle ListView touch events.
-//				v.onTouchEvent(event);
-//				return true;
-//			}
-//		});
-//	}
-
+	// /**
+	// * Genera el scrool de la lisa de la vista del usuario
+	// *
+	// * @see onCreate
+	// * */
+	// private void scroolLista() {
+	// listaVista.setOnTouchListener(new ListView.OnTouchListener() {
+	// @Override
+	// public boolean onTouch(View v, MotionEvent event) {
+	// // TODO Auto-generated method stub
+	// int action = event.getAction();
+	// switch (action) {
+	// case MotionEvent.ACTION_DOWN:
+	// // Disallow ScrollView to intercept touch events.
+	// v.getParent().requestDisallowInterceptTouchEvent(true);
+	// break;
+	// case MotionEvent.ACTION_UP:
+	// // Allow ScrollView to intercept touch events.
+	// v.getParent().requestDisallowInterceptTouchEvent(false);
+	// break;
+	// }
+	// // Handle ListView touch events.
+	// v.onTouchEvent(event);
+	// return true;
+	// }
+	// });
+	// }
 	/**
 	 * Método que utiliza la lista para hacer el click en un item de la lista
 	 * 
@@ -299,16 +297,20 @@ public class UsuarioVista extends ActionBarActivity {
 					int position, long id) {
 				if (seleccionado.getTable().get(position)) {
 					seleccionado.getTable().put(position, false);
-					listaVista.getChildAt(position-listaVista.getFirstVisiblePosition()).setBackgroundColor(
-							Color.TRANSPARENT);
+					listaVista.getChildAt(
+							position - listaVista.getFirstVisiblePosition())
+							.setBackgroundColor(Color.TRANSPARENT);
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
-					System.out.println(position-listaVista.getFirstVisiblePosition());
+					System.out.println(position
+							- listaVista.getFirstVisiblePosition());
 					seleccionado.getTable().put(position, true);
-					listaVista.getChildAt(position-listaVista.getFirstVisiblePosition()).setBackgroundColor(Color.RED);
+					listaVista.getChildAt(
+							position - listaVista.getFirstVisiblePosition())
+							.setBackgroundColor(Color.RED);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
 				}
