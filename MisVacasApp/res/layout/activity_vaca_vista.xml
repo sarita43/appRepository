@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fondos_layout" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/ScrollView01"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent" >
+
+<RelativeLayout 
+    android:background="@drawable/fondos_layout"
+    android:layout_width="fill_parent"
+	android:layout_height="638dp" >
+    
 
     <ImageView
         android:id="@+id/imageView1"
@@ -11,8 +17,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_marginTop="30dp" />
 
     <TextView
         android:id="@+id/idVaca"
@@ -22,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/imageView1"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -37,6 +42,18 @@
         android:layout_marginTop="30dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/sexo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/idVaca"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/raza"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/fechaNacimiento"
@@ -44,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/raza"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/raza"
+        android:layout_below="@+id/sexo"
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:text=""
@@ -67,11 +84,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/idMadre"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_alignRight="@+id/idMadre"
+        android:layout_below="@+id/idMadre"
+        android:layout_marginTop="30dp"
         android:onClick="onClickMedicamentos"
         android:text="@string/botonMedicamentos" />
 
 </RelativeLayout>
+</ScrollView>
