@@ -14,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -179,7 +178,6 @@ public class UsuarioVista extends ActionBarActivity {
 				if (texto.getText().toString().equals("")) {
 					dialog.cancel();
 				} else {
-					System.out.println("1: " + texto.getText().toString());
 					seleccionarEnLista(texto.getText().toString());
 				}
 			}
@@ -204,22 +202,17 @@ public class UsuarioVista extends ActionBarActivity {
 	public void seleccionarEnLista(String item) {
 		int i = 0;
 		while (lista.size() > i) {
-			listaVista.getSelectedView().setBackgroundColor(Color.BLUE);
-			// System.out.println("ENTRA: "+i);
-			// System.out.println(listaVista.getChildAt(i));
-			// listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 			seleccionado.getTable().put(i, false);
 			i++;
 		}
+		setAdapter(lista);
 		i = 0;
 		while (lista.size() > i) {
 			if (item.equals(lista.get(i).getId_vaca())) {
-				listaVista.getChildAt(i).setVisibility(i);
-				System.out.println("3: " + i);
-				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar);
 				botonEliminar.setEnabled(true);
+				setAdapter(lista);
 			}
 			i++;
 		}
