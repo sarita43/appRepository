@@ -62,7 +62,6 @@ public class UsuarioVista extends ActionBarActivity {
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
 		// scroolLista();
-		seleccionado = new TableSeleccionado();
 		mostrarListado();
 	}
 
@@ -87,11 +86,49 @@ public class UsuarioVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void eliminarVaca(View v) {
+		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
-				eliminar(lista.get(i).getId_vaca());
+				eliminados = eliminados + " " + lista.get(i).getId_vaca()+"\n";
 			}
 		}
+		alertaConfirmarEliminar(eliminados);
+
+	}
+
+	/**
+	 * Método que lanza una alerta para advertir que se van a eliminar esas
+	 * vacas Si pulsas si eliminas la vaca(s) y si no se cierra la alerta y no
+	 * hace nada
+	 * 
+	 * @param eliminados
+	 *            String de los ids que se van a eliminar para mostrarlos por
+	 *            pantalla
+	 */
+	public void alertaConfirmarEliminar(String eliminados) {
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setMessage("¿Quiere eliminar la(s) vaca(s)?: " + eliminados);
+		dialogo.setPositiveButton("Si", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				for (int i = 0; i < seleccionado.getTable().size(); i++) {
+					if (seleccionado.getTable().get(i)) {
+						eliminar(lista.get(i).getId_vaca());
+					}
+				}
+				mostrarListado();
+			}
+		});
+		dialogo.setNegativeButton("No", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+
+		dialogo.show();
 	}
 
 	/**
@@ -108,12 +145,6 @@ public class UsuarioVista extends ActionBarActivity {
 
 			public void run() {
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mostrarListado();
-					}
-				});
 			}
 		};
 		hilo.start();
@@ -201,6 +232,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
+		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new GsonBuilder().setPrettyPrinting()
@@ -235,7 +267,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see mostrarListado
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
-		adapter = new AdapterVaca(this, lista,seleccionado);
+		adapter = new AdapterVaca(this, lista, seleccionado);
 		listaVista.setAdapter(adapter);
 		clickLista();
 		clickLargoLista();
@@ -298,16 +330,13 @@ public class UsuarioVista extends ActionBarActivity {
 				seleccionado = adapter.getSeleccionado();
 				if (seleccionado.getTable().get(position)) {
 					seleccionado.getTable().put(position, false);
-					
+
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
-					System.out.println(position
-							- listaVista.getFirstVisiblePosition());
 					seleccionado.getTable().put(position, true);
-					
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
 				}

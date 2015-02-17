@@ -114,7 +114,7 @@ public class AdministrarCuentaVista extends ActionBarActivity{
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				finish();
+				dialog.cancel();
 			}
 		});
 		

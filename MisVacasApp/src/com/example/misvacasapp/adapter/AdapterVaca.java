@@ -63,7 +63,6 @@ public class AdapterVaca extends BaseAdapter{
        
         TextView cargo = (TextView) v.findViewById(R.id.idVaca_texto);
         cargo.setText("Id: "+vaca.getId_vaca());
-        System.out.println("POSICION: "+position+ "getSeleccionado().getTable().get(position):"+getSeleccionado().getTable().get(position));
         v.setBackgroundResource(!getSeleccionado().getTable().get(position)?R.drawable.abc_item_background_holo_dark:R.drawable.abc_list_selector_disabled_holo_dark);
         return v;
 	}
