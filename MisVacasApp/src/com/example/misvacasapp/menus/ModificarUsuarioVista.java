@@ -12,18 +12,41 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Clase de la actividad modificar usuario <p>En ella se implementan los métodos que se
+ * utilizan para manejar la vista de modificar usuario</p>
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class ModificarUsuarioVista extends ActionBarActivity {
 
+	//Atributos
+	/** Id del usuario*/
 	private String id_usuario;
-	private String contrase�a;
+	/**Contraseña del usuario*/
+	private String contraseña;
+	/**Usuario de la clase Usuario @see Usuario*/
 	private Usuario usuario;
+	/**TextView que aparece en la vista que es el nombre del usuario*/
 	private TextView nombre;
+	/** TextView que aparece en la vista que es el primer apellido del usuario*/
 	private TextView apellido1;
+	/** TextView que aparece en la vista que es el segundo apellido del usuario*/
 	private TextView apellido2;
+	/**TextView que aparece en la vista que es la dirección del usuario*/
 	private TextView direccion;
+	/**TextView que aparece en la vista que es la población del usuario*/
 	private TextView poblacion;
+	/** TextViwn que aparece en la vista que es el teléfono del usuario*/
 	private TextView telefono;
 
+	//Métodos
+	
+	/**
+	 * Añade la vista de modificar usuario
+	 * Recoge el usuario y la contraseña de administrar cuenta
+	 * Inicializa parametros
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,7 +54,7 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		contrase�a = bundle.getString("contrase�a");
+		contraseña = bundle.getString("contraseña");
 
 		nombre = (TextView) findViewById(R.id.nombre_texto);
 		apellido1 = (TextView) findViewById(R.id.apellido1_texto);
@@ -42,16 +65,18 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 		rellenarCamposTexto();
 	}
 
+	/**
+	 * Rellena los campos de la vista recogiendolos llamando al servicio web del usuario
+	 * Recoge el usuario como String y despues lo convierte a tipo Usuario
+	 * */
 	private void rellenarCamposTexto() {
-
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-
-				res = llamada.LlamadaUsuario(id_usuario, contrase�a);
+				res = llamada.LlamadaUsuario(id_usuario, contraseña);
 				usuario = json.fromJson(res, Usuario.class);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -69,6 +94,12 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Método que se ejecuta cuando se aprieta el botón aceptar.
+	 * LLama al servicio web para actualizar los campos del usuario que han sido modificados
+	 * Comprueba que el teléfono no sea vacio, si no, no puedes añadir el usuario
+	 * @param view Vista
+	 * */
 	public void onClickActualizarUsuario(View view) {
 		Thread hilo = new Thread() {
 
@@ -108,10 +139,13 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Después de que se ha modificado el usuario ya se puede volver a la vista anterior AdministrarCuentaVista
+	 * */
 	private void modificarUsuarioOk() {
 		Intent i = new Intent(this, AdministrarCuentaVista.class);
 		i.putExtra("id_usuario", id_usuario);
-		i.putExtra("contrase�a", contrase�a);
+		i.putExtra("contraseña", contraseña);
 		startActivity(i);
 		finish();
 	}
