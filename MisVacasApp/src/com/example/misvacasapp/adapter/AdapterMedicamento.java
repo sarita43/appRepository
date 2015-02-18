@@ -1,10 +1,8 @@
 package com.example.misvacasapp.adapter;
 
 import java.util.ArrayList;
-
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.modelo.Medicamento;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,30 +13,34 @@ import android.widget.TextView;
 
 /**
  * Clase adaptador de la lista de los medicamentos
+ * 
  * @see BaseAdapter
  * @author Sara Martinez Lopez
  * */
-public class AdapterMedicamento extends BaseAdapter{
-
-	//Atributos
-	/**Actividad donde se va a mostrar el adapter*/
+public class AdapterMedicamento extends BaseAdapter {
+	// Atributos
+	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
-	/** Lista para mostrar el listado de medicamentos*/
+	/** Lista para mostrar el listado de medicamentos */
 	private ArrayList<Medicamento> lista;
 
 	/**
-	 * Constructor 
-	 * @param activity Actividad donde se va a mostrar el adapter
-	 * @param lista Lista para mostrar la lista de medicamentos
+	 * Constructor
+	 * 
+	 * @param activity
+	 *            Actividad donde se va a mostrar el adapter
+	 * @param lista
+	 *            Lista para mostrar la lista de medicamentos
 	 * */
-	public AdapterMedicamento(Activity activity, ArrayList<Medicamento> lista){
+	public AdapterMedicamento(Activity activity, ArrayList<Medicamento> lista) {
 		this.activity = activity;
 		this.lista = lista;
 	}
-	
+
 	/**
-	 * Devuelve el tama帽o de la lista
-	 * @return int Tama帽o de la lista
+	 * Devuelve el tama駉 de la lista
+	 * 
+	 * @return int Tama駉 de la lista
 	 * */
 	@Override
 	public int getCount() {
@@ -46,8 +48,10 @@ public class AdapterMedicamento extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve el item de una posici贸n
-	 * @param position Posici贸n de la lista
+	 * Devuelve el item de una posici髇
+	 * 
+	 * @param position
+	 *            Posici髇 de la lista
 	 * @return String Item de la posicion position
 	 * */
 	@Override
@@ -56,9 +60,10 @@ public class AdapterMedicamento extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve un id del item
-	 * M茅todo inutilizado
-	 * @param position Posici贸n del item
+	 * Devuelve un id del item M閠odo inutilizado
+	 * 
+	 * @param position
+	 *            Posici髇 del item
 	 * @return long Devuelve 0
 	 * */
 	@Override
@@ -67,8 +72,10 @@ public class AdapterMedicamento extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve la construcci贸n de la vista que se va a mostrar en la lista de medicamentos
-	 * @param position 
+	 * Devuelve la construcci髇 de la vista que se va a mostrar en la lista de
+	 * medicamentos
+	 * 
+	 * @param position
 	 * @param convertView
 	 * @param parent
 	 * @return View Vista de la lista de medicamentos
@@ -76,23 +83,17 @@ public class AdapterMedicamento extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		 
-        //Asociamos el layout de la lista que hemos creado
-        if(convertView == null){
-            LayoutInflater inf = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inf.inflate(R.layout.lista_medicamentos, null);
-        }
- 
-    
-        Medicamento medicamento = this.lista.get(position);
-        
-        TextView tipo = (TextView) v.findViewById(R.id.tipoTexto);
-        tipo.setText("Tipo: "+medicamento.getTipo());
-       
-        TextView fecha = (TextView) v.findViewById(R.id.fechaTexto);
-        fecha.setText("	Fecha: "+medicamento.getFecha());
- 
-        return v;
+		// Asociamos el layout de la lista que hemos creado
+		if (convertView == null) {
+			LayoutInflater inf = (LayoutInflater) activity
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = inf.inflate(R.layout.lista_medicamentos, null);
+		}
+		Medicamento medicamento = this.lista.get(position);
+		TextView tipo = (TextView) v.findViewById(R.id.tipoTexto);
+		tipo.setText("Tipo: " + medicamento.getTipo());
+		TextView fecha = (TextView) v.findViewById(R.id.fechaTexto);
+		fecha.setText("	Fecha: " + medicamento.getFecha());
+		return v;
 	}
-
 }

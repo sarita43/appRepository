@@ -1,9 +1,7 @@
 package com.example.misvacasapp.adapter;
 
 import java.util.ArrayList;
-
 import com.example.misvacasapp.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,35 +10,37 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 /**
  * Clase adaptador de la lista de los menus
+ * 
  * @see BaseAdapter
  * @author Sara Martinez Lopez
  * */
-public class AdapterListaMenu extends BaseAdapter{
-	
-	//Atributos
-	/** Lista para mostrar el menu*/
+public class AdapterListaMenu extends BaseAdapter {
+	// Atributos
+	/** Lista para mostrar el menu */
 	private ArrayList<String> lista = new ArrayList<String>();
-	/**Actividad donde se va a mostrar el adapter*/
+	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
-	
-	//M茅todo
-	
+
+	// M閠odo
 	/**
-	 * Constructor 
-	 * @param activity Actividad donde se va a mostrar el adapter
-	 * @param lista Lista para mostrar el menu
+	 * Constructor
+	 * 
+	 * @param activity
+	 *            Actividad donde se va a mostrar el adapter
+	 * @param lista
+	 *            Lista para mostrar el menu
 	 * */
-	public AdapterListaMenu(Activity activity, ArrayList<String> lista){
+	public AdapterListaMenu(Activity activity, ArrayList<String> lista) {
 		this.lista = lista;
 		this.activity = activity;
 	}
-	
+
 	/**
-	 * Devuelve el tama帽o de la lista
-	 * @return int Tama帽o de la lista
+	 * Devuelve el tama駉 de la lista
+	 * 
+	 * @return int Tama駉 de la lista
 	 * */
 	@Override
 	public int getCount() {
@@ -48,8 +48,10 @@ public class AdapterListaMenu extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve el item de una posici贸n
-	 * @param position Posici贸n de la lista
+	 * Devuelve el item de una posici髇
+	 * 
+	 * @param position
+	 *            Posici髇 de la lista
 	 * @return String Item de la posicion position
 	 * */
 	@Override
@@ -58,9 +60,10 @@ public class AdapterListaMenu extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve un id del item
-	 * M茅todo inutilizado
-	 * @param position Posici贸n del item
+	 * Devuelve un id del item M閠odo inutilizado
+	 * 
+	 * @param position
+	 *            Posici髇 del item
 	 * @return long Devuelve 0
 	 * */
 	@Override
@@ -69,8 +72,9 @@ public class AdapterListaMenu extends BaseAdapter{
 	}
 
 	/**
-	 * Devuelve la construcci贸n de la vista que se va a mostrar en el menu
-	 * @param position 
+	 * Devuelve la construcci髇 de la vista que se va a mostrar en el menu
+	 * 
+	 * @param position
 	 * @param convertView
 	 * @param parent
 	 * @return View Vista del menu
@@ -78,18 +82,15 @@ public class AdapterListaMenu extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		 
-        //Asociamos el layout de la lista que hemos creado
-        if(convertView == null){
-            LayoutInflater inf = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inf.inflate(R.layout.lista_menu, null);
-        }
-        
-        String string = this.getItem(position);
-        
-        TextView item = (TextView)v.findViewById(R.id.itemMenu);
-        item.setText(string);
-        
-        return v;
+		// Asociamos el layout de la lista que hemos creado
+		if (convertView == null) {
+			LayoutInflater inf = (LayoutInflater) activity
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			v = inf.inflate(R.layout.lista_menu, null);
+		}
+		String string = this.getItem(position);
+		TextView item = (TextView) v.findViewById(R.id.itemMenu);
+		item.setText(string);
+		return v;
 	}
 }

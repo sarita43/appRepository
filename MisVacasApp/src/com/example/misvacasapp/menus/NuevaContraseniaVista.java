@@ -4,7 +4,6 @@ import com.example.misvacasapp.R;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,131 +12,130 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Clase de la actividad cambiar contraseÃ±a <p>En ella se implementan los mÃ©todos que se
- * utilizan para manejar la vista de cambiar contraseÃ±a</p>
+ * Clase de la actividad cambiar contraseña
+ * <p>
+ * En ella se implementan los métodos que se utilizan para manejar la vista de
+ * cambiar contraseña
+ * </p>
  * 
  * @author Sara Martinez Lopez
  * */
 public class NuevaContraseniaVista extends ActionBarActivity {
-
-	//Atributos
-	
-	/**Id usuario*/
+	// Atributos
+	/** Id usuario */
 	private String id_usuario;
-	/**ContraseÃ±a del usuario*/
-	private String contraseÃ±a;
-	/**TextView de la contraseÃ±a del usuario*/
-	private TextView contraseÃ±aActual;
-	/**TextView de la nueva contraseÃ±a que quiere el usuario*/
-	private TextView contraseÃ±aNueva;
-	/**TextView de la repeticiÃ³n de la nueva contraseÃ±a del usuario*/
-	private TextView contraseÃ±aNuevaRepetida;
-	/** Usuario que se va a recoger de la llamada al servicio web*/
+	/** Contraseña del usuario */
+	private String contraseña;
+	/** TextView de la contraseña del usuario */
+	private TextView contraseñaActual;
+	/** TextView de la nueva contraseña que quiere el usuario */
+	private TextView contraseñaNueva;
+	/** TextView de la repetición de la nueva contraseña del usuario */
+	private TextView contraseñaNuevaRepetida;
+	/** Usuario que se va a recoger de la llamada al servicio web */
 	private Usuario usuario;
 
-	//MÃ©todos
+	// Métodos
 	/**
-	 * AÃ±ade la vista de cambiar contraseÃ±a
-	 * Recoge el usuario y la contraseÃ±a de la vista login 
-	 * Inicializa parametros
+	 * Añade la vista de cambiar contraseña Recoge el usuario y la contraseña de
+	 * la vista login Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cambiar_contrasena);
-
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		contraseÃ±a = bundle.getString("contraseÃ±a");
+		contraseña = bundle.getString("contraseña");
 	}
 
-	//PORQUE LLAMO AL WEB SERVICE SI SE PUEDE COMPROBAR LA CONTRASEÃ‘A CON LA QUE E PASADO DE ANTES DE LA VISTA ANTERIOR
+	// PORQUE LLAMO AL WEB SERVICE SI SE PUEDE COMPROBAR LA CONTRASEÑA CON LA
+	// QUE E PASADO DE ANTES DE LA VISTA ANTERIOR
 	/**
-	 * MÃ©todo que se ejecuta cuando se da al botÃ³n aceptar
-	 * En el se recogen los parÃ¡metros del los textView 
-	 * Se comprueba que la contraseÃ±a introducida y la que tiene el usuario sean iguales
+	 * Método que se ejecuta cuando se da al botón aceptar En el se recogen los
+	 * parámetros del los textView Se comprueba que la contraseña introducida y
+	 * la que tiene el usuario sean iguales
 	 * */
-	public void onClickCambioContraseÃ±a(View view) {
-		contraseÃ±aActual = (TextView) findViewById(R.id.contrasena_actual_texto);
-		contraseÃ±aNueva = (TextView) findViewById(R.id.nueva_contrasena_texto);
-		contraseÃ±aNuevaRepetida = (TextView) findViewById(R.id.repita_nueva_contrasena_texto);
+	public void onClickCambioContraseña(View view) {
+		contraseñaActual = (TextView) findViewById(R.id.contrasena_actual_texto);
+		contraseñaNueva = (TextView) findViewById(R.id.nueva_contrasena_texto);
+		contraseñaNuevaRepetida = (TextView) findViewById(R.id.repita_nueva_contrasena_texto);
+		usuario = new Usuario();
 
-//		usuario = new Usuario();
-//
-//		Thread hilo = new Thread() {
-//			String res = "";
-//			Gson json = new Gson();
-//
-//			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-//
-//			public void run() {
-//				res = llamada.LlamadaUsuario(id_usuario, contraseÃ±a);
-//
-//				usuario = json.fromJson(res, Usuario.class);
-//				runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-						if(contraseÃ±a.equals(contraseÃ±aActual.getText().toString())){
-//						if (usuario.getContraseÃ±a().equals(
-								contraseÃ±aActual.getText().toString())) {
-							comprobarContraseÃ±a();
-						} else {
-							Toast.makeText(NuevaContraseniaVista.this,
-									"ContraseÃ±a incorrecta", Toast.LENGTH_LONG)
-									.show();
-						}
-//					}
-//				});
-//			}
-//		};
-//		hilo.start();
-	}
-
-	/**
-	 * MÃ©todo que comprueba que la contraseÃ±a nueva no sea vacia
-	 * y que la contraseÃ±a nueva coincidan las dos la nueva ya repetir contraseÃ±a nueva
-	 * */
-	private void comprobarContraseÃ±a() {
-		if (contraseÃ±aNueva.getText().toString().equals("")) {
-			Toast.makeText(NuevaContraseniaVista.this,
-					"La contraseÃ±a no puede ser vacia", Toast.LENGTH_LONG)
-					.show();
-		} else if (contraseÃ±aNueva.getText().toString()
-				.equals(contraseÃ±aNuevaRepetida.getText().toString())) {
-			cambiarContraseÃ±a();
-			Toast.makeText(NuevaContraseniaVista.this,
-					"La contraseÃ±a ha sido cambiada correctamente",
-					Toast.LENGTH_LONG).show();
-			Intent i = new Intent(this, AdministrarCuentaVista.class);
-			i.putExtra("id_usuario", id_usuario);
-			i.putExtra("contraseÃ±a", contraseÃ±aNueva.getText().toString());
-			startActivity(i);
-			finish();
-		} else {
-			Toast.makeText(NuevaContraseniaVista.this,
-					"Las contraseÃ±as no coinciden", Toast.LENGTH_LONG).show();
-		}
-	}
-
-	/**
-	 * MÃ©todo que cambia la contraseÃ±a del usuario
-	 * LLama al servicio web del usuario
-	 * */
-	private void cambiarContraseÃ±a() {
 		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new Gson();
 
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
+				res = llamada.LlamadaUsuario(id_usuario, contraseña);
 
-				llamada.actualizarContraseÃ±a(id_usuario, contraseÃ±aNueva
+				usuario = json.fromJson(res, Usuario.class);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						
+						System.out.println("usuatio "+usuario.getContraseña() +" text "+contraseñaActual.getText().toString());
+						
+						if (usuario.getContraseña().equals(
+								contraseñaActual.getText().toString())) {
+							comprobarContraseña();
+						} else {
+							Toast.makeText(NuevaContraseniaVista.this,
+									"Contraseña incorrecta", Toast.LENGTH_LONG)
+									.show();
+						}
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+
+	/**
+	 * Método que comprueba que la contraseña nueva no sea vacia y que la
+	 * contraseña nueva coincidan las dos la nueva ya repetir contraseña nueva
+	 * */
+	private void comprobarContraseña() {
+		if (contraseñaNueva.getText().toString().equals("")) {
+			Toast.makeText(NuevaContraseniaVista.this,
+					"La contraseña no puede ser vacia", Toast.LENGTH_LONG)
+					.show();
+		} else if (contraseñaNueva.getText().toString()
+				.equals(contraseñaNuevaRepetida.getText().toString())) {
+			cambiarContraseña();
+			Toast.makeText(NuevaContraseniaVista.this,
+					"La contraseña ha sido cambiada correctamente",
+					Toast.LENGTH_LONG).show();
+			Intent i = new Intent(this, AdministrarCuentaVista.class);
+			i.putExtra("id_usuario", id_usuario);
+			i.putExtra("contraseña", contraseñaNueva.getText().toString());
+			startActivity(i);
+			finish();
+		} else {
+			Toast.makeText(NuevaContraseniaVista.this,
+					"Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/**
+	 * Método que cambia la contraseña del usuario LLama al servicio web del
+	 * usuario
+	 * */
+	private void cambiarContraseña() {
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.actualizarContraseña(id_usuario, contraseñaNueva
 						.getText().toString());
-//				runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//
-//					}
-//				});
+				// runOnUiThread(new Runnable() {
+				// @Override
+				// public void run() {
+				//
+				// }
+				// });
 			}
 		};
 		hilo.start();
