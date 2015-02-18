@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 /**
  * Clase de la actividad administrar cuenta <p>En ella se implementan los métodos que se
- * utilizan para manejar la vista del usuario</p>
+ * utilizan para manejar la vista de administrar cuenta</p>
  * 
  * @author Sara Martinez Lopez
  * */
