@@ -16,39 +16,75 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Clase adaptador de la lista de las vacas
+ * @see BaseAdapter
+ * @author Sara Martinez Lopez
+ * */
 public class AdapterVaca extends BaseAdapter{
 	
+	//Atributos
+	/**Actividad donde se va a mostrar el adapter*/
 	private Activity activity;
+	/** Lista para mostrar el menu*/
 	private ArrayList<Vaca> lista;
+	/**Tabla hash que indica si el item esta seleccionado o no y si hay que seleccionarlo o no*/
 	private TableSeleccionado seleccionado;
 
+	//Métodos
+	
+	/**
+	 * Constructor 
+	 * @param activity Actividad donde se va a mostrar el adapter
+	 * @param lista Lista para mostrar la lista de vacas
+	 * @param seleccionado Tabla hash que indica si el item esta seleccionado o no y si hay que seleccionarlo o no
+	 * */
 	public AdapterVaca(Activity activity, ArrayList<Vaca> lista,TableSeleccionado seleccionado){
 		this.activity = activity;
 		this.lista = lista;
 		setSeleccionado(seleccionado);
 	}
 	
+	/**
+	 * Devuelve el tamaño de la lista
+	 * @return int Tamaño de la lista
+	 * */
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return this.lista.size();
 	}
-
+	
+	/**
+	 * Devuelve el item de una posición
+	 * @param position Posición de la lista
+	 * @return String Item de la posicion position
+	 * */
 	@Override
 	public Vaca getItem(int position) {
-		// TODO Auto-generated method stub
 		return this.lista.get(position);
 	}
 
+	/**
+	 * Devuelve un id del item
+	 * Método inutilizado
+	 * @param position Posición del item
+	 * @return long Devuelve 0
+	 * */
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
+	/**
+	 * Devuelve la construcción de la vista que se va a mostrar en el menu
+	 * @param position 
+	 * @param convertView
+	 * @param parent
+	 * @return View Vista del menu
+	 * */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// Generamos una convertView por motivos de eficiencia
+	
         View v = convertView;
  
         //Asociamos el layout de la lista que hemos creado
@@ -67,10 +103,18 @@ public class AdapterVaca extends BaseAdapter{
         return v;
 	}
 
+	/**
+	 * Debuelve la tabla hash de los items seleccionados
+	 * @return seleccionado Tabla hash de items seleccionados
+	 * */
 	public TableSeleccionado getSeleccionado() {
 		return seleccionado;
 	}
 
+	/**
+	 * Guarda la tabla hash de los items seleccionados
+	 * @param seleccionado Tabla del los items seleccionados
+	 * */
 	public void setSeleccionado(TableSeleccionado seleccionado) {
 		this.seleccionado = seleccionado;
 	}
