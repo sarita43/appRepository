@@ -2,8 +2,6 @@ package com.example.misvacasapp.menus;
 
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.modelo.Usuario;
-import com.google.gson.Gson;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -32,8 +30,6 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 	private TextView contraseñaNueva;
 	/** TextView de la repetición de la nueva contraseña del usuario */
 	private TextView contraseñaNuevaRepetida;
-	/** Usuario que se va a recoger de la llamada al servicio web */
-	private Usuario usuario;
 
 	// Métodos
 	/**
@@ -49,8 +45,6 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 		contraseña = bundle.getString("contraseña");
 	}
 
-	// PORQUE LLAMO AL WEB SERVICE SI SE PUEDE COMPROBAR LA CONTRASEÑA CON LA
-	// QUE E PASADO DE ANTES DE LA VISTA ANTERIOR
 	/**
 	 * Método que se ejecuta cuando se da al botón aceptar En el se recogen los
 	 * parámetros del los textView Se comprueba que la contraseña introducida y
@@ -60,37 +54,13 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 		contraseñaActual = (TextView) findViewById(R.id.contrasena_actual_texto);
 		contraseñaNueva = (TextView) findViewById(R.id.nueva_contrasena_texto);
 		contraseñaNuevaRepetida = (TextView) findViewById(R.id.repita_nueva_contrasena_texto);
-		usuario = new Usuario();
 
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new Gson();
-
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-
-			public void run() {
-				res = llamada.LlamadaUsuario(id_usuario, contraseña);
-
-				usuario = json.fromJson(res, Usuario.class);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						
-						System.out.println("usuatio "+usuario.getContraseña() +" text "+contraseñaActual.getText().toString());
-						
-						if (usuario.getContraseña().equals(
-								contraseñaActual.getText().toString())) {
-							comprobarContraseña();
-						} else {
-							Toast.makeText(NuevaContraseniaVista.this,
-									"Contraseña incorrecta", Toast.LENGTH_LONG)
-									.show();
-						}
-					}
-				});
-			}
-		};
-		hilo.start();
+		if (contraseña.equals(contraseñaActual.getText().toString())) {
+			comprobarContraseña();
+		} else {
+			Toast.makeText(NuevaContraseniaVista.this, "Contraseña incorrecta",
+					Toast.LENGTH_LONG).show();
+		}
 	}
 
 	/**
@@ -130,12 +100,6 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 			public void run() {
 				llamada.actualizarContraseña(id_usuario, contraseñaNueva
 						.getText().toString());
-				// runOnUiThread(new Runnable() {
-				// @Override
-				// public void run() {
-				//
-				// }
-				// });
 			}
 		};
 		hilo.start();
