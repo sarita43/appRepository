@@ -19,12 +19,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * Clase de la actividad de aniadir medicamento En ella se implementan los métodos que se
+ * utilizan para manejar la vista de añadir medicamento
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
 
+	//Atributos
+	/**Id del animal*/
 	private String id_vaca;
+	/**Lista de medicamentos que tiene el animal*/
 	private ArrayList<Medicamento> lista;
+	/** Tipo que serializa o deserializa para enviar a través del servicio web*/
 	private Gson json;
-
+	
+	//Métodos
+	
+	/**
+	 * Añade la vista de añadir medicamento. Recoge el id de la vaca de la vista de la vaca. Inicializa parametros
+	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +56,10 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 
 	}
 
+	/**
+	 * LLama a crear el id aleatorio y comprueba que ese id no exista
+	 * Si existe vuelve a crear otro id aleatorio
+	 * */
 	private int crearIdMedicamento() {
 		int id = idAleatorio();
 		for (int i = 0; lista.size() > i; i++) {
@@ -51,11 +70,17 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		}
 		return id;
 	}
-
+	
+	/**
+	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un entero
+	 * @see Integer.MAX_VALUE
+	 * @return int Id aleatorio
+	 * */
 	private int idAleatorio() {
 		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
 	}
 
+	//FALTAN TODAS LAS COMPROBACIONES DE LOS DATOS INTRODUCIDOS
 	private Medicamento crearMedicamento() {
 		int dia = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_dia))
@@ -63,11 +88,11 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		int mes = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_mes))
 						.getText().toString()) - 1;
-		int a�o = Integer
+		int año = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
 						.getText().toString()) - 1900;
 		@SuppressWarnings("deprecation")
-		Date fecha = new Date(a�o, mes, dia);
+		Date fecha = new Date(año, mes, dia);
 		String tipo = ((TextView) findViewById(R.id.tipo_medicamento_texto))
 				.getText().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
@@ -86,7 +111,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 
 			public void run() {
 				String m = json.toJson(crearMedicamento());
-				llamada.LLamadaA�adirMedicamento(m);
+				llamada.LLamadaAñadirMedicamento(m);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -101,6 +126,11 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		finish();
 	}
 
+	/**
+	 * Añade el menu a la vista aniadirVaca
+	 * 
+	 * @param menu
+	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -108,6 +138,11 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		return true;
 	}
 
+	/**
+	 * Añade los item al menu
+	 * 
+	 * @param item
+	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
