@@ -48,7 +48,7 @@ public class OracleConection {
 	/**
 	 * Método que hace la conexión a la base de datos
 	 * Crea la conexión con el driver jdbc. Necesitamos la IP(localhost) el puerto en el que escucha(1521) y el 
-	 * usuario y la contraseña a la base de datos
+	 * usuario y la contraseña a la base de datos para crear la conexión
 	 * @return OracleConection 
 	 * */
 	public OracleConection Conectar() {
