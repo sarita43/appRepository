@@ -123,11 +123,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 					public void run() {
 						Toast.makeText(AniadirVacaVista.this, "Id ya existe",
 								Toast.LENGTH_SHORT).show();
-						Intent i = new Intent(getApplicationContext(),
-								AniadirVacaVista.class);
-						i.putExtra("id_usuario", id_usuario);
-						startActivity(i);
-						finish();
 					}
 				});
 			} else if (id_vaca.equals("")) {
@@ -137,11 +132,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 					public void run() {
 						Toast.makeText(AniadirVacaVista.this, "Id vacio",
 								Toast.LENGTH_SHORT).show();
-						Intent i = new Intent(getApplicationContext(),
-								AniadirVacaVista.class);
-						i.putExtra("id_usuario", id_usuario);
-						startActivity(i);
-						finish();
 					}
 				});
 			}
@@ -157,8 +147,58 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	private Vaca crearVaca() {
 		Vaca vaca = new Vaca();
+
+		int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
+				.getText().toString());
+		int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
+				.getText().toString()) - 1;
+		int año = Integer.parseInt(((TextView) findViewById(R.id.anio_vaca))
+				.getText().toString()) - 1900;
+		@SuppressWarnings("deprecation")
+		Date fecha = new Date(año, mes, dia);
+		String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
+				.getText().toString());
+		String raza = spinnerRaza.getSelectedItem().toString();
+		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
+				.getText().toString();
+		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
+				.toString();
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo, null);
+
+		return vaca;
+	}
+
+	private boolean comprobarSexo() {
+		boolean sexoOK = false;
+		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
+				.toString();
+
+		if (sexo.equals("M") || sexo.equals("H")) {
+			sexoOK = true;
+		} else {
+			sexoOK = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Mal sexo. M o H",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+		return sexoOK;
+
+	}
+
+	private boolean comprobarFecha() {
+		boolean fechaOk = false;
+
 		if (((TextView) findViewById(R.id.dia_vaca)).getText().toString()
-				.equals("")) {
+				.equals("")
+				|| ((TextView) findViewById(R.id.mes_vaca)).getText()
+						.toString().equals("")
+				|| ((TextView) findViewById(R.id.anio_vaca)).getText()
+						.toString().equals("")) {
+			fechaOk = false;
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -166,31 +206,29 @@ public class AniadirVacaVista extends ActionBarActivity {
 							Toast.LENGTH_SHORT).show();
 				}
 			});
-			Intent i = new Intent(this, AniadirVacaVista.class);
-			i.putExtra("id_usuario", id_usuario);
-			startActivity(i);
-			finish();
 		} else {
 			int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
 					.getText().toString());
 			int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
-					.getText().toString()) - 1;
+					.getText().toString());
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
-							.getText().toString()) - 1900;
-			@SuppressWarnings("deprecation")
-			Date fecha = new Date(año, mes, dia);
-			String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
-					.getText().toString());
-			String raza = spinnerRaza.getSelectedItem().toString();
-			String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
-					.getText().toString();
-			String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca))
-					.getText().toString();
-			vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
-					null);
+							.getText().toString())-1900;
+			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
+				fechaOk = true;
+			} else {
+				fechaOk = false;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(AniadirVacaVista.this,
+								"Fecha incorrecta", Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
 		}
-		return vaca;
+
+		return fechaOk;
 	}
 
 	// REMODELAR ESTE METODO PONER EN OTRO METODO COMPROBAR SEXO
@@ -208,42 +246,24 @@ public class AniadirVacaVista extends ActionBarActivity {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-				if (comprobarIdVaca()) {
+				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()) {
 					final Vaca v = crearVaca();
-					if (((TextView) findViewById(R.id.dia_vaca)).getText()
-							.toString().equals("")) {
-					} else if (v.getSexo().equals("M")
-							|| v.getSexo().equals("H")) {
-						String vaca = json.toJson(v);
-						llamada.LLamadaAñadirVaca(vaca);
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Toast.makeText(AniadirVacaVista.this,
-										"Añadido correctamente",
-										Toast.LENGTH_SHORT).show();
-								Intent i = new Intent(getApplicationContext(),
-										UsuarioVista.class);
-								i.putExtra("id_usuario", id_usuario);
-								startActivity(i);
-								finish();
-							}
-						});
-					} else {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Toast.makeText(AniadirVacaVista.this,
-										"Mal sexo. M o H", Toast.LENGTH_SHORT)
-										.show();
-								Intent i = new Intent(getApplicationContext(),
-										AniadirVacaVista.class);
-								i.putExtra("id_usuario", id_usuario);
-								startActivity(i);
-								finish();
-							}
-						});
-					}
+
+					String vaca = json.toJson(v);
+					llamada.LLamadaAñadirVaca(vaca);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(AniadirVacaVista.this,
+									"Añadido correctamente", Toast.LENGTH_SHORT)
+									.show();
+							Intent i = new Intent(getApplicationContext(),
+									UsuarioVista.class);
+							i.putExtra("id_usuario", id_usuario);
+							startActivity(i);
+							finish();
+						}
+					});
 				}
 			}
 		};
