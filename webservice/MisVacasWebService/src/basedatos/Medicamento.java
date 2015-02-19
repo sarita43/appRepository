@@ -6,40 +6,44 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.Date;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-//Clase en la que se describe el medicamento
-
+/**
+ * Clase medicameno
+ * @author Sara Martinez Lopez
+ * */
 public class Medicamento {
-
-	//Atributos
-	/**Id medicamento*/
+	// Atributos
+	/** Id medicamento */
 	private int id_medicamento;
-	/**Fecha de medicamentos */
+	/** Fecha de medicamentos */
 	private Date fecha;
-	/**Tipo de medicamento*/
+	/** Tipo de medicamento */
 	private String tipo;
-	/**Descripcion del medicamento*/
+	/** Descripcion del medicamento */
 	private String descripcion;
-	/** Id de la vaca*/
+	/** Id de la vaca */
 	private String id_vaca;
 
-	//M茅todos
-	
-	/**Constructor del medicamento sin atributos*/
+	// M閠odos
+	/** Constructor del medicamento sin atributos */
 	public Medicamento() {
-
 	}
-	
+
 	/**
 	 * Constructor del medicamento con atributos
-	 * @param id_medicamento Id medicamento
-	 * @param fecha Fecha del medicamento
-	 * @param tipo Tipo de medicamento
-	 * @param descripcion Descripci贸n del medicamento
-	 * @param id_vaca Id de la vaca
+	 * 
+	 * @param id_medicamento
+	 *            Id medicamento
+	 * @param fecha
+	 *            Fecha del medicamento
+	 * @param tipo
+	 *            Tipo de medicamento
+	 * @param descripcion
+	 *            Descripci髇 del medicamento
+	 * @param id_vaca
+	 *            Id de la vaca
 	 * */
 	public Medicamento(int id_medicamento, Date fecha, String tipo,
 			String descripcion, String id_vaca) {
@@ -51,24 +55,25 @@ public class Medicamento {
 	}
 
 	/**
-	 * Devuelve el arrayList de los medicamentos que tiene un animal en la base de datos. Crea la conexi贸n a la base de datos,
-	 *  llama a la base de datos recogiendo todos los medicamentos de ella y los guarda en un arrayList lista que contiene
-	 * medicamentos.
-	 * @param id_vaca Id de la vaca para buscar sus medicamentos
+	 * Devuelve el arrayList de los medicamentos que tiene un animal en la base
+	 * de datos. Crea la conexi髇 a la base de datos, llama a la base de datos
+	 * recogiendo todos los medicamentos de ella y los guarda en un arrayList
+	 * lista que contiene medicamentos.
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca para buscar sus medicamentos
 	 * @return ArrayList<Medicamento> Lista de medicamentos del animal
 	 * */
 	public ArrayList<Medicamento> listaMedicamento(String id_vaca) {
 		OracleConection c = new OracleConection();
 		ArrayList<Medicamento> lista = new ArrayList<Medicamento>();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
 						.executeQuery("SELECT * from medicamento where id_vaca='"
 								+ id_vaca + "'");
-
 				while (result.next()) {
 					Medicamento medicamento = new Medicamento();
 					try {
@@ -81,7 +86,6 @@ public class Medicamento {
 						e.printStackTrace();
 					}
 					lista.add(medicamento);
-
 				}
 			} catch (SQLException e) {
 			}
@@ -90,17 +94,20 @@ public class Medicamento {
 	}
 
 	/**
-	 * Devuelve el medicamento que tiene un animal en la base de datos. Crea la conexi贸n a la base de datos,
-	 *  llama a la base de datos recogiendo el medicamento que se quiere y los guarda en un nuevo medicamento
-	 * @param id_vaca Id del animal
-	 * @param id_medicamento Id del medicamento
-	 * @return Medicamento Medicamento encontrado en la base de datos 
+	 * Devuelve el medicamento que tiene un animal en la base de datos. Crea la
+	 * conexi髇 a la base de datos, llama a la base de datos recogiendo el
+	 * medicamento que se queire y los guarda en un nuevo medicamento
+	 * 
+	 * @param id_vaca
+	 *            Id del animal
+	 * @param id_medicamento
+	 *            Id del medicamento
+	 * @return Medicamento Medicamento encontrado en la base de datos
 	 * */
 	public Medicamento getMedicamento(String id_vaca, String id_medicamento) {
 		OracleConection c = new OracleConection();
 		Medicamento medicamento = new Medicamento();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
@@ -109,7 +116,6 @@ public class Medicamento {
 								+ id_vaca
 								+ "' and id_medicamento='"
 								+ id_medicamento + "'");
-
 				while (result.next()) {
 					try {
 						medicamento.setId_medicamento(result.getInt(1));
@@ -128,14 +134,13 @@ public class Medicamento {
 	}
 
 	/**
-	 * M茅todo que devuelve la lista de medicamentos como String. Recoge los medicamentos de listaMedicamento y los serializa con
-	 * json.toJson. Si el animal no tiene medicamentos en la lista se a帽ade uno sin parametros, para que no mande una lista 
-	 * vacia
-	 * @param id_vaca Id de la vaca para buscar los medicamentos
-	 * @return String Lista de medicamentos como String
+	 * M閠odo que devuelve la lista de medicamentos como String. Recoge los
+	 * medicamentos de listaMedicamento y los serializa con json.toJson. Si el
+	 * animal no tiene medicamentos en la lista se
 	 * */
 	public String listaMedicamentoString(String id_vaca) {
-		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
 		ArrayList<Medicamento> lista = listaMedicamento(id_vaca);
 		if (lista.size() == 0) {
 			lista.add(new Medicamento());
@@ -147,68 +152,52 @@ public class Medicamento {
 		}
 	}
 
-	/**
-	 * M茅todo que devuelve el medicamento que tiene un animal en la base de datos como String. 
-	 * Recoge el medicamento de getMedicamento y lo serializa con json.toJson. 
-	 * @param id_vaca Id de la vaca para buscar el medicamento
-	 * @param id_medicamentos Id del medicamento a buscar
-	 * @return String Medicamento como String
-	 * */
 	public String medicamentoString(String id_vaca, String id_medicamento) {
-		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
 		Medicamento me = getMedicamento(id_vaca, id_medicamento);
 		String medicamento = json.toJson(me);
 		return medicamento;
 	}
-	
-	/**
-	 * M茅todo que elimina un medicamento de la ase de datos de la lista de medicamentos de un animal
-	 * @param id_medicamento Id del medicamento a eliminar
-	 * @param id_vaca Id del animal para buscar el medicamento a eliminar
-	 * */
+
 	public void eliminarMedicamento(String id_medicamento, String id_vaca) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM medicamento WHERE id_medicamento='"
 						+ id_medicamento + "' AND id_vaca='" + id_vaca + "'");
-
 			} catch (SQLException e) {
 			}
 		}
 	}
 
-	/**
-	 * M茅todo que a帽ade un medicamento a la base de datos. Recoge el medicamento como String y lo deserializa a tipo Medicamento, 
-	 * conecta con la base de datos y a帽ade el medicamento en la base de datos
-	 * @param medicamento Medicamento que recibe 
-	 * */
-	public void a帽adirMedicamento(String medicamento) {
-		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
+	public void a馻dirMedicamento(String medicamento) {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES(?,?,?,?,?)";
 		Medicamento m = json.fromJson(medicamento, Medicamento.class);
 		OracleConection c = new OracleConection();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
-				PreparedStatement pstmt = c.getConexion().prepareStatement(INSERT_RECORD);
-				 pstmt.setInt(1, m.getId_medicamento());
-				 pstmt.setDate(2,m.getFecha() );
-				 pstmt.setString(3, m.getTipo());
-				 pstmt.setString(4, m.getDescripcion());
-				 pstmt.setString(5, m.getId_vaca());
-				 pstmt.executeUpdate();
-
+				PreparedStatement pstmt = c.getConexion().prepareStatement(
+						INSERT_RECORD);
+				pstmt.setInt(1, m.getId_medicamento());
+				pstmt.setDate(2, m.getFecha());
+				pstmt.setString(3, m.getTipo());
+				pstmt.setString(4, m.getDescripcion());
+				pstmt.setString(5, m.getId_vaca());
+				pstmt.executeUpdate();
 			} catch (SQLException e) {
 			}
 		}
 	}
+
 	/**
 	 * Devuelve el id del medicamento
+	 * 
 	 * @return int Id medicamento
 	 * */
 	public int getId_medicamento() {
@@ -217,7 +206,9 @@ public class Medicamento {
 
 	/**
 	 * Guarda el id del medicamento
-	 * @param id_medicamento Id del medicamento
+	 * 
+	 * @param id_medicamento
+	 *            Id del medicamento
 	 * */
 	public void setId_medicamento(int id_medicamento) {
 		this.id_medicamento = id_medicamento;
@@ -225,6 +216,7 @@ public class Medicamento {
 
 	/**
 	 * Devuelve la fecha del medicamento
+	 * 
 	 * @return java.sql.Date Fecha del medicamento
 	 * */
 	public Date getFecha() {
@@ -233,7 +225,9 @@ public class Medicamento {
 
 	/**
 	 * Guarda la fecha del medicamento
-	 * @param fecha Fecha del medicamento
+	 * 
+	 * @param fecha
+	 *            Fecha del medicamento
 	 * */
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
@@ -241,6 +235,7 @@ public class Medicamento {
 
 	/**
 	 * Devuelve el tipo del medicamento
+	 * 
 	 * @return String Tipo del medicamento
 	 * */
 	public String getTipo() {
@@ -249,13 +244,17 @@ public class Medicamento {
 
 	/**
 	 * Guarda el tipo del medicamento
-	 * @param tipo Tipo del medicamento
+	 * 
+	 * @param tipo
+	 *            Tipo del medicamento
 	 */
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+
 	/**
 	 * Devuelve el id de la vaca
+	 * 
 	 * @return String Id de la vaca
 	 * */
 	public String getId_vaca() {
@@ -264,23 +263,28 @@ public class Medicamento {
 
 	/**
 	 * Guarda el id de la vaca
-	 * @param id_vaca Id de la vaca
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
 	 * */
 	public void setId_vaca(String id_vaca) {
 		this.id_vaca = id_vaca;
 	}
 
 	/**
-	 * Devuelve la descripci贸n del medicamento
-	 * @return String Descripci贸n del medicamento
+	 * Devuelve la descripci髇 del medicamento
+	 * 
+	 * @return String Descripci髇 del medicamento
 	 * */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
-	 * Guarda la descripci贸n del medicamento
-	 * @param descripcion Descripci贸n del medicamento
+	 * Guarda la descripci髇 del medicamento
+	 * 
+	 * @param descripcion
+	 *            Descripci髇 del medicamento
 	 * */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;

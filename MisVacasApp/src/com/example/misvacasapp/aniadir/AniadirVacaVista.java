@@ -3,7 +3,6 @@ package com.example.misvacasapp.aniadir;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
@@ -24,27 +22,26 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * Clase de la actividad de a√±adir vaca. En ella se implementan los m√©todos que se
- * utilizan para manejar la vista de a√±adir vaca
+ * Clase de la actividad de aÒadir vaca. En ella se implementan los mÈtodos que
+ * se utilizan para manejar la vista de aÒadir vaca
  * 
  * @author Sara Martinez Lopez
  * */
 public class AniadirVacaVista extends ActionBarActivity {
-
-	//Atributos
-	/** Id del usuario*/
+	// Atributos
+	/** Id del usuario */
 	private String id_usuario;
-	/**Lista de vacas del usuario*/
+	/** Lista de vacas del usuario */
 	private ArrayList<Vaca> lista;
-	/** Tipo que serializa o deserializa para enviar a traves del servicio web*/
+	/** Tipo que serializa o deserializa para enviar a traves del servicio web */
 	private Gson json;
-	/**Lista desplegable que muestra los tipos de vacas que puedes introducir*/
+	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
 
-	//M√©todos
-	
+	// MÈtodos
 	/**
-	 * A√±ade la vista de a√±adir vaca. Recoge el usuario de la vista del usuario. Inicializa parametros
+	 * AÒade la vista de aÒadir vaca. Recoge el usuario de la vista del usuario.
+	 * Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +58,34 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 	/**
 	 * Rellena la lista de desplegable de los tipos de vacas
+	 * 
 	 * @see onCreate
 	 * */
-	private void rellenarSpinner(){
+	private void rellenarSpinner() {
 		spinnerRaza = (Spinner) findViewById(R.id.raza_nuevo_texto);
-		ArrayList<String> listaRazas = new ArrayList<String>(Arrays.asList("Albera","Alistana Sanabresa","Asturiana de la Monta√±a",
-				"Asturiana de los Valles","Avile√±a Negra Ib√©rica","Avile√±a Negra Ib√©rica Bociblanca","Berrenda en Colorado",
-				"Berrenda en Negro","Betizu","Blanca Cacere√±a","Blonda de Aquitania","Bruna de los Pirineos","Cachena",
-				"Caldel√°","Canaria","C√°rdena Andaluza","Charolesa","Fleckvieh","Frieiresa","Frisona","Lidia","Limi√°",
-				"Limusina","Mallorquina","Marisme√±a","Menorquina","Monchina","Morucha","Morucha Negra","Murciana Levantina",
-				"Negra Andaluza","Pajuna","Palmera","Parda","Parda de Monta√±a","Pasiega","Pirenaica","Retinto","Rubia Gallega",
-				"Sayaguesa","Serrana de Teruel","Serrana Negra","Terre√±a","Tudanca","Vianesa"));
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listaRazas);
+		ArrayList<String> listaRazas = new ArrayList<String>(Arrays.asList(
+				"Albera", "Alistana Sanabresa", "Asturiana de la MontaÒa",
+				"Asturiana de los Valles", "AvileÒa Negra IbÈrica",
+				"AvileÒa Negra IbÈrica Bociblanca", "Berrenda en Colorado",
+				"Berrenda en Negro", "Betizu", "Blanca CacereÒa",
+				"Blonda de Aquitania", "Bruna de los Pirineos", "Cachena",
+				"Caldel·", "Canaria", "C·rdena Andaluza", "Charolesa",
+				"Fleckvieh", "Frieiresa", "Frisona", "Lidia", "Limi·",
+				"Limusina", "Mallorquina", "MarismeÒa", "Menorquina",
+				"Monchina", "Morucha", "Morucha Negra", "Murciana Levantina",
+				"Negra Andaluza", "Pajuna", "Palmera", "Parda",
+				"Parda de MontaÒa", "Pasiega", "Pirenaica", "Retinto",
+				"Rubia Gallega", "Sayaguesa", "Serrana de Teruel",
+				"Serrana Negra", "TerreÒa", "Tudanca", "Vianesa"));
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+				android.R.layout.simple_spinner_dropdown_item, listaRazas);
 		spinnerRaza.setAdapter(adapter);
 	}
-	
+
 	/**
 	 * Recoge la lista de vacas del usuario y lo guarda en el arrayList de lista
 	 * Para ello se llama al servicio web de vacas
+	 * 
 	 * @see onCreate
 	 * */
 	private void listaVacas() {
@@ -98,8 +105,9 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Comprueba que el id de la vaca nueva introducido sea correcto
-	 * Para ello comprueba que no sea vacio y que no exista ya ese animal
+	 * Comprueba que el id de la vaca nueva introducido sea correcto Para ello
+	 * comprueba que no sea vacio y que no exista ya ese animal
+	 * 
 	 * @see nuevaVaca
 	 * @return boolean si es true el id es correcto si es false no
 	 * */
@@ -107,7 +115,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
-
 		for (int i = 0; lista.size() > i; i++) {
 			if (id_vaca.equals(lista.get(i).getId_vaca())) {
 				id_correcto = false;
@@ -145,6 +152,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	/**
 	 * Recoge los campos de la vista que se han introducido para crear el animal
 	 * Comprueba que la fecha sea correcta
+	 * 
 	 * @return Vaca Vaca creada con los parametros introducidos
 	 * */
 	private Vaca crearVaca() {
@@ -167,33 +175,38 @@ public class AniadirVacaVista extends ActionBarActivity {
 					.getText().toString());
 			int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
 					.getText().toString()) - 1;
-			int a√±o = Integer
+			int aÒo = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
 							.getText().toString()) - 1900;
 			@SuppressWarnings("deprecation")
-			Date fecha = new Date(a√±o, mes, dia);
+			Date fecha = new Date(aÒo, mes, dia);
 			String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 					.getText().toString());
 			String raza = spinnerRaza.getSelectedItem().toString();
-		
 			String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
 					.getText().toString();
 			String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca))
 					.getText().toString();
-			vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo, null);	
+			vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
+					null);
 		}
 		return vaca;
 	}
-	//REMODELAR ESTE METODO PONER EN OTRO METODO COMPROBAR SEXO
-	//COMPROBAR EN OTROS METODOS LOS VALORES INTRODUCIDOS
+
+	// REMODELAR ESTE METODO PONER EN OTRO METODO COMPROBAR SEXO
+	// COMPROBAR EN OTROS METODOS LOS VALORES INTRODUCIDOS
 	/**
-	 * M√©todo que se ejecuta cuando se presiona el bot√≥n aceptar
-	 * En el se llama a las comprobaciones que se pueden hacer para a√±adir el animal correctamente y a√±ade el animal si todo es correcto
-	 * @param view Vista
+	 * MÈtodo que se ejecuta cuando se presiona el botÛn aceptar En el se llama
+	 * a las comprobaciones que se pueden hacer para aÒadir el animal
+	 * correctamente y aÒade el animal si todo es correcto
+	 * 
+	 * @param view
+	 *            Vista
 	 * */
 	public void nuevaVaca(View view) {
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
+
 			public void run() {
 				if (comprobarIdVaca()) {
 					final Vaca v = crearVaca();
@@ -202,12 +215,12 @@ public class AniadirVacaVista extends ActionBarActivity {
 					} else if (v.getSexo().equals("M")
 							|| v.getSexo().equals("H")) {
 						String vaca = json.toJson(v);
-						llamada.LLamadaA√±adirVaca(vaca);
+						llamada.LLamadaAÒadirVaca(vaca);
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								Toast.makeText(AniadirVacaVista.this,
-										"A√±adido correctamente",
+										"AÒadido correctamente",
 										Toast.LENGTH_SHORT).show();
 								Intent i = new Intent(getApplicationContext(),
 										UsuarioVista.class);
@@ -223,7 +236,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 								Toast.makeText(AniadirVacaVista.this,
 										"Mal sexo. M o H", Toast.LENGTH_SHORT)
 										.show();
-
 								Intent i = new Intent(getApplicationContext(),
 										AniadirVacaVista.class);
 								i.putExtra("id_usuario", id_usuario);
@@ -233,14 +245,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 						});
 					}
 				}
-
 			}
 		};
 		hilo.start();
 	}
 
 	/**
-	 * A√±ade el menu a la vista aniadirVaca
+	 * AÒade el menu a la vista aniadirVaca
 	 * 
 	 * @param menu
 	 * */
@@ -252,7 +263,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * A√±ade los item al menu
+	 * AÒade los item al menu
 	 * 
 	 * @param item
 	 * */

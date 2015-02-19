@@ -2,7 +2,6 @@ package com.example.misvacasapp.aniadir;
 
 import java.sql.Date;
 import java.util.ArrayList;
-
 import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
@@ -10,7 +9,6 @@ import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,59 +18,58 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * Clase de la actividad de aniadir medicamento En ella se implementan los mÃ©todos que se
- * utilizan para manejar la vista de aÃ±adir medicamento
+ * Clase de la actividad de aniadir medicamento En ella se implementan los
+ * métodos que se utilizan para manejar la vista de añadir medicamento
  * 
  * @author Sara Martinez Lopez
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
-
-	//Atributos
-	/**Id del animal*/
+	
+	// Atributos
+	/** Id del animal */
 	private String id_vaca;
-	/**Lista de medicamentos que tiene el animal*/
+	/** Lista de medicamentos que tiene el animal */
 	private ArrayList<Medicamento> lista;
-	/** Tipo que serializa o deserializa para enviar a travÃ©s del servicio web*/
+	/** Tipo que serializa o deserializa para enviar a través del servicio web */
 	private Gson json;
-	
-	//MÃ©todos
-	
+
+	// Métodos
 	/**
-	 * AÃ±ade la vista de aÃ±adir medicamento. Recoge el id de la vaca de la vista de la vaca. Inicializa parametros
+	 * Añade la vista de añadir medicamento. Recoge el id de la vaca de la vista
+	 * de la vaca. Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aniadir_medicamento);
-
 		json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
-		
 		Bundle bundle = getIntent().getExtras();
 		id_vaca = bundle.getString("id_vaca");
 		lista = json.fromJson(bundle.getString("listaMedicamentos"),
 				new TypeToken<ArrayList<Medicamento>>() {
 				}.getType());
-
 	}
 
 	/**
-	 * LLama a crear el id aleatorio y comprueba que ese id no exista
-	 * Si existe vuelve a crear otro id aleatorio
+	 * LLama a crear el id aleatorio y comprueba que ese id no exista Si existe
+	 * vuelve a crear otro id aleatorio
 	 * */
 	private int crearIdMedicamento() {
 		int id = idAleatorio();
 		for (int i = 0; lista.size() > i; i++) {
 			if (lista.get(i).getId_medicamento() == id) {
-				id= idAleatorio();
+				id = idAleatorio();
 				i = 0;
 			}
 		}
 		return id;
 	}
-	
+
 	/**
-	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un entero
+	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un
+	 * entero
+	 * 
 	 * @see Integer.MAX_VALUE
 	 * @return int Id aleatorio
 	 * */
@@ -80,7 +77,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
 	}
 
-	//FALTAN TODAS LAS COMPROBACIONES DE LOS DATOS INTRODUCIDOS
+	// FALTAN TODAS LAS COMPROBACIONES DE LOS DATOS INTRODUCIDOS
 	private Medicamento crearMedicamento() {
 		int dia = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_dia))
@@ -88,20 +85,18 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		int mes = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_mes))
 						.getText().toString()) - 1;
-		int aÃ±o = Integer
+		int año = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
 						.getText().toString()) - 1900;
 		@SuppressWarnings("deprecation")
-		Date fecha = new Date(aÃ±o, mes, dia);
+		Date fecha = new Date(año, mes, dia);
 		String tipo = ((TextView) findViewById(R.id.tipo_medicamento_texto))
 				.getText().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
 				.getText().toString();
-
 		Medicamento medicamento = new Medicamento();
-		medicamento = new Medicamento(crearIdMedicamento(), fecha, tipo, descripcion,
-				id_vaca);
-
+		medicamento = new Medicamento(crearIdMedicamento(), fecha, tipo,
+				descripcion, id_vaca);
 		return medicamento;
 	}
 
@@ -111,7 +106,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 
 			public void run() {
 				String m = json.toJson(crearMedicamento());
-				llamada.LLamadaAÃ±adirMedicamento(m);
+				llamada.LLamadaAñadirMedicamento(m);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -127,7 +122,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * AÃ±ade el menu a la vista aniadirVaca
+	 * Añade el menu a la vista aniadirVaca
 	 * 
 	 * @param menu
 	 * */
@@ -139,7 +134,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * AÃ±ade los item al menu
+	 * Añade los item al menu
 	 * 
 	 * @param item
 	 * */

@@ -3,42 +3,34 @@ package basedatos;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.apache.naming.java.javaURLContextFactory;
 
 /**
- * Clase que hace la conexi贸n a la base de datos
+ * Clase que hace la conexi髇 a la base de datos
  * 
  * @author Sara Martinez Lopez
  * */
 public class OracleConection {
-	
-	//Atributos
-	/** Conexi贸n */
+	// Atributos
+	/** Conexi髇 */
 	private Connection conexion;
-	
-	//M茅todos
 
-//	public static void main(String[] args) {
-//		OracleConection obconeccion = new OracleConection();
-//		obconeccion.Conectar();
-//	}
-
+	// M閠odos
+	// public static void main(String[] args) {
+	// OracleConection obconeccion = new OracleConection();
+	// obconeccion.Conectar();
+	// }
 	/**
-	 * M茅todo que devuelve la conexi贸n 
-	 * @return Connection Conexi贸n
+	 * M閠odo que devuelve la conexi髇
+	 * 
+	 * @return Connection Conexi髇
 	 * */
 	public Connection getConexion() {
 		return conexion;
 	}
 
 	/**
-	 * Guarda la conexi贸n
+	 * Guarda la conexi髇
+	 * 
 	 * @param conexion
 	 * */
 	public void setConexion(Connection conexion) {
@@ -46,10 +38,11 @@ public class OracleConection {
 	}
 
 	/**
-	 * M茅todo que hace la conexi贸n a la base de datos
-	 * Crea la conexi贸n con el driver jdbc. Necesitamos la IP(localhost) el puerto en el que escucha(1521) y el 
-	 * usuario y la contrase帽a a la base de datos para crear la conexi贸n
-	 * @return OracleConection 
+	 * M閠odo que hace la conexi髇 a la base de datos Crea la conexi髇 con el
+	 * driver jdbc. Necesitamos la IP(localhost) el puerto en el que
+	 * escucha(1521) y el usuario y la contrase馻 a la base de datos
+	 * 
+	 * @return OracleConection
 	 * */
 	public OracleConection Conectar() {
 		try {
@@ -59,18 +52,14 @@ public class OracleConection {
 			Class.forName("oracle.jdbc.OracleDriver");
 			String BaseDeDatos = "jdbc:oracle:thin:@" + ip + ":1521:XE";
 			conexion = DriverManager.getConnection(BaseDeDatos, "bbdd", "bbdd");
-
 			if (conexion != null) {
 				System.out.println("Conexion exitosa");
-				
 			} else {
 				System.out.println("Conexion fallida");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return this;
 	}
-
 }
