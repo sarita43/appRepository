@@ -91,7 +91,7 @@ public class Medicamento {
 
 	/**
 	 * Devuelve el medicamento que tiene un animal en la base de datos. Crea la conexión a la base de datos,
-	 *  llama a la base de datos recogiendo el medicamento que se queire y los guarda en un nuevo medicamento
+	 *  llama a la base de datos recogiendo el medicamento que se quiere y los guarda en un nuevo medicamento
 	 * @param id_vaca Id del animal
 	 * @param id_medicamento Id del medicamento
 	 * @return Medicamento Medicamento encontrado en la base de datos 
@@ -129,7 +129,10 @@ public class Medicamento {
 
 	/**
 	 * Método que devuelve la lista de medicamentos como String. Recoge los medicamentos de listaMedicamento y los serializa con
-	 * json.toJson. Si el animal no tiene medicamentos en la lista se 
+	 * json.toJson. Si el animal no tiene medicamentos en la lista se añade uno sin parametros, para que no mande una lista 
+	 * vacia
+	 * @param id_vaca Id de la vaca para buscar los medicamentos
+	 * @return String Lista de medicamentos como String
 	 * */
 	public String listaMedicamentoString(String id_vaca) {
 		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
@@ -144,6 +147,13 @@ public class Medicamento {
 		}
 	}
 
+	/**
+	 * Método que devuelve el medicamento que tiene un animal en la base de datos como String. 
+	 * Recoge el medicamento de getMedicamento y lo serializa con json.toJson. 
+	 * @param id_vaca Id de la vaca para buscar el medicamento
+	 * @param id_medicamentos Id del medicamento a buscar
+	 * @return String Medicamento como String
+	 * */
 	public String medicamentoString(String id_vaca, String id_medicamento) {
 		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		Medicamento me = getMedicamento(id_vaca, id_medicamento);
@@ -151,6 +161,11 @@ public class Medicamento {
 		return medicamento;
 	}
 	
+	/**
+	 * Método que elimina un medicamento de la ase de datos de la lista de medicamentos de un animal
+	 * @param id_medicamento Id del medicamento a eliminar
+	 * @param id_vaca Id del animal para buscar el medicamento a eliminar
+	 * */
 	public void eliminarMedicamento(String id_medicamento, String id_vaca) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
@@ -166,6 +181,11 @@ public class Medicamento {
 		}
 	}
 
+	/**
+	 * Método que añade un medicamento a la base de datos. Recoge el medicamento como String y lo deserializa a tipo Medicamento, 
+	 * conecta con la base de datos y añade el medicamento en la base de datos
+	 * @param medicamento Medicamento que recibe 
+	 * */
 	public void añadirMedicamento(String medicamento) {
 		Gson json = new GsonBuilder().setPrettyPrinting().setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES(?,?,?,?,?)";
