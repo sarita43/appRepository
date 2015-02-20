@@ -13,20 +13,56 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Clase vaca
+ * 
+ * @author Sara Martinez Lopez
+ * */
 public class Vaca {
 
+	// Atributos
+	/** Id del animal */
 	private String id_vaca;
+	/** Raza del animal */
 	private String raza;
+	/** Fecha de nacimiento del animal */
 	private Date fecha_nacimiento;
+	/** Id de la madre del animal */
 	private String id_madre;
+	/** Foto del animal o foto por defecto */
 	private byte[] foto;
+	/** Id del usuario del animal */
 	private String id_usuario;
+	/** Sexo del animal */
 	private String sexo;
 
+	// Métodos
+	/**
+	 * Constructor del animal sin atributos
+	 * Crea un animal conn id=0
+	 * */
 	public Vaca() {
 		setId_vaca("0");
 	}
 
+	/**
+	 * Constructor del animal con atributos
+	 * 
+	 * @param id_vaca
+	 *            Id del animal
+	 * @param raza
+	 *            Raza del animal
+	 * @param fecha_nacimiento
+	 *            Fecha de nacimiento
+	 * @param id_madre
+	 *            Id de la madre ddel animal
+	 * @param id_usuario
+	 *            Id del usuario del animal
+	 * @param sexo
+	 *            Sexo del animal
+	 * @param foto
+	 *            Foto del animal
+	 * */
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
 			String id_madre, String id_usuario, String sexo, byte[] foto) {
 		setId_vaca(id_vaca);
@@ -38,6 +74,16 @@ public class Vaca {
 		setSexo(sexo);
 	}
 
+	/**
+	 * Devuelve el arrayList de los animales que tiene un usuario en la base
+	 * de datos. Crea la conexión a la base de datos, llama a la base de datos
+	 * recogiendo todos los animales de ese usuario y los guarda en un arrayList
+	 * lista que contiene Vacas.
+	 * 
+	 * @param id_usuario
+	 *            Id del usuario para buscar sus animales
+	 * @return ArrayList<Vaca> Lista de animales del usuario
+	 * */
 	public ArrayList<Vaca> listaVacas(String id_usuario) {
 		OracleConection c = new OracleConection();
 		ArrayList<Vaca> lista = new ArrayList<Vaca>();
@@ -68,7 +114,18 @@ public class Vaca {
 		}
 		return lista;
 	}
-
+	
+	/**
+	 * Devuelve el animal que tiene un usuario en la base de datos. Crea la
+	 * conexión a la base de datos, llama a la base de datos recogiendo el
+	 * animal que se quiere y los guarda en un nuevo animal
+	 * 
+	 * @param id_vaca
+	 *            Id del animal
+	 * @param id_usuario
+	 *            Id del usuario
+	 * @return Vaca Animal encontrado en la base de datos
+	 * */
 	public Vaca getVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
@@ -97,6 +154,16 @@ public class Vaca {
 		return vaca;
 	}
 
+	/**
+	 * Método que devuelve el animal que hay en la base de datos como String.
+	 * Recoge el animal de getVaca y lo serializa con json.toJson.
+	 * 
+	 * @param id_vaca
+	 *            Id del animal
+	 * @param id_usuario
+	 *            DNI del usuario o Id del usuario
+	 * @return String Vaca como String
+	 * */
 	public String vacaString(String id_vaca, String id_usuario) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
@@ -105,6 +172,13 @@ public class Vaca {
 		return vaca;
 	}
 
+	/**
+	 * Método que devuelve la lista de animales como String. Recoge los
+	 * animales de listaVaca y los serializa con json.toJson. Si el
+	 * usuario no tiene animales en la lista se le añade un animal a la lista con el id=0
+	 * @param id_vaca Id de la vaca
+	 * @return String Lista de medicamentos como String
+	 * */
 	public String listaVacasString(String id_usuario) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
@@ -119,7 +193,12 @@ public class Vaca {
 		}
 	}
 
-	public void a�adirVaca(String vaca) {
+	/**
+	 * Método que añade un animal a la base de datos. Hace la conexión con la base de datos y añade el animal que se
+	 * pasa por parametro como String. Se deserializa con json.fromJson y se introduce en la base de datos
+	 * @param vaca Vaca que como String para deserializar
+	 * */
+	public void añadirVaca(String vaca) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO vaca(id_vaca,raza,fecha_nacimiento,id_madre,id_usuario,sexo,foto) VALUES(?,?,?,?,?,?,?)";
@@ -147,6 +226,11 @@ public class Vaca {
 		}
 	}
 
+	/**
+	 * Elimina el animal de la base de datos. Hace la conexión con la base de datos y elimina el animal
+	 * @param id_vaca Id de la vaca
+	 * @param id_usuario Id del usuario
+	 * */
 	public void eliminarVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
@@ -162,58 +246,135 @@ public class Vaca {
 		}
 	}
 	
+	/**
+	 * Devuelve el id del animal
+	 * 
+	 * @return String Id del animal
+	 * */
 	public String getId_vaca() {
 		return id_vaca;
 	}
 
+	/**
+	 * Guarda el id del animal
+	 * 
+	 * @param id_vaca
+	 *            Id del animal
+	 * */
 	public void setId_vaca(String id_vaca) {
 		this.id_vaca = id_vaca;
 	}
 
+	/**
+	 * Devuelve la raza del animal
+	 * 
+	 * @return String Raza del animal
+	 * */
 	public String getRaza() {
 		return raza;
 	}
 
+	/**
+	 * Guarda la raza del animal
+	 * 
+	 * @param raza
+	 *            Raza del animal
+	 * */
 	public void setRaza(String raza) {
 		this.raza = raza;
 	}
 
+	/**
+	 * Devuelve la fecha de nacimiento
+	 * 
+	 * @return Date Fecha de nacimiento
+	 * */
 	public Date getFecha_nacimiento() {
 		return fecha_nacimiento;
 	}
 
+	/**
+	 * Guarda la fecha de nacimiento del animal
+	 * 
+	 * @param fecha_nacimiento
+	 *            Guarda la fecha del nacimiento del animal
+	 * */
 	public void setFecha_nacimiento(Date fecha_nacimiento) {
 		this.fecha_nacimiento = fecha_nacimiento;
 	}
 
+	/**
+	 * Devuelve el id de la madre del animal
+	 * 
+	 * @return String Id de la madre del animal
+	 * */
 	public String getId_madre() {
 		return id_madre;
 	}
 
+	/**
+	 * Guarda el id de la madre del animal
+	 * 
+	 * @param id_madre
+	 *            Id de la madre del animal
+	 * */
 	public void setId_madre(String id_madre) {
 		this.id_madre = id_madre;
 	}
 
+	/**
+	 * Devuelve la foto del animal
+	 * 
+	 * @return byte[] Foto del animal
+	 * */
 	public byte[] getFoto() {
 		return foto;
 	}
 
+	/**
+	 * Guarda la foto del animal
+	 * 
+	 * @param foto
+	 *            Foto del animal
+	 * */
 	public void setFoto(byte[] foto) {
 		this.foto = foto;
 	}
 
+	/**
+	 * Devuelve el id del usuario del animal
+	 * 
+	 * @return String Id del usuario
+	 * */
 	public String getId_usuario() {
 		return id_usuario;
 	}
 
+	/**
+	 * Guarda el id del usuario del animal
+	 * 
+	 * @param id_usuario
+	 *            Usuario del animal
+	 * */
 	public void setId_usuario(String id_usuario) {
 		this.id_usuario = id_usuario;
 	}
 
+	/**
+	 * Devuelve el sexo del animal
+	 * 
+	 * @return String Sexo del animal
+	 * */
 	public String getSexo() {
 		return sexo;
 	}
 
+	/**
+	 * Guarda el sexo del animal
+	 * 
+	 * @param sexo
+	 *            Sexo del animal
+	 * */
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
