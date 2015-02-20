@@ -193,7 +193,7 @@ public class Medicamento {
 	/**
 	 * Método que añade un medicamento a la base de datos. Hace la conexión con la base de datos y añade el medicamento que se
 	 * pasa por parametro como String. Se deserializa con json.fromJson y se introduce en la base de datos
-	 * @param medicamento Medicamento que como String para deserializar
+	 * @param medicamento Medicamento como String para deserializar
 	 * */
 	public void añadirMedicamento(String medicamento) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
