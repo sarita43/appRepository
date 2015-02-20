@@ -20,20 +20,20 @@ public class Usuario {
 	private String apellido1;
 	/** Segundo apellido */
 	private String apellido2;
-	/** Direcci�n del usuario */
+	/** Dirección del usuario */
 	private String direccion;
-	/** Poblaci�n del usuario */
+	/** Población del usuario */
 	private String poblacion;
-	/** Tel�fono del usuario */
+	/** Teléfono del usuario */
 	private int telefono;
 	/** Dni o id del usuario */
 	private String dni;
-	/** Contrase�a del usuario */
-	private String contrase�a;
+	/** Contraseña del usuario */
+	private String contraseña;
 	/** Rol que tiene el usuario. Usuario o administrador */
 	private int rol;
 
-	// M�todos
+	// Métodos
 	/** Constructor del usuario sin atributos */
 	public Usuario() {
 	}
@@ -48,21 +48,21 @@ public class Usuario {
 	 * @param apellido2
 	 *            Segundo apellido del usuario
 	 * @param direccion
-	 *            Direcci�n del usuario
+	 *            Dirección del usuario
 	 * @param poblacion
-	 *            Poblaci�n del usuario
+	 *            Población del usuario
 	 * @param telefono
-	 *            Tel�fono del usuario
+	 *            Teléfono del usuario
 	 * @param dni
 	 *            DNI o Id del usuario
-	 * @param contrase�a
-	 *            Contrase�a del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * @param rol
 	 *            Rol que tiene el usuario. Usuario o administrador
 	 * */
 	public Usuario(String nombre, String apellido1, String apellido2,
 			String direccion, String poblacion, String telefono, String dni,
-			String contrase�a, int rol) {
+			String contraseña, int rol) {
 		setNombre(nombre);
 		setApellido1(apellido1);
 		setApellido2(apellido2);
@@ -74,18 +74,18 @@ public class Usuario {
 			setTelefono(0);
 		}
 		setDni(dni);
-		setContrase�a(contrase�a);
+		setContraseña(contraseña);
 		setRol(rol);
 	}
 
-	// public Usuario(String dni, String contrase�a, int rol) {
+	// public Usuario(String dni, String contraseña, int rol) {
 	// setDni(dni);
-	// setContrase�a(contrase�a);
+	// setContraseña(contraseña);
 	// setRol(rol);
 	// }
 	/**
 	 * Devuelve el arrayList de los Usuarios que tiene hay en la base de datos.
-	 * Crea la conexi�n a la base de datos, llama a la base de datos recogiendo
+	 * Crea la conexión a la base de datos, llama a la base de datos recogiendo
 	 * todos los usuarios de ella y los guarda en un arrayList lista que
 	 * contiene ususarios.
 	 * 
@@ -120,17 +120,17 @@ public class Usuario {
 	}
 
 	/**
-	 * Devuelve un usuario la base de datos. Crea la conexi�n a la base de
+	 * Devuelve un usuario la base de datos. Crea la conexión a la base de
 	 * datos, llama a la base de datos recogiendo el usuario que se quiere y lo
 	 * guarda en un nuevo usuario
 	 * 
 	 * @param dni
 	 *            DNI del usuario o id del usuario
-	 * @param contrase�a
-	 *            Contrase�a del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * @return Usuario Usuario encontrado en la base de datos
 	 * */
-	public Usuario getUsuario(String dni, String contrase�a) {
+	public Usuario getUsuario(String dni, String contraseña) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		Usuario usuario = new Usuario();
@@ -139,7 +139,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
 						.executeQuery("SELECT * from usuario where dni='" + dni
-								+ "'and contrase�a='" + contrase�a + "'");
+								+ "'and contraseña='" + contraseña + "'");
 				while (result.next()) {
 					try {
 						usuario = new Usuario(result.getString(1),
@@ -159,23 +159,30 @@ public class Usuario {
 	}
 
 	/**
-	 * M�todo que devuelve el usuario que hay en la base de datos como String.
+	 * Método que devuelve el usuario que hay en la base de datos como String.
 	 * Recoge el usuario de getUsuario y lo serializa con json.toJson.
 	 * 
 	 * @param dni
 	 *            DNI del usuario o Id del usuario
-	 * @param contrase�a
-	 *            Contrase�a del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * @return String Usuario como String
 	 * */
-	public String usuarioString(String dni, String contrase�a) {
-		Usuario u = getUsuario(dni, contrase�a);
+	public String usuarioString(String dni, String contraseña) {
+		Usuario u = getUsuario(dni, contraseña);
 		Gson gson = new Gson();
 		String usuario = gson.toJson(u);
 		return usuario;
 	}
 
-	public boolean usuarioExistente(String dni, String contrase�a) {
+	/**
+	 * Método que busca en la base de datos el usuario y comprueba que coincidan usuario y contraseña. Si existe devuelve 
+	 * un true y si no un false
+	 * @param dni DNI o id del usuario
+	 * @param contraseña Contraseña del usuario
+	 * @return boolean Existe o no el usuario
+	 * */
+	public boolean usuarioExistente(String dni, String contraseña) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		boolean existe = false;
@@ -184,7 +191,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				ResultSet result = select
 						.executeQuery("SELECT * from usuario where dni='" + dni
-								+ "'and contrase�a='" + contrase�a + "'");
+								+ "'and contraseña='" + contraseña + "'");
 				while (result.next()) {
 					try {
 						existe = true;
@@ -198,6 +205,17 @@ public class Usuario {
 		return existe;
 	}
 
+	/**
+	 * Actualiza los parámetros del usuario cuyo id, pasado por parámetro, exista en la base de datos.
+	 * Hace la conexión con la base de datos, busca el usuario con ese id y cambia los parámetros.
+	 * @param dni DNI o id del ususario
+	 * @param nombre Nombre del usuario
+	 * @param apellido1 Primer apellido
+	 * @param apellido2 Segundo apellido
+	 * @param direccion Dirección del usuario
+	 * @param poblacion Población del usuario
+	 * @param telefono Teléfono del usuario
+	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
 			String apellido2, String direccion, String poblacion, int telefono) {
 		OracleConection c = new OracleConection();
@@ -220,19 +238,29 @@ public class Usuario {
 		}
 	}
 
-	public void actualizarContrase�a(String dni, String contrase�a) {
+	/**
+	 * Cambia la contraseña del usuario. Para ello tiene que hacer la conexión con la base de datos, buscar al usuario
+	 * y cambiar la contraseña
+	 * @param dni DNI o Id del usuario
+	 * @param contraseña Contraseña del usuario
+	 * */
+	public void actualizarContraseña(String dni, String contraseña) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
-				select.executeQuery("UPDATE usuario SET contrase�a ='"
-						+ contrase�a + "' where dni='" + dni + "'");
+				select.executeQuery("UPDATE usuario SET contraseña ='"
+						+ contraseña + "' where dni='" + dni + "'");
 			} catch (SQLException e) {
 			}
 		}
 	}
 
+	/**
+	 * Elimina el usuario de la base de datos. Hace la conexión con la base de datos y elimina el usuario
+	 * @param id_usuario Id del usuario
+	 * */
 	public void eliminarUsuario(String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
@@ -305,26 +333,26 @@ public class Usuario {
 	}
 
 	/**
-	 * Devuelve la direcci�n del usuario
+	 * Devuelve la dirección del usuario
 	 * 
-	 * @return String Direcci�n del ususario
+	 * @return String Dirección del ususario
 	 * */
 	public String getDireccion() {
 		return direccion;
 	}
 
 	/**
-	 * Guarda la direcci�n del usuario
+	 * Guarda la dirección del usuario
 	 * 
 	 * @param direccion
-	 *            Direcci�n del usuario
+	 *            Dirección del usuario
 	 * */
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
 
 	/**
-	 * Devuelve la poblaci�n del usuario
+	 * Devuelve la población del usuario
 	 * 
 	 * @return String Poblacion del usuario
 	 * */
@@ -333,25 +361,25 @@ public class Usuario {
 	}
 
 	/**
-	 * Guarda la poblaci�n
+	 * Guarda la población
 	 * 
-	 * @param poblaci�n
+	 * @param población
 	 * */
 	public void setPoblacion(String poblacion) {
 		this.poblacion = poblacion;
 	}
 
 	/**
-	 * Devuelve el tel�fono
+	 * Devuelve el teléfono
 	 * 
-	 * @return int Tel�fono del usuario
+	 * @return int Teléfono del usuario
 	 * */
 	public int getTelefono() {
 		return telefono;
 	}
 
 	/**
-	 * Guarda el tel�fono
+	 * Guarda el teléfono
 	 * 
 	 * @param telefono
 	 *            Telefono del usuario
@@ -380,22 +408,22 @@ public class Usuario {
 	}
 
 	/**
-	 * Devuelve la contrase�a del usuario
+	 * Devuelve la contraseña del usuario
 	 * 
-	 * @return String Contrase�a del usuario
+	 * @return String Contraseña del usuario
 	 * */
-	public String getContrase�a() {
-		return contrase�a;
+	public String getContraseña() {
+		return contraseña;
 	}
 
 	/**
-	 * Guarda la contrase�a del usuario
+	 * Guarda la contraseña del usuario
 	 * 
-	 * @param contrase�a
-	 *            Contrase�a del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * */
-	public void setContrase�a(String contrase�a) {
-		this.contrase�a = contrase�a;
+	public void setContraseña(String contraseña) {
+		this.contraseña = contraseña;
 	}
 
 	/**
