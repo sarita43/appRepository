@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,7 +18,6 @@ import com.google.gson.GsonBuilder;
  * @author Sara Martinez Lopez
  * */
 public class Vaca {
-
 	// Atributos
 	/** Id del animal */
 	private String id_vaca;
@@ -36,10 +34,9 @@ public class Vaca {
 	/** Sexo del animal */
 	private String sexo;
 
-	// MÃ©todos
+	// Métodos
 	/**
-	 * Constructor del animal sin atributos
-	 * Crea un animal conn id=0
+	 * Constructor del animal sin atributos Crea un animal conn id=0
 	 * */
 	public Vaca() {
 		setId_vaca("0");
@@ -75,8 +72,8 @@ public class Vaca {
 	}
 
 	/**
-	 * Devuelve el arrayList de los animales que tiene un usuario en la base
-	 * de datos. Crea la conexiÃ³n a la base de datos, llama a la base de datos
+	 * Devuelve el arrayList de los animales que tiene un usuario en la base de
+	 * datos. Crea la conexión a la base de datos, llama a la base de datos
 	 * recogiendo todos los animales de ese usuario y los guarda en un arrayList
 	 * lista que contiene Vacas.
 	 * 
@@ -88,7 +85,6 @@ public class Vaca {
 		OracleConection c = new OracleConection();
 		ArrayList<Vaca> lista = new ArrayList<Vaca>();
 		c.Conectar();
-
 		Vaca vaca = new Vaca();
 		if (c.getConexion() != null) {
 			try {
@@ -96,28 +92,26 @@ public class Vaca {
 				ResultSet result = select
 						.executeQuery("SELECT * from vaca where id_usuario='"
 								+ id_usuario + "'");
-
 				while (result.next()) {
 					try {
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
-								result.getString(6),result.getBytes(7));
+								result.getString(6), result.getBytes(7));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 					lista.add(vaca);
-
 				}
 			} catch (SQLException e) {
 			}
 		}
 		return lista;
 	}
-	
+
 	/**
 	 * Devuelve el animal que tiene un usuario en la base de datos. Crea la
-	 * conexiÃ³n a la base de datos, llama a la base de datos recogiendo el
+	 * conexión a la base de datos, llama a la base de datos recogiendo el
 	 * animal que se quiere y los guarda en un nuevo animal
 	 * 
 	 * @param id_vaca
@@ -129,15 +123,14 @@ public class Vaca {
 	public Vaca getVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
-
 		Vaca vaca = new Vaca();
 		if (c.getConexion() != null) {
 			try {
-				PreparedStatement ps = c.getConexion().prepareStatement( "SELECT * from vaca where id_usuario=? and id_vaca=?" );
-				ps.setString( 1, id_usuario);
-				ps.setString( 2, id_vaca);
+				PreparedStatement ps = c.getConexion().prepareStatement(
+						"SELECT * from vaca where id_usuario=? and id_vaca=?");
+				ps.setString(1, id_usuario);
+				ps.setString(2, id_vaca);
 				ResultSet result = ps.executeQuery();
-				
 				while (result.next()) {
 					try {
 						vaca = new Vaca(result.getString(1),
@@ -155,7 +148,7 @@ public class Vaca {
 	}
 
 	/**
-	 * MÃ©todo que devuelve el animal que hay en la base de datos como String.
+	 * Método que devuelve el animal que hay en la base de datos como String.
 	 * Recoge el animal de getVaca y lo serializa con json.toJson.
 	 * 
 	 * @param id_vaca
@@ -173,10 +166,12 @@ public class Vaca {
 	}
 
 	/**
-	 * MÃ©todo que devuelve la lista de animales como String. Recoge los
-	 * animales de listaVaca y los serializa con json.toJson. Si el
-	 * usuario no tiene animales en la lista se le aÃ±ade un animal a la lista con el id=0
-	 * @param id_vaca Id de la vaca
+	 * Método que devuelve la lista de animales como String. Recoge los animales
+	 * de listaVaca y los serializa con json.toJson. Si el usuario no tiene
+	 * animales en la lista se le añade un animal a la lista con el id=0
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
 	 * @return String Lista de medicamentos como String
 	 * */
 	public String listaVacasString(String id_usuario) {
@@ -194,18 +189,20 @@ public class Vaca {
 	}
 
 	/**
-	 * MÃ©todo que aÃ±ade un animal a la base de datos. Hace la conexiÃ³n con la base de datos y aÃ±ade el animal que se
-	 * pasa por parametro como String. Se deserializa con json.fromJson y se introduce en la base de datos
-	 * @param vaca Vaca que como String para deserializar
+	 * Método que añade un animal a la base de datos. Hace la conexión con la
+	 * base de datos y añade el animal que se pasa por parametro como String. Se
+	 * deserializa con json.fromJson y se introduce en la base de datos
+	 * 
+	 * @param vaca
+	 *            Vaca que como String para deserializar
 	 * */
-	public void aÃ±adirVaca(String vaca) {
+	public void añadirVaca(String vaca) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO vaca(id_vaca,raza,fecha_nacimiento,id_madre,id_usuario,sexo,foto) VALUES(?,?,?,?,?,?,?)";
 		Vaca v = json.fromJson(vaca, Vaca.class);
 		OracleConection c = new OracleConection();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
 				File fichero = new File("C:\\Users\\sara\\Desktop\\vaca1.gif");
@@ -220,32 +217,33 @@ public class Vaca {
 				pstmt.setString(6, v.getSexo());
 				pstmt.setBlob(7, streamEntrada);
 				pstmt.executeUpdate();
-
 			} catch (SQLException | FileNotFoundException e) {
 			}
 		}
 	}
 
 	/**
-	 * Elimina el animal de la base de datos. Hace la conexiÃ³n con la base de datos y elimina el animal
-	 * @param id_vaca Id de la vaca
-	 * @param id_usuario Id del usuario
+	 * Elimina el animal de la base de datos. Hace la conexión con la base de
+	 * datos y elimina el animal
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
+	 * @param id_usuario
+	 *            Id del usuario
 	 * */
 	public void eliminarVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
-
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
 						+ id_vaca + "' AND id_usuario='" + id_usuario + "'");
-
 			} catch (SQLException e) {
 			}
 		}
 	}
-	
+
 	/**
 	 * Devuelve el id del animal
 	 * 
@@ -378,5 +376,4 @@ public class Vaca {
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
-
 }

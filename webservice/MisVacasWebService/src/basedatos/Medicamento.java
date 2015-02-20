@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 
 /**
  * Clase medicameno
+ * 
  * @author Sara Martinez Lopez
  * */
 public class Medicamento {
@@ -26,7 +27,7 @@ public class Medicamento {
 	/** Id de la vaca */
 	private String id_vaca;
 
-	// M茅todos
+	// M閠odos
 	/** Constructor del medicamento sin atributos */
 	public Medicamento() {
 	}
@@ -41,7 +42,7 @@ public class Medicamento {
 	 * @param tipo
 	 *            Tipo de medicamento
 	 * @param descripcion
-	 *            Descripci贸n del medicamento
+	 *            Descripci髇 del medicamento
 	 * @param id_vaca
 	 *            Id de la vaca
 	 * */
@@ -56,7 +57,7 @@ public class Medicamento {
 
 	/**
 	 * Devuelve el arrayList de los medicamentos que tiene un animal en la base
-	 * de datos. Crea la conexi贸n a la base de datos, llama a la base de datos
+	 * de datos. Crea la conexi髇 a la base de datos, llama a la base de datos
 	 * recogiendo todos los medicamentos de ella y los guarda en un arrayList
 	 * lista que contiene medicamentos.
 	 * 
@@ -95,7 +96,7 @@ public class Medicamento {
 
 	/**
 	 * Devuelve el medicamento que tiene un animal en la base de datos. Crea la
-	 * conexi贸n a la base de datos, llama a la base de datos recogiendo el
+	 * conexi髇 a la base de datos, llama a la base de datos recogiendo el
 	 * medicamento que se queire y los guarda en un nuevo medicamento
 	 * 
 	 * @param id_vaca
@@ -134,10 +135,13 @@ public class Medicamento {
 	}
 
 	/**
-	 * M茅todo que devuelve la lista de medicamentos como String. Recoge los
+	 * M閠odo que devuelve la lista de medicamentos como String. Recoge los
 	 * medicamentos de listaMedicamento y los serializa con json.toJson. Si el
-	 * animal no tiene medicamentos en la lista se le a帽ade un medicamento a la lista vacio
-	 * @param id_vaca Id de la vaca
+	 * animal no tiene medicamentos en la lista se le a馻de un medicamento a la
+	 * lista vacio
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
 	 * @return String Lista de medicamentos como String
 	 * */
 	public String listaMedicamentoString(String id_vaca) {
@@ -155,8 +159,9 @@ public class Medicamento {
 	}
 
 	/**
-	 * M茅todo que devuelve el medicamento que hay en la base de datos como String.
-	 * Recoge el medicamento de getMedicamento y lo serializa con json.toJson.
+	 * M閠odo que devuelve el medicamento que hay en la base de datos como
+	 * String. Recoge el medicamento de getMedicamento y lo serializa con
+	 * json.toJson.
 	 * 
 	 * @param id_vaca
 	 *            Id del animal
@@ -173,9 +178,13 @@ public class Medicamento {
 	}
 
 	/**
-	 * Elimina el medicamento de la base de datos. Hace la conexi贸n con la base de datos y elimina el medicamento
-	 * @param id_medicamento Id del medicamento
-	 * @param id_vaca Id de la vaca
+	 * Elimina el medicamento de la base de datos. Hace la conexi髇 con la base
+	 * de datos y elimina el medicamento
+	 * 
+	 * @param id_medicamento
+	 *            Id del medicamento
+	 * @param id_vaca
+	 *            Id de la vaca
 	 * */
 	public void eliminarMedicamento(String id_medicamento, String id_vaca) {
 		OracleConection c = new OracleConection();
@@ -191,11 +200,15 @@ public class Medicamento {
 	}
 
 	/**
-	 * M茅todo que a帽ade un medicamento a la base de datos. Hace la conexi贸n con la base de datos y a帽ade el medicamento que se
-	 * pasa por parametro como String. Se deserializa con json.fromJson y se introduce en la base de datos
-	 * @param medicamento Medicamento como String para deserializar
+	 * M閠odo que a馻de un medicamento a la base de datos. Hace la conexi髇 con
+	 * la base de datos y a馻de el medicamento que se pasa por parametro como
+	 * String. Se deserializa con json.fromJson y se introduce en la base de
+	 * datos
+	 * 
+	 * @param medicamento
+	 *            Medicamento como String para deserializar
 	 * */
-	public void a帽adirMedicamento(String medicamento) {
+	public void a馻dirMedicamento(String medicamento) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES(?,?,?,?,?)";
@@ -294,19 +307,19 @@ public class Medicamento {
 	}
 
 	/**
-	 * Devuelve la descripci贸n del medicamento
+	 * Devuelve la descripci髇 del medicamento
 	 * 
-	 * @return String Descripci贸n del medicamento
+	 * @return String Descripci髇 del medicamento
 	 * */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
-	 * Guarda la descripci贸n del medicamento
+	 * Guarda la descripci髇 del medicamento
 	 * 
 	 * @param descripcion
-	 *            Descripci贸n del medicamento
+	 *            Descripci髇 del medicamento
 	 * */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;

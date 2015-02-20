@@ -3,39 +3,49 @@ package web.service;
 import basedatos.Usuario;
 
 public class UsuarioWebService {
-
 	/**
-	 * MÃ©todo que si existe el usuario devuelve 
-	 * un true y si no un false
-	 * @param dni DNI o id del usuario
-	 * @param contraseÃ±a ContraseÃ±a del usuario
+	 * Método que si existe el usuario devuelve un true y si no un false
+	 * 
+	 * @param dni
+	 *            DNI o id del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * @return boolean Existe o no el usuario
 	 * */
-	public boolean usuarioExistente(String dni, String contraseÃ±a) {
-		return new Usuario().usuarioExistente(dni, contraseÃ±a);
+	public boolean usuarioExistente(String dni, String contraseña) {
+		return new Usuario().usuarioExistente(dni, contraseña);
 	}
 
 	/**
-	 * MÃ©todo que devuelve el usuario como String. 
+	 * Método que devuelve el usuario como String.
+	 * 
 	 * @param dni
 	 *            DNI del usuario o Id del usuario
-	 * @param contraseÃ±a
-	 *            ContraseÃ±a del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * @return String Usuario como String
 	 * */
-	public String Usuario(String dni, String contraseÃ±a) {
-		return new Usuario().usuarioString(dni, contraseÃ±a);
+	public String Usuario(String dni, String contraseña) {
+		return new Usuario().usuarioString(dni, contraseña);
 	}
 
 	/**
-	 * Actualiza los parÃ¡metros del usuario cuyo id se pasa por parÃ¡metro.
-	 * @param dni DNI o id del ususario
-	 * @param nombre Nombre del usuario
-	 * @param apellido1 Primer apellido
-	 * @param apellido2 Segundo apellido
-	 * @param direccion DirecciÃ³n del usuario
-	 * @param poblacion PoblaciÃ³n del usuario
-	 * @param telefono TelÃ©fono del usuario
+	 * Actualiza los parámetros del usuario cuyo id se pasa por parámetro.
+	 * 
+	 * @param dni
+	 *            DNI o id del ususario
+	 * @param nombre
+	 *            Nombre del usuario
+	 * @param apellido1
+	 *            Primer apellido
+	 * @param apellido2
+	 *            Segundo apellido
+	 * @param direccion
+	 *            Dirección del usuario
+	 * @param poblacion
+	 *            Población del usuario
+	 * @param telefono
+	 *            Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
 			String apellido2, String direccion, String poblacion, int telefono) {
@@ -44,19 +54,24 @@ public class UsuarioWebService {
 	}
 
 	/**
-	 * Cambia la contraseÃ±a del usuario.
-	 * @param dni DNI o Id del usuario
-	 * @param contraseÃ±a ContraseÃ±a del usuario
+	 * Cambia la contraseña del usuario.
+	 * 
+	 * @param dni
+	 *            DNI o Id del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
 	 * */
-	public void actualizarContraseÃ±a(String dni, String contraseÃ±a) {
-		new Usuario().actualizarContraseÃ±a(dni, contraseÃ±a);
+	public void actualizarContraseña(String dni, String contraseña) {
+		new Usuario().actualizarContraseña(dni, contraseña);
 	}
 
 	/**
 	 * Elimina el usuario.
-	 * @param id_usuario Id del usuario
+	 * 
+	 * @param id_usuario
+	 *            Id del usuario
 	 * */
-	public void eliminarUsuario(String id_usuario){
+	public void eliminarUsuario(String id_usuario) {
 		new Usuario().eliminarUsuario(id_usuario);
 	}
 }
