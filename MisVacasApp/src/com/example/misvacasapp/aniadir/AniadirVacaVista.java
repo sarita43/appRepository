@@ -168,6 +168,12 @@ public class AniadirVacaVista extends ActionBarActivity {
 		return vaca;
 	}
 
+	/**
+	 * Comprueba que el sexo introducido por el usuario sea el correcto. El sexo
+	 * tiene que se M (Macho) o H (Hembra), si no es asi devuelve un false
+	 * 
+	 * @return boolean True sexo correcto false sexo incorrecto
+	 */
 	private boolean comprobarSexo() {
 		boolean sexoOK = false;
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
@@ -189,6 +195,14 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 	}
 
+	/**
+	 * Método que comprueba si la fecha introducida por el usuario es correcta.
+	 * Comprueba que este entre los valores de los dias posibles, los meses
+	 * posibles y el año que no supere al año actual. También comprueba que se
+	 * introduzca algun valor en la fecha
+	 * 
+	 * @return boolean Fecha correcta true fecha incorrecta false
+	 */
 	private boolean comprobarFecha() {
 		boolean fechaOk = false;
 
@@ -213,7 +227,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 					.getText().toString());
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
-							.getText().toString())-1900;
+							.getText().toString()) - 1900;
 			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
 				fechaOk = true;
 			} else {

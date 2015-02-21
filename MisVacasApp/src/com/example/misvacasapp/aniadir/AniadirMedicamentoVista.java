@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Clase de la actividad de aniadir medicamento En ella se implementan los
@@ -24,7 +26,7 @@ import android.widget.TextView;
  * @author Sara Martinez Lopez
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
-	
+
 	// Atributos
 	/** Id del animal */
 	private String id_vaca;
@@ -76,8 +78,12 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	private int idAleatorio() {
 		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
 	}
-
-	// FALTAN TODAS LAS COMPROBACIONES DE LOS DATOS INTRODUCIDOS
+	
+	/**
+	 * Método que crea el medicamento con los valores introducidos por el usuario en la pantalla
+	 * 
+	 * @return Medicamento Nuevo medicamento 
+	 */
 	private Medicamento crearMedicamento() {
 		int dia = Integer
 				.parseInt(((TextView) findViewById(R.id.fecha_medicamento_dia))
@@ -100,25 +106,89 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		return medicamento;
 	}
 
+	/**
+	 * Método que comprueba si la fecha introducida por el usuario es correcta.
+	 * Comprueba que este entre los valores de los dias posibles, los meses
+	 * posibles y el año que no supere al año actual. También comprueba que se
+	 * introduzca algun valor en la fecha
+	 * 
+	 * @return boolean Fecha correcta true fecha incorrecta false
+	 */
+	private boolean comprobarFecha() {
+		boolean fechaOk = false;
+
+		if (((TextView) findViewById(R.id.fecha_medicamento_dia)).getText()
+				.toString().equals("")
+				|| ((TextView) findViewById(R.id.fecha_medicamento_mes))
+						.getText().toString().equals("")
+				|| ((TextView) findViewById(R.id.fecha_medicamento_anio))
+						.getText().toString().equals("")) {
+			fechaOk = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirMedicamentoVista.this,
+							"Fecha incorrecta", Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else {
+			int dia = Integer
+					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_dia))
+							.getText().toString());
+			int mes = Integer
+					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_mes))
+							.getText().toString());
+			int año = Integer
+					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
+							.getText().toString()) - 1900;
+			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
+				fechaOk = true;
+			} else {
+				fechaOk = false;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(AniadirMedicamentoVista.this,
+								"Fecha incorrecta", Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+		}
+
+		return fechaOk;
+	}
+
+	/**
+	 * Método que añade el medicamento a la lista de medicamentos de un animal
+	 * Si las comprobaciones que hace son correctas añade el medicamento
+	 * @param view Vista
+	 */
 	public void nuevoMedicamento(View view) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
 
 			public void run() {
-				String m = json.toJson(crearMedicamento());
-				llamada.LLamadaAñadirMedicamento(m);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-					}
-				});
+				if (comprobarFecha()) {
+					String m = json.toJson(crearMedicamento());
+					llamada.LLamadaAñadirMedicamento(m);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(AniadirMedicamentoVista.this,
+									"Añadido correctamente", Toast.LENGTH_SHORT)
+									.show();
+							Intent i = new Intent(getApplicationContext(),
+									MedicamentosVista.class);
+							i.putExtra("id_vaca", id_vaca);
+							startActivity(i);
+							finish();
+						}
+					});
+				}
 			}
 		};
 		hilo.start();
-		Intent i = new Intent(this, MedicamentosVista.class);
-		i.putExtra("id_vaca", id_vaca);
-		startActivity(i);
-		finish();
+
 	}
 
 	/**
