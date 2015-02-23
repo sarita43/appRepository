@@ -60,7 +60,6 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-		// scroolLista();
 		mostrarListado();
 	}
 
@@ -212,6 +211,7 @@ public class UsuarioVista extends ActionBarActivity {
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar);
 				botonEliminar.setEnabled(true);
+				botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
 				setAdapter(lista);
 			}
 			i++;
@@ -266,33 +266,6 @@ public class UsuarioVista extends ActionBarActivity {
 		clickLargoLista();
 	}
 
-	// /**
-	// * Genera el scrool de la lisa de la vista del usuario
-	// *
-	// * @see onCreate
-	// * */
-	// private void scroolLista() {
-	// listaVista.setOnTouchListener(new ListView.OnTouchListener() {
-	// @Override
-	// public boolean onTouch(View v, MotionEvent event) {
-	// // TODO Auto-generated method stub
-	// int action = event.getAction();
-	// switch (action) {
-	// case MotionEvent.ACTION_DOWN:
-	// // Disallow ScrollView to intercept touch events.
-	// v.getParent().requestDisallowInterceptTouchEvent(true);
-	// break;
-	// case MotionEvent.ACTION_UP:
-	// // Allow ScrollView to intercept touch events.
-	// v.getParent().requestDisallowInterceptTouchEvent(false);
-	// break;
-	// }
-	// // Handle ListView touch events.
-	// v.onTouchEvent(event);
-	// return true;
-	// }
-	// });
-	// }
 	/**
 	 * Método que utiliza la lista para hacer el click en un item de la lista
 	 * 
@@ -326,12 +299,14 @@ public class UsuarioVista extends ActionBarActivity {
 
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
+						botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
+					botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
 				}
 				adapter.setSeleccionado(seleccionado);
 				setAdapter(lista);

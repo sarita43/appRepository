@@ -16,39 +16,34 @@
     </ListView>
 
     <Button
-        android:id="@+id/buscar"
+        android:id="@+id/eliminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/lista_usuario_vista"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/eliminar"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/boton_buscar"
-        android:onClick="buscarVaca" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/boton_eliminar_2"
+        android:enabled="false"
+        android:layout_margin="10dp"
+        android:onClick="eliminarVaca" />
 
     <Button
         android:id="@+id/aniadir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/eliminar"
+        android:layout_margin="10dp"
         android:background="@drawable/boton_nuevo"
         android:onClick="añadirVaca" />
 
     <Button
-        android:id="@+id/eliminar"
+        android:id="@+id/buscar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/aniadir"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="3dp"
-        android:layout_toLeftOf="@+id/buscar"
-        android:layout_toRightOf="@+id/aniadir"
-        android:background="@drawable/boton_eliminar"
-        android:enabled="false"
-        android:height="12dp"
-        android:onClick="eliminarVaca" />
+        android:layout_above="@+id/lista_usuario_vista"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/eliminar"
+        android:background="@drawable/boton_buscar"
+        android:onClick="buscarVaca" />
 
 </RelativeLayout>
