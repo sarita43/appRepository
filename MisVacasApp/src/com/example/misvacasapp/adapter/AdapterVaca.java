@@ -95,7 +95,6 @@ public class AdapterVaca extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		// Asociamos el layout de la lista que hemos creado
 		if (convertView == null) {
 			LayoutInflater inf = (LayoutInflater) activity
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

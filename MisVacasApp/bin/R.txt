@@ -389,7 +389,7 @@ int id contrasena_actual_texto 0x7f090059
 int id decor_content_parent 0x7f090031
 int id default_activity_button 0x7f090026
 int id descripcion 0x7f09006d
-int id descripcion_medicamento_texto 0x7f090047
+int id descripcion_medicamento_texto 0x7f090045
 int id dia_vaca 0x7f09004f
 int id dialog 0x7f090019
 int id direccion_texto 0x7f090071
@@ -405,9 +405,9 @@ int id fecha 0x7f090073
 int id fechaNacimiento 0x7f09007d
 int id fechaTexto 0x7f090082
 int id fecha_medicamento 0x7f09006b
-int id fecha_medicamento_anio 0x7f09004c
-int id fecha_medicamento_dia 0x7f090049
-int id fecha_medicamento_mes 0x7f09004b
+int id fecha_medicamento_anio 0x7f09004b
+int id fecha_medicamento_dia 0x7f090048
+int id fecha_medicamento_mes 0x7f090049
 int id home 0x7f090000
 int id homeAsUp 0x7f09000e
 int id icon 0x7f090028
@@ -467,13 +467,13 @@ int id telefono_texto 0x7f090070
 int id textView1 0x7f090042
 int id textView2 0x7f090044
 int id textView3 0x7f090043
-int id textView4 0x7f090048
+int id textView4 0x7f090047
 int id textView5 0x7f09004a
 int id textView6 0x7f090050
 int id textView7 0x7f090055
 int id tipoTexto 0x7f090081
 int id tipo_medicamento 0x7f09006c
-int id tipo_medicamento_texto 0x7f090045
+int id tipo_medicamento_texto 0x7f09004c
 int id title 0x7f090029
 int id top 0x7f09001f
 int id up 0x7f090001

@@ -18,11 +18,9 @@
         android:id="@+id/aniadir_medicamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eliminar_medicamento"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/eliminar_medicamento"
+        android:layout_margin="10dp"
         android:background="@drawable/boton_nuevo"
         android:onClick="añadirMedicamento"
         android:text="" />
@@ -31,10 +29,11 @@
         android:id="@+id/eliminar_medicamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/lista_medicamentos_vista"
         android:layout_centerHorizontal="true"
-        android:layout_marginRight="3dp"
-        android:background="@drawable/boton_eliminar"
+        android:background="@drawable/boton_eliminar_2"
+        android:enabled="false"
+        android:layout_margin="10dp"
         android:onClick="eliminarMedicamento"
         android:text="" />
 
@@ -42,10 +41,9 @@
         android:id="@+id/buscar_medicamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/eliminar_medicamento"
         android:onClick="buscarMedicamento"
-        android:layout_marginRight="15dp"
+        android:layout_margin="10dp"
         android:background="@drawable/boton_buscar"
         android:text="" />
 

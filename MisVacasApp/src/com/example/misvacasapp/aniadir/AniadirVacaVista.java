@@ -203,6 +203,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * 
 	 * @return boolean Fecha correcta true fecha incorrecta false
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean comprobarFecha() {
 		boolean fechaOk = false;
 

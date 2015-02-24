@@ -102,9 +102,11 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
 	 * 
 	 * @see mostrarListado
+	 * @param lista
+	 *            ArrayList de medicamentos
 	 * */
 	private void setAdapter(ArrayList<Medicamento> lista) {
-		adapter = new AdapterMedicamento(this, lista);
+		adapter = new AdapterMedicamento(this, lista, seleccionado);
 		listaVista.setAdapter(adapter);
 		clickLista();
 		clickLargoLista();
@@ -138,21 +140,25 @@ public class MedicamentosVista extends ActionBarActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				seleccionado = adapter.getSeleccionado();
 				if (seleccionado.getTable().get(position)) {
 					seleccionado.getTable().put(position, false);
-					listaVista.getChildAt(position).setBackgroundColor(
-							Color.TRANSPARENT);
+
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+						botonEliminar
+								.setBackgroundResource(R.drawable.boton_eliminar_2);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
-					listaVista.getChildAt(position).setBackgroundColor(
-							Color.RED);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+					botonEliminar
+							.setBackgroundResource(R.drawable.boton_eliminar);
 					botonEliminar.setEnabled(true);
 				}
+				adapter.setSeleccionado(seleccionado);
+				setAdapter(lista);
 				return true;
 			}
 		});
@@ -213,11 +219,49 @@ public class MedicamentosVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void eliminarMedicamento(View v) {
+		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
-				eliminar(lista.get(i).getId_medicamento());
+				eliminados = eliminados + " " + lista.get(i).getTipo() + "("
+						+ lista.get(i).getFecha() + ")" + "\n";
 			}
 		}
+		alertaConfirmarEliminar(eliminados);
+	}
+
+	/**
+	 * Método que lanza una alerta para advertir que se van a eliminar esas
+	 * vacas Si pulsas si eliminas la vaca(s) y si no se cierra la alerta y no
+	 * hace nada
+	 * 
+	 * @param eliminados
+	 *            String de los ids que se van a eliminar para mostrarlos por
+	 *            pantalla
+	 */
+	public void alertaConfirmarEliminar(String eliminados) {
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setMessage("¿Quiere eliminar los medicamentos?: " + eliminados);
+		dialogo.setPositiveButton("Si", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				for (int i = 0; i < seleccionado.getTable().size(); i++) {
+					if (seleccionado.getTable().get(i)) {
+						eliminar(lista.get(i).getId_medicamento());
+					}
+				}
+				mostrarListado();
+			}
+		});
+		dialogo.setNegativeButton("No", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+
+		dialogo.show();
 	}
 
 	/**
@@ -235,12 +279,6 @@ public class MedicamentosVista extends ActionBarActivity {
 			public void run() {
 				llamada.LLamadaEliminarMedicamento(
 						Integer.toString(id_medicamento), idVaca);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mostrarListado();
-					}
-				});
 			}
 		};
 		hilo.start();
@@ -307,6 +345,7 @@ public class MedicamentosVista extends ActionBarActivity {
 				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+				botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
 				botonEliminar.setEnabled(true);
 			}
 			i++;

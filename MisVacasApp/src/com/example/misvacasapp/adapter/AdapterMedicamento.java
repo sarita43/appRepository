@@ -2,6 +2,7 @@ package com.example.misvacasapp.adapter;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.TableSeleccionado;
 import com.example.misvacasapp.modelo.Medicamento;
 import android.app.Activity;
 import android.content.Context;
@@ -23,7 +24,13 @@ public class AdapterMedicamento extends BaseAdapter {
 	private Activity activity;
 	/** Lista para mostrar el listado de medicamentos */
 	private ArrayList<Medicamento> lista;
-
+	/**
+	 * Tabla hash que indica si el item esta seleccionado o no y si hay que
+	 * seleccionarlo o no
+	 */
+	private TableSeleccionado seleccionado;
+	
+	//Métodos
 	/**
 	 * Constructor
 	 * 
@@ -32,9 +39,11 @@ public class AdapterMedicamento extends BaseAdapter {
 	 * @param lista
 	 *            Lista para mostrar la lista de medicamentos
 	 * */
-	public AdapterMedicamento(Activity activity, ArrayList<Medicamento> lista) {
+	public AdapterMedicamento(Activity activity, ArrayList<Medicamento> lista,
+			TableSeleccionado seleccionado) {
 		this.activity = activity;
 		this.lista = lista;
+		setSeleccionado(seleccionado);
 	}
 
 	/**
@@ -83,7 +92,6 @@ public class AdapterMedicamento extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		// Asociamos el layout de la lista que hemos creado
 		if (convertView == null) {
 			LayoutInflater inf = (LayoutInflater) activity
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -94,6 +102,29 @@ public class AdapterMedicamento extends BaseAdapter {
 		tipo.setText("Tipo: " + medicamento.getTipo());
 		TextView fecha = (TextView) v.findViewById(R.id.fechaTexto);
 		fecha.setText("	Fecha: " + medicamento.getFecha());
+		
+		v.setBackgroundResource(!getSeleccionado().getTable().get(position) ? R.drawable.abc_item_background_holo_dark
+				: R.drawable.abc_list_selector_disabled_holo_dark);
+		
 		return v;
+	}
+
+	/**
+	 * Debuelve la tabla hash de los items seleccionados
+	 * 
+	 * @return seleccionado Tabla hash de items seleccionados
+	 * */
+	public TableSeleccionado getSeleccionado() {
+		return seleccionado;
+	}
+
+	/**
+	 * Guarda la tabla hash de los items seleccionados
+	 * 
+	 * @param seleccionado
+	 *            Tabla del los items seleccionados
+	 * */
+	public void setSeleccionado(TableSeleccionado seleccionado) {
+		this.seleccionado = seleccionado;
 	}
 }

@@ -2,9 +2,10 @@ package com.example.misvacasapp.aniadir;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
@@ -16,6 +17,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,11 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	private ArrayList<Medicamento> lista;
 	/** Tipo que serializa o deserializa para enviar a través del servicio web */
 	private Gson json;
+	/**
+	 * Lista desplegable que muestra los tipos de medicamentos o vacunas que
+	 * puedes introducir
+	 */
+	private Spinner spinnerMedicamento;
 
 	// Métodos
 	/**
@@ -51,6 +59,27 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		lista = json.fromJson(bundle.getString("listaMedicamentos"),
 				new TypeToken<ArrayList<Medicamento>>() {
 				}.getType());
+		rellenarSpinner();
+	}
+
+	/**
+	 * Rellena la lista de desplegable de los tipos medicamentos o vacunas
+	 * 
+	 * @see onCreate
+	 * */
+	private void rellenarSpinner() {
+		spinnerMedicamento = (Spinner) findViewById(R.id.tipo_medicamento_texto);
+		ArrayList<String> listaMedicamentos = new ArrayList<String>(
+				Arrays.asList("Brucelosis", "Leptospirosis", "Rinotraqueitis",
+						"Parainfluenza 3 (PI 3)", "Diarrea viral bovina (DVB)",
+						"Analgésico", "Antibiótico", " Desparasitante",
+						" Diurético", "Expectorante",
+						"Anabólicos y Hormonales", " Misceláneos",
+						" Vitaminas", "Otros"));
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+				android.R.layout.simple_spinner_dropdown_item,
+				listaMedicamentos);
+		spinnerMedicamento.setAdapter(adapter);
 	}
 
 	/**
@@ -78,11 +107,12 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	private int idAleatorio() {
 		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
 	}
-	
+
 	/**
-	 * Método que crea el medicamento con los valores introducidos por el usuario en la pantalla
+	 * Método que crea el medicamento con los valores introducidos por el
+	 * usuario en la pantalla
 	 * 
-	 * @return Medicamento Nuevo medicamento 
+	 * @return Medicamento Nuevo medicamento
 	 */
 	private Medicamento crearMedicamento() {
 		int dia = Integer
@@ -96,8 +126,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 						.getText().toString()) - 1900;
 		@SuppressWarnings("deprecation")
 		Date fecha = new Date(año, mes, dia);
-		String tipo = ((TextView) findViewById(R.id.tipo_medicamento_texto))
-				.getText().toString();
+		String tipo = spinnerMedicamento.getSelectedItem().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
 				.getText().toString();
 		Medicamento medicamento = new Medicamento();
@@ -114,6 +143,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * 
 	 * @return boolean Fecha correcta true fecha incorrecta false
 	 */
+	@SuppressWarnings("deprecation")
 	private boolean comprobarFecha() {
 		boolean fechaOk = false;
 
@@ -140,9 +170,29 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 							.getText().toString());
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
-							.getText().toString()) - 1900;
+							.getText().toString())-1900;
+			
 			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
 				fechaOk = true;
+				
+			} else if (año == new java.util.Date().getYear()) {
+				System.out.println(año +" "+new java.util.Date().getYear());
+				System.out.println(dia +" "+new java.util.Date().getDate());
+				System.out.println(mes +" "+new java.util.Date().getMonth());
+				if (dia <= new java.util.Date().getDay()
+						&& mes-1 <= new java.util.Date().getMonth()) {
+					fechaOk = true;
+				} else {
+					fechaOk = false;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(AniadirMedicamentoVista.this,
+									"Fecha incorrecta", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
 			} else {
 				fechaOk = false;
 				runOnUiThread(new Runnable() {
@@ -161,7 +211,9 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	/**
 	 * Método que añade el medicamento a la lista de medicamentos de un animal
 	 * Si las comprobaciones que hace son correctas añade el medicamento
-	 * @param view Vista
+	 * 
+	 * @param view
+	 *            Vista
 	 */
 	public void nuevoMedicamento(View view) {
 		Thread hilo = new Thread() {
@@ -198,7 +250,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -210,9 +261,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

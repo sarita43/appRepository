@@ -35,22 +35,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/tipo_medicamento_texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignRight="@+id/boton_aceptar_nuevo_medicamento"
-        android:layout_toRightOf="@+id/textView3"
-        android:inputType="text"
-        android:ems="10" />
-
-    <EditText
         android:id="@+id/descripcion_medicamento_texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView3"
-        android:layout_alignRight="@+id/tipo_medicamento_texto"
+        android:layout_alignRight="@+id/boton_aceptar_nuevo_medicamento"
         android:layout_below="@+id/textView3"
         android:layout_marginTop="20dp"
         android:ems="10"
@@ -70,13 +59,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView2"
+        android:layout_marginLeft="20dp"
         android:layout_toLeftOf="@+id/textView4"
         android:layout_toRightOf="@+id/textView1"
-        android:layout_marginLeft="20dp"
+        android:nextFocusDown="@+id/fecha_medicamento_mes"
+        android:ems="10"
         android:gravity="center"
-        android:inputType="number"
-        android:ems="10" >
-		  <requestFocus />
+        android:inputType="number" >
+
+        <requestFocus />
     </EditText>
 
     <TextView
@@ -96,11 +87,12 @@
         android:layout_alignBaseline="@+id/fecha_medicamento_dia"
         android:layout_alignBottom="@+id/fecha_medicamento_dia"
         android:layout_alignRight="@+id/textView5"
-        android:layout_toRightOf="@+id/textView4"
         android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/textView4"
         android:inputType="number"
+        android:gravity="center"
+        android:nextFocusDown="@+id/fecha_medicamento_anio"
         android:width="100dp" >
-
     </EditText>
 
     <EditText
@@ -108,10 +100,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView5"
-        android:layout_alignRight="@+id/tipo_medicamento_texto"
+        android:layout_alignRight="@+id/boton_aceptar_nuevo_medicamento"
         android:layout_toRightOf="@+id/textView5"
-        android:inputType="number"
-        android:ems="10" />
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/boton_aceptar_nuevo_medicamento"
@@ -123,5 +116,14 @@
         android:layout_marginRight="30dp"
         android:onClick="nuevoMedicamento"
         android:text="@string/botonAceptar" />
+
+    <Spinner
+        android:id="@+id/tipo_medicamento_texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/fecha_medicamento_anio"
+        android:layout_below="@+id/textView4"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@+id/textView1" />
 
 </RelativeLayout>
