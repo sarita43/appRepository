@@ -279,9 +279,13 @@ public class MedicamentosVista extends ActionBarActivity {
 			public void run() {
 				llamada.LLamadaEliminarMedicamento(
 						Integer.toString(id_medicamento), idVaca);
+				
 			}
 		};
 		hilo.start();
+		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
+		botonEliminar.setEnabled(false);
 	}
 
 	/**

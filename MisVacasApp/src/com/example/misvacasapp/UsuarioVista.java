@@ -146,6 +146,9 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+		Button botonEliminar = (Button) findViewById(R.id.eliminar);
+		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
+		botonEliminar.setEnabled(false);
 	}
 
 	/**

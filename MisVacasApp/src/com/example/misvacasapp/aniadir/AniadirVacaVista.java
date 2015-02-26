@@ -229,8 +229,26 @@ public class AniadirVacaVista extends ActionBarActivity {
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
 							.getText().toString()) - 1900;
-			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
+			int añoActual=new java.util.Date().getYear();
+			int mesActual=new java.util.Date().getMonth();
+			int diaActual=new java.util.Date().getDate();
+			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
+				
+			} else if (año == añoActual) {
+				if (dia <= diaActual && mes<= mesActual) {
+					fechaOk = true;
+				} else {
+					fechaOk = false;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(AniadirVacaVista.this,
+									"Fecha incorrecta", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
 			} else {
 				fechaOk = false;
 				runOnUiThread(new Runnable() {
@@ -245,9 +263,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 		return fechaOk;
 	}
-
-	// REMODELAR ESTE METODO PONER EN OTRO METODO COMPROBAR SEXO
-	// COMPROBAR EN OTROS METODOS LOS VALORES INTRODUCIDOS
+	
 	/**
 	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
 	 * a las comprobaciones que se pueden hacer para añadir el animal
