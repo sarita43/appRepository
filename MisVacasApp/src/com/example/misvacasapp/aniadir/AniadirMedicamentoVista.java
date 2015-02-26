@@ -167,20 +167,18 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 							.getText().toString());
 			int mes = Integer
 					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_mes))
-							.getText().toString());
+							.getText().toString())-1;
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
 							.getText().toString())-1900;
-			
-			if (dia <= 31 && mes <= 12 && año <= new java.util.Date().getYear()) {
+			int añoActual=new java.util.Date().getYear();
+			int mesActual=new java.util.Date().getMonth();
+			int diaActual=new java.util.Date().getDate();
+			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
 				
-			} else if (año == new java.util.Date().getYear()) {
-				System.out.println(año +" "+new java.util.Date().getYear());
-				System.out.println(dia +" "+new java.util.Date().getDate());
-				System.out.println(mes +" "+new java.util.Date().getMonth());
-				if (dia <= new java.util.Date().getDay()
-						&& mes-1 <= new java.util.Date().getMonth()) {
+			} else if (año == añoActual) {
+				if (dia <= diaActual && mes<= mesActual) {
 					fechaOk = true;
 				} else {
 					fechaOk = false;
