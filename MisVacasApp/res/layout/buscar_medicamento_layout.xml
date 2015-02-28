@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <CheckBox
+        android:id="@+id/check_buscar_tipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:text="Tipo" />
+
+    <CheckBox
+        android:id="@+id/check_buscar_fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/check_buscar_tipo"
+        android:layout_below="@+id/check_buscar_tipo"
+        android:layout_marginTop="24dp"
+        android:text="Fecha" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/check_buscar_fecha"
+        android:layout_alignLeft="@+id/spinner2"
+        android:layout_alignRight="@+id/spinner4"
+        android:visibility="invisible"
+        android:layout_alignTop="@+id/check_buscar_tipo" />
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_alignBottom="@+id/check_buscar_fecha"
+        android:layout_alignTop="@+id/check_buscar_fecha"
+        android:layout_toRightOf="@+id/check_buscar_fecha" 
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner2"
+        android:layout_toRightOf="@+id/spinner2"
+        android:text="@string/barra"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignTop="@+id/spinner2"
+        android:layout_toRightOf="@+id/textView1" 
+        android:visibility="invisible"/>
+
+    <Spinner
+        android:id="@+id/spinner4"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner3"
+        android:layout_alignTop="@+id/spinner3"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@+id/spinner3" 
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner3"
+        android:layout_alignRight="@+id/spinner3"
+        android:text="@string/barra"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

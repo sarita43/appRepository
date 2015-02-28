@@ -21,9 +21,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Spinner;
 
 /**
  * Clase de la actividad de los medicamentos En ella se implementan los métodos
@@ -305,16 +307,29 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		View layout = inflater.inflate(R.layout.buscar_layout, null);
+		View layout = inflater.inflate(R.layout.buscar_medicamento_layout, null);
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 		dialogo.setView(layout);
 		dialogo.setMessage("Buscar");
-		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+
+		CheckBox tipoBox = (CheckBox)layout.findViewById(R.id.checkBox1);
+		CheckBox fechaBox = (CheckBox)layout.findViewById(R.id.checkBox2);
+		if(tipoBox.isChecked()){
+			Spinner tipoSpinner = (Spinner)layout.findViewById(R.id.spinner1);
+			tipoSpinner.setVisibility(layout.VISIBLE);
+		}
+		if(fechaBox.isChecked()){
+			Spinner diaSpinner = (Spinner)layout.findViewById(R.id.spinner2);
+			diaSpinner.setVisibility(layout.VISIBLE);
+			Spinner mesSpinner = (Spinner)layout.findViewById(R.id.spinner3);
+			mesSpinner.setVisibility(layout.VISIBLE)
+			Spinner anioSpinner = (Spinner)layout.findViewById(R.id.spinner4);
+			anioSpinner.setVisibility(layout.VISIBLE);
+		}
 		/** Método del botón aceptar del dialogo */
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				seleccionarEnLista(Integer.parseInt(texto.getText().toString()));
 			}
 		});
 		/** Método del botón cancelar del dialogo */
