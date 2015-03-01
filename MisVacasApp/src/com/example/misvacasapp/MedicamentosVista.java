@@ -1,6 +1,8 @@
 package com.example.misvacasapp;
 
 import java.util.ArrayList;
+import java.util.Date;
+
 import com.example.misvacasapp.adapter.AdapterMedicamento;
 import com.example.misvacasapp.aniadir.AniadirMedicamentoVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
@@ -12,7 +14,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Spinner;
@@ -281,7 +281,7 @@ public class MedicamentosVista extends ActionBarActivity {
 			public void run() {
 				llamada.LLamadaEliminarMedicamento(
 						Integer.toString(id_medicamento), idVaca);
-				
+
 			}
 		};
 		hilo.start();
@@ -307,31 +307,67 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		View layout = inflater.inflate(R.layout.buscar_medicamento_layout, null);
+		View layout = inflater
+				.inflate(R.layout.buscar_medicamento_layout, null);
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 		dialogo.setView(layout);
 		dialogo.setMessage("Buscar");
 
-		CheckBox tipoBox = (CheckBox)layout.findViewById(R.id.checkBox1);
-		CheckBox fechaBox = (CheckBox)layout.findViewById(R.id.checkBox2);
-		if(tipoBox.isChecked()){
-			Spinner tipoSpinner = (Spinner)layout.findViewById(R.id.spinner1);
-			tipoSpinner.setVisibility(layout.VISIBLE);
+		CheckBox tipoBox = (CheckBox) layout.findViewById(R.id.checkBox1);
+		CheckBox fechaBox = (CheckBox) layout.findViewById(R.id.checkBox2);
+		if (tipoBox.isChecked() && fechaBox.isChecked()) {
+			final Spinner tipoSpinner = (Spinner) layout
+					.findViewById(R.id.spinner1);
+			tipoSpinner.setVisibility(View.VISIBLE);
+			final Spinner diaSpinner = (Spinner) layout
+					.findViewById(R.id.spinner2);
+			diaSpinner.setVisibility(View.VISIBLE);
+			final Spinner mesSpinner = (Spinner) layout
+					.findViewById(R.id.spinner3);
+			mesSpinner.setVisibility(View.VISIBLE);
+			final Spinner anioSpinner = (Spinner) layout
+					.findViewById(R.id.spinner4);
+			anioSpinner.setVisibility(View.VISIBLE);
+			/** Método del botón aceptar del dialogo */
+			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mostrarTipoFecha(tipoSpinner, diaSpinner, mesSpinner,
+							anioSpinner);
+				}
+			});
+		} else if (tipoBox.isChecked()) {
+			final Spinner tipoSpinner = (Spinner) layout
+					.findViewById(R.id.spinner1);
+			tipoSpinner.setVisibility(View.VISIBLE);
+
+			/** Método del botón aceptar del dialogo */
+			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					mostrarTipo(tipoSpinner);
+				}
+			});
+		} else if (fechaBox.isChecked()) {
+			final Spinner diaSpinner = (Spinner) layout
+					.findViewById(R.id.spinner2);
+			diaSpinner.setVisibility(View.VISIBLE);
+			final Spinner mesSpinner = (Spinner) layout
+					.findViewById(R.id.spinner3);
+			mesSpinner.setVisibility(View.VISIBLE);
+			final Spinner anioSpinner = (Spinner) layout
+					.findViewById(R.id.spinner4);
+			anioSpinner.setVisibility(View.VISIBLE);
+			/** Método del botón aceptar del dialogo */
+			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+					mostrarFecha(diaSpinner, mesSpinner, anioSpinner);
+				}
+			});
 		}
-		if(fechaBox.isChecked()){
-			Spinner diaSpinner = (Spinner)layout.findViewById(R.id.spinner2);
-			diaSpinner.setVisibility(layout.VISIBLE);
-			Spinner mesSpinner = (Spinner)layout.findViewById(R.id.spinner3);
-			mesSpinner.setVisibility(layout.VISIBLE)
-			Spinner anioSpinner = (Spinner)layout.findViewById(R.id.spinner4);
-			anioSpinner.setVisibility(layout.VISIBLE);
-		}
-		/** Método del botón aceptar del dialogo */
-		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		});
+
 		/** Método del botón cancelar del dialogo */
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
 			@Override
@@ -343,32 +379,83 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que selecciona un item de la lista
+	 * Método que muestra la lista de medicamentos que coincidan con la fecha y
+	 * el tipo pasado por parametro
 	 * 
-	 * @param item
-	 *            Item a seleccionar
-	 * @see alertaBuscar
-	 * */
-	public void seleccionarEnLista(int item) {
-		int i = 0;
-		while (lista.size() > i) {
-			if (seleccionado.getTable().get(i)) {
-				seleccionado.getTable().put(i, false);
-				listaVista.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+	 * @param tipoSpinner
+	 * @param diaSpinner
+	 * @param mesSpinner
+	 * @param anioSpinner
+	 */
+	@SuppressWarnings("deprecation")
+	private void mostrarTipoFecha(Spinner tipoSpinner, Spinner diaSpinner,
+			Spinner mesSpinner, Spinner anioSpinner) {
+		Date dia = new Date(Integer.parseInt(anioSpinner.getSelectedItem()
+				.toString()), Integer.parseInt(mesSpinner.getSelectedItem()
+				.toString()), Integer.parseInt(diaSpinner.getSelectedItem()
+				.toString()));
+		ArrayList<Medicamento> listaTipoFecha = new ArrayList<Medicamento>();
+		for (int i = 0; i < lista.size(); i++) {
+			if (lista.get(i).getTipo()
+					.equals(tipoSpinner.getSelectedItem().toString())
+					&& lista.get(i).getFecha().compareTo(dia) == 0) {
+				listaTipoFecha.add(lista.get(i));
 			}
-			i++;
 		}
-		i = 0;
-		while (lista.size() > i) {
-			if (item == (lista.get(i).getId_medicamento())) {
-				listaVista.getChildAt(i).setBackgroundColor(Color.RED);
-				seleccionado.getTable().put(i, true);
-				Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-				botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
-				botonEliminar.setEnabled(true);
+		for (int i = 0; i < listaTipoFecha.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		if (listaTipoFecha.size() != 0)
+			setAdapter(listaTipoFecha);
+	}
+
+	/**
+	 * Método que muestra los medicamentos que sean del tipo pasado por por
+	 * parámetro
+	 * 
+	 * @param tipoSpinner
+	 */
+	private void mostrarTipo(Spinner tipoSpinner) {
+		ArrayList<Medicamento> listaTipo = new ArrayList<Medicamento>();
+		for (int i = 0; i < lista.size(); i++) {
+			if (lista.get(i).getTipo()
+					.equals(tipoSpinner.getSelectedItem().toString())) {
+				listaTipo.add(lista.get(i));
 			}
-			i++;
 		}
+		for (int i = 0; i < listaTipo.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		if (listaTipo.size() != 0)
+			setAdapter(listaTipo);
+	}
+
+	/**
+	 * Método que muestra los medicamentos que coincidan con la fecha pasada por
+	 * párametro
+	 * 
+	 * @param diaSpinner
+	 * @param mesSpinner
+	 * @param anioSpinner
+	 */
+	@SuppressWarnings("deprecation")
+	private void mostrarFecha(Spinner diaSpinner, Spinner mesSpinner,
+			Spinner anioSpinner) {
+		Date dia = new Date(Integer.parseInt(anioSpinner.getSelectedItem()
+				.toString()), Integer.parseInt(mesSpinner.getSelectedItem()
+				.toString()), Integer.parseInt(diaSpinner.getSelectedItem()
+				.toString()));
+		ArrayList<Medicamento> listaFecha = new ArrayList<Medicamento>();
+		for (int i = 0; i < lista.size(); i++) {
+			if (lista.get(i).getFecha().compareTo(dia) == 0) {
+				listaFecha.add(lista.get(i));
+			}
+		}
+		for (int i = 0; i < listaFecha.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		if (listaFecha.size() != 0)
+			setAdapter(listaFecha);
 	}
 
 	/**
