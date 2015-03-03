@@ -1,7 +1,7 @@
 package com.example.misvacasapp;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 
 import com.example.misvacasapp.adapter.AdapterMedicamento;
 import com.example.misvacasapp.aniadir.AniadirMedicamentoVista;
@@ -21,8 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Spinner;
@@ -307,155 +307,138 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private void alertaBuscar() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		View layout = inflater
-				.inflate(R.layout.buscar_medicamento_layout, null);
+		final View layout = inflater.inflate(
+				R.layout.buscar_medicamento_layout, null);
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 		dialogo.setView(layout);
 		dialogo.setMessage("Buscar");
 
-		CheckBox tipoBox = (CheckBox) layout.findViewById(R.id.checkBox1);
-		CheckBox fechaBox = (CheckBox) layout.findViewById(R.id.checkBox2);
-		if (tipoBox.isChecked() && fechaBox.isChecked()) {
-			final Spinner tipoSpinner = (Spinner) layout
-					.findViewById(R.id.spinner1);
-			tipoSpinner.setVisibility(View.VISIBLE);
-			final Spinner diaSpinner = (Spinner) layout
-					.findViewById(R.id.spinner2);
-			diaSpinner.setVisibility(View.VISIBLE);
-			final Spinner mesSpinner = (Spinner) layout
-					.findViewById(R.id.spinner3);
-			mesSpinner.setVisibility(View.VISIBLE);
-			final Spinner anioSpinner = (Spinner) layout
-					.findViewById(R.id.spinner4);
-			anioSpinner.setVisibility(View.VISIBLE);
-			/** Método del botón aceptar del dialogo */
-			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					mostrarTipoFecha(tipoSpinner, diaSpinner, mesSpinner,
-							anioSpinner);
-				}
-			});
-		} else if (tipoBox.isChecked()) {
-			final Spinner tipoSpinner = (Spinner) layout
-					.findViewById(R.id.spinner1);
-			tipoSpinner.setVisibility(View.VISIBLE);
+		Spinner tipoSpinner = (Spinner) layout.findViewById(R.id.spinner1);
 
-			/** Método del botón aceptar del dialogo */
-			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					mostrarTipo(tipoSpinner);
-				}
-			});
-		} else if (fechaBox.isChecked()) {
-			final Spinner diaSpinner = (Spinner) layout
-					.findViewById(R.id.spinner2);
-			diaSpinner.setVisibility(View.VISIBLE);
-			final Spinner mesSpinner = (Spinner) layout
-					.findViewById(R.id.spinner3);
-			mesSpinner.setVisibility(View.VISIBLE);
-			final Spinner anioSpinner = (Spinner) layout
-					.findViewById(R.id.spinner4);
-			anioSpinner.setVisibility(View.VISIBLE);
-			/** Método del botón aceptar del dialogo */
-			dialogo.setPositiveButton("Aceptar", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
+		rellenarSpinnerBuscar(tipoSpinner);
 
-					mostrarFecha(diaSpinner, mesSpinner, anioSpinner);
-				}
-			});
-		}
+		/** Método del botón aceptar del dialogo */
+		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Spinner tipoSpinner = (Spinner) layout
+						.findViewById(R.id.spinner1);
+				mostrarTipoFecha(tipoSpinner);
+			}
+		});
 
 		/** Método del botón cancelar del dialogo */
 		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				finish();
+				dialog.cancel();
 			}
 		});
 		dialogo.show();
 	}
 
 	/**
-	 * Método que muestra la lista de medicamentos que coincidan con la fecha y
-	 * el tipo pasado por parametro
+	 * Método que rellena los spinner de la alerta buscar
 	 * 
 	 * @param tipoSpinner
 	 * @param diaSpinner
 	 * @param mesSpinner
 	 * @param anioSpinner
 	 */
-	@SuppressWarnings("deprecation")
-	private void mostrarTipoFecha(Spinner tipoSpinner, Spinner diaSpinner,
-			Spinner mesSpinner, Spinner anioSpinner) {
-		Date dia = new Date(Integer.parseInt(anioSpinner.getSelectedItem()
-				.toString()), Integer.parseInt(mesSpinner.getSelectedItem()
-				.toString()), Integer.parseInt(diaSpinner.getSelectedItem()
-				.toString()));
+
+	private void rellenarSpinnerBuscar(Spinner tipoSpinner) {
+		ArrayList<String> listaMedicamentos = new ArrayList<String>(
+				Arrays.asList("-", "Brucelosis", "Leptospirosis",
+						"Rinotraqueitis", "Parainfluenza 3 (PI 3)",
+						"Diarrea viral bovina (DVB)", "Analgésico",
+						"Antibiótico", " Desparasitante", " Diurético",
+						"Expectorante", "Anabólicos y Hormonales",
+						" Misceláneos", " Vitaminas", "Otros"));
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(
+				getApplicationContext(),
+				android.R.layout.simple_spinner_dropdown_item,
+				listaMedicamentos);
+		tipoSpinner.setAdapter(adapter);
+		//
+		// ArrayList<String> listaDias = new
+		// ArrayList<String>(Arrays.asList("-",
+		// "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+		// "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
+		// "23", "24", "25", "26", "27", "28", "29", "30", "31"));
+		// adapter = new ArrayAdapter<>(getApplicationContext(),
+		// android.R.layout.simple_spinner_dropdown_item, listaDias);
+		// diaSpinner.setAdapter(adapter);
+		//
+		// ArrayList<String> listaMeses = new
+		// ArrayList<String>(Arrays.asList("-",
+		// "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
+		// adapter = new ArrayAdapter<>(getApplicationContext(),
+		// android.R.layout.simple_spinner_dropdown_item, listaMeses);
+		// diaSpinner.setAdapter(adapter);
+		//
+		// int añoActual = new java.util.Date().getYear() + 1900;
+		// ArrayList<String> listaAnio = new
+		// ArrayList<String>(Arrays.asList("-",
+		// Integer.toString(añoActual - 30),
+		// Integer.toString(añoActual - 29),
+		// Integer.toString(añoActual - 28),
+		// Integer.toString(añoActual - 27),
+		// Integer.toString(añoActual - 26),
+		// Integer.toString(añoActual - 25),
+		// Integer.toString(añoActual - 24),
+		// Integer.toString(añoActual - 23),
+		// Integer.toString(añoActual - 22),
+		// Integer.toString(añoActual - 21),
+		// Integer.toString(añoActual - 20),
+		// Integer.toString(añoActual - 19),
+		// Integer.toString(añoActual - 18),
+		// Integer.toString(añoActual - 17),
+		// Integer.toString(añoActual - 16),
+		// Integer.toString(añoActual - 15),
+		// Integer.toString(añoActual - 14),
+		// Integer.toString(añoActual - 13),
+		// Integer.toString(añoActual - 12),
+		// Integer.toString(añoActual - 11),
+		// Integer.toString(añoActual - 10),
+		// Integer.toString(añoActual - 9),
+		// Integer.toString(añoActual - 8),
+		// Integer.toString(añoActual - 7),
+		// Integer.toString(añoActual - 6),
+		// Integer.toString(añoActual - 5),
+		// Integer.toString(añoActual - 4),
+		// Integer.toString(añoActual - 3),
+		// Integer.toString(añoActual - 2),
+		// Integer.toString(añoActual - 1), Integer.toString(añoActual)));
+		// adapter = new ArrayAdapter<>(getApplicationContext(),
+		// android.R.layout.simple_spinner_dropdown_item, listaAnio);
+		// diaSpinner.setAdapter(adapter);
+	}
+
+	/**
+	 * Método que muestra la lista de medicamentos que coincidan con el tipo
+	 * pasado por parametro
+	 * 
+	 * @param tipoSpinner
+	 */
+	private void mostrarTipoFecha(Spinner tipoSpinner) {
+
 		ArrayList<Medicamento> listaTipoFecha = new ArrayList<Medicamento>();
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getTipo()
-					.equals(tipoSpinner.getSelectedItem().toString())
-					&& lista.get(i).getFecha().compareTo(dia) == 0) {
-				listaTipoFecha.add(lista.get(i));
-			}
-		}
-		for (int i = 0; i < listaTipoFecha.size(); i++) {
-			seleccionado.getTable().put(i, false);
-		}
-		if (listaTipoFecha.size() != 0)
-			setAdapter(listaTipoFecha);
-	}
 
-	/**
-	 * Método que muestra los medicamentos que sean del tipo pasado por por
-	 * parámetro
-	 * 
-	 * @param tipoSpinner
-	 */
-	private void mostrarTipo(Spinner tipoSpinner) {
-		ArrayList<Medicamento> listaTipo = new ArrayList<Medicamento>();
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getTipo()
-					.equals(tipoSpinner.getSelectedItem().toString())) {
-				listaTipo.add(lista.get(i));
+		if (tipoSpinner.getSelectedItem().toString().equals("-")) {
+			for (int i = 0; i < lista.size(); i++) {
+				listaTipoFecha = lista;
+				seleccionado.getTable().put(i, false);
 			}
-		}
-		for (int i = 0; i < listaTipo.size(); i++) {
-			seleccionado.getTable().put(i, false);
-		}
-		if (listaTipo.size() != 0)
-			setAdapter(listaTipo);
-	}
 
-	/**
-	 * Método que muestra los medicamentos que coincidan con la fecha pasada por
-	 * párametro
-	 * 
-	 * @param diaSpinner
-	 * @param mesSpinner
-	 * @param anioSpinner
-	 */
-	@SuppressWarnings("deprecation")
-	private void mostrarFecha(Spinner diaSpinner, Spinner mesSpinner,
-			Spinner anioSpinner) {
-		Date dia = new Date(Integer.parseInt(anioSpinner.getSelectedItem()
-				.toString()), Integer.parseInt(mesSpinner.getSelectedItem()
-				.toString()), Integer.parseInt(diaSpinner.getSelectedItem()
-				.toString()));
-		ArrayList<Medicamento> listaFecha = new ArrayList<Medicamento>();
-		for (int i = 0; i < lista.size(); i++) {
-			if (lista.get(i).getFecha().compareTo(dia) == 0) {
-				listaFecha.add(lista.get(i));
+		} else {
+			for (int i = 0; i < lista.size(); i++) {
+				if (lista.get(i).getTipo()
+						.equals(tipoSpinner.getSelectedItem().toString())) {
+					listaTipoFecha.add(lista.get(i));
+				}
 			}
 		}
-		for (int i = 0; i < listaFecha.size(); i++) {
-			seleccionado.getTable().put(i, false);
-		}
-		if (listaFecha.size() != 0)
-			setAdapter(listaFecha);
+		setAdapter(listaTipoFecha);
 	}
 
 	/**

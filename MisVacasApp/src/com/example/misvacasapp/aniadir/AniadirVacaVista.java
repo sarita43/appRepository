@@ -1,15 +1,26 @@
 package com.example.misvacasapp.aniadir;
 
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Camera;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -229,14 +240,14 @@ public class AniadirVacaVista extends ActionBarActivity {
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
 							.getText().toString()) - 1900;
-			int añoActual=new java.util.Date().getYear();
-			int mesActual=new java.util.Date().getMonth();
-			int diaActual=new java.util.Date().getDate();
+			int añoActual = new java.util.Date().getYear();
+			int mesActual = new java.util.Date().getMonth();
+			int diaActual = new java.util.Date().getDate();
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
-				
+
 			} else if (año == añoActual) {
-				if (dia <= diaActual && mes<= mesActual) {
+				if (dia <= diaActual && mes <= mesActual) {
 					fechaOk = true;
 				} else {
 					fechaOk = false;
@@ -263,7 +274,25 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 		return fechaOk;
 	}
-	
+
+	private boolean comprobarIdMadre() {
+
+		boolean id_correcto = true;
+		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
+				.getText().toString();
+		if (id_madre.equals("")) {
+			id_correcto = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Id madre vacio",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+		return id_correcto;
+	}
+
 	/**
 	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
 	 * a las comprobaciones que se pueden hacer para añadir el animal
@@ -277,7 +306,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()) {
+				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
 					final Vaca v = crearVaca();
 
 					String vaca = json.toJson(v);
@@ -299,6 +328,28 @@ public class AniadirVacaVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+	
+	public void cargarFoto(View v){
+		String name = Environment.getExternalStorageDirectory() + "/test.jpg";
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		startActivityForResult(intent, 2);
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Uri selectedImage = data.getData();
+		InputStream is;
+		try {
+			is = getContentResolver().openInputStream(selectedImage);
+			BufferedInputStream bis = new BufferedInputStream(is);
+			Bitmap bitmap = BitmapFactory.decodeStream(bis);
+			Button imagen = (Button) findViewById(R.id.foto_boton);
+			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
+		} catch (FileNotFoundException e) {
+		}
 	}
 
 	/**

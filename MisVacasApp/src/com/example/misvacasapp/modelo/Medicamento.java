@@ -108,16 +108,16 @@ public class Medicamento {
 	}
 
 	/**
-	 * Devuelve la descripci贸n del medicamento
-	 * @return String Descripci贸n del medicamento
+	 * Devuelve la descripci髇 del medicamento
+	 * @return String Descripci髇 del medicamento
 	 * */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
-	 * Guarda la descripci贸n del medicamento
-	 * @param descripcion Descripci贸n del medicamento
+	 * Guarda la descripci髇 del medicamento
+	 * @param descripcion Descripci髇 del medicamento
 	 * */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;

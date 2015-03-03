@@ -128,7 +128,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		Date fecha = new Date(año, mes, dia);
 		String tipo = spinnerMedicamento.getSelectedItem().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
-				.getText().toString();
+				.getText().toString()+" ";
 		Medicamento medicamento = new Medicamento();
 		medicamento = new Medicamento(crearIdMedicamento(), fecha, tipo,
 				descripcion, id_vaca);
