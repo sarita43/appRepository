@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.aniadir.AniadirVacaVista;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.menus.AdministrarCuentaVista;
 import com.example.misvacasapp.modelo.Vaca;
@@ -91,7 +92,6 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		}
 		alertaConfirmarEliminar(eliminados);
-
 	}
 
 	/**
@@ -140,15 +140,28 @@ public class UsuarioVista extends ActionBarActivity {
 	public void eliminar(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
 			public void run() {
+				eliminarMedicamentosVaca(id_vaca);
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
+				mostrarListado();
 			}
 		};
 		hilo.start();
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
 		botonEliminar.setEnabled(false);
+		
+	}
+	
+	private void eliminarMedicamentosVaca(final String id_vaca){
+		Thread hilo = new Thread() {
+			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+
+			public void run() {
+				llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
+			}
+		};
+		hilo.start();
 	}
 
 	/**

@@ -198,6 +198,22 @@ public class Medicamento {
 			}
 		}
 	}
+	
+	/**
+	 * Método que elimina todos los medicamentos de un animal de la base de datos
+	 * @param id_vaca
+	 */
+	public void eliminarMedicamentos(String id_vaca){
+		OracleConection c = new OracleConection();
+		c.Conectar();
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='" + id_vaca + "'");
+			} catch (SQLException e) {
+			}
+		}
+	}
 
 	/**
 	 * Método que añade un medicamento a la base de datos. Hace la conexión con

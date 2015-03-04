@@ -1,6 +1,7 @@
 package com.example.misvacasapp.aniadir;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Date;
@@ -9,7 +10,6 @@ import java.util.Arrays;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Camera;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -174,7 +173,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo, null);
+		Button imagen = (Button)findViewById(R.id.foto_boton);
+		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		byte[] bitmapdata = stream.toByteArray();
+		System.out.println(bitmapdata);
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,null);
 
 		return vaca;
 	}
@@ -348,10 +353,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 			Bitmap bitmap = BitmapFactory.decodeStream(bis);
 			Button imagen = (Button) findViewById(R.id.foto_boton);
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
+			
 		} catch (FileNotFoundException e) {
 		}
 	}
-
+	
 	/**
 	 * Añade el menu a la vista aniadirVaca
 	 * 

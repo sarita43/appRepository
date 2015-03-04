@@ -215,7 +215,7 @@ public class Vaca {
 				pstmt.setString(4, v.getId_madre());
 				pstmt.setString(5, v.getId_usuario());
 				pstmt.setString(6, v.getSexo());
-				pstmt.setBlob(7, streamEntrada);
+				pstmt.setBytes(7, v.getFoto());
 				pstmt.executeUpdate();
 			} catch (SQLException | FileNotFoundException e) {
 			}

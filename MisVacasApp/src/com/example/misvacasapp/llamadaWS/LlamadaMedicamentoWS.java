@@ -171,4 +171,27 @@ public class LlamadaMedicamentoWS {
 		}
 		return resultado;
 	}
+
+	/**
+	 * Método que elimina todos los medicamentos de un animal
+	 * 
+	 * @param id_vaca
+	 */
+	public void LLamadaEliminarMedicamentos(String id_vaca) {
+		
+		METHOD_NAME = "eliminarMedicamentos";
+		SOAP_ACTION = "urn:eliminarMedicamentos";
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("id_vaca", id_vaca);
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
+	}
 }
