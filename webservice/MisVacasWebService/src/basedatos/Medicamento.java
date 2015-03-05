@@ -88,6 +88,7 @@ public class Medicamento {
 					}
 					lista.add(medicamento);
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -128,6 +129,7 @@ public class Medicamento {
 						e.printStackTrace();
 					}
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -194,6 +196,7 @@ public class Medicamento {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM medicamento WHERE id_medicamento='"
 						+ id_medicamento + "' AND id_vaca='" + id_vaca + "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -210,6 +213,7 @@ public class Medicamento {
 			try {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='" + id_vaca + "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -241,6 +245,7 @@ public class Medicamento {
 				pstmt.setString(4, m.getDescripcion());
 				pstmt.setString(5, m.getId_vaca());
 				pstmt.executeUpdate();
+				pstmt.close();
 			} catch (SQLException e) {
 			}
 		}

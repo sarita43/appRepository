@@ -247,7 +247,7 @@ public class UsuarioVista extends ActionBarActivity {
 			Gson json = new GsonBuilder().setPrettyPrinting()
 					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
+		
 			public void run() {
 				res = llamada.LlamadaListaVacas(id_usuario);
 				runOnUiThread(new Runnable() {

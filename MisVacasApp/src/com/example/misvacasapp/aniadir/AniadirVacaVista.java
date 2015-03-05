@@ -173,13 +173,15 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
+		
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inSampleSize = 2;
 		Button imagen = (Button)findViewById(R.id.foto_boton);
 		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		byte[] bitmapdata = stream.toByteArray();
-		System.out.println(bitmapdata);
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,null);
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,bitmapdata);
 
 		return vaca;
 	}

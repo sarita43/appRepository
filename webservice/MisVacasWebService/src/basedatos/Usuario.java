@@ -77,11 +77,6 @@ public class Usuario {
 		setRol(rol);
 	}
 
-	// public Usuario(String dni, String contraseña, int rol) {
-	// setDni(dni);
-	// setContraseña(contraseña);
-	// setRol(rol);
-	// }
 	/**
 	 * Devuelve el arrayList de los Usuarios que tiene hay en la base de datos.
 	 * Crea la conexión a la base de datos, llama a la base de datos recogiendo
@@ -111,6 +106,7 @@ public class Usuario {
 						e.printStackTrace();
 					}
 					lista.add(usuario);
+					select.close();
 				}
 			} catch (SQLException e) {
 			}
@@ -151,6 +147,7 @@ public class Usuario {
 						e.printStackTrace();
 					}
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -201,6 +198,7 @@ public class Usuario {
 						e.printStackTrace();
 					}
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -234,16 +232,12 @@ public class Usuario {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
-				ResultSet result = select
-						.executeQuery("UPDATE usuario SET nombre ='" + nombre
-								+ "',apellido1 ='" + apellido1
-								+ "',apellido2 ='" + apellido2
-								+ "',direccion ='" + direccion
-								+ "',poblacion ='" + poblacion
-								+ "',telefono ='" + telefono + "'where dni='"
-								+ dni + "'");
-				while (result.next()) {
-				}
+				select.executeQuery("UPDATE usuario SET nombre ='" + nombre
+						+ "',apellido1 ='" + apellido1 + "',apellido2 ='"
+						+ apellido2 + "',direccion ='" + direccion
+						+ "',poblacion ='" + poblacion + "',telefono ='"
+						+ telefono + "'where dni='" + dni + "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -266,6 +260,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("UPDATE usuario SET contraseña ='"
 						+ contraseña + "' where dni='" + dni + "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -286,6 +281,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}

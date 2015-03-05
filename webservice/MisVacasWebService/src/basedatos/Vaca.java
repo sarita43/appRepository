@@ -1,5 +1,6 @@
 package basedatos;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -103,6 +104,7 @@ public class Vaca {
 					}
 					lista.add(vaca);
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -141,6 +143,7 @@ public class Vaca {
 						e.printStackTrace();
 					}
 				}
+				ps.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -205,8 +208,8 @@ public class Vaca {
 		c.Conectar();
 		if (c.getConexion() != null) {
 			try {
-				File fichero = new File("C:\\Users\\sara\\Desktop\\vaca1.gif");
-				FileInputStream streamEntrada = new FileInputStream(fichero);
+				
+				ByteArrayInputStream is = new ByteArrayInputStream(v.getFoto());
 				PreparedStatement pstmt = c.getConexion().prepareStatement(
 						INSERT_RECORD);
 				pstmt.setString(1, v.getId_vaca());
@@ -215,9 +218,10 @@ public class Vaca {
 				pstmt.setString(4, v.getId_madre());
 				pstmt.setString(5, v.getId_usuario());
 				pstmt.setString(6, v.getSexo());
-				pstmt.setBytes(7, v.getFoto());
+				pstmt.setBlob(7, is);
 				pstmt.executeUpdate();
-			} catch (SQLException | FileNotFoundException e) {
+				pstmt.close();
+			} catch (SQLException e) {
 			}
 		}
 	}
@@ -239,6 +243,7 @@ public class Vaca {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
 						+ id_vaca + "' AND id_usuario='" + id_usuario + "'");
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
