@@ -2,6 +2,7 @@ package com.example.misvacasapp.aniadir;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Date;
@@ -10,16 +11,21 @@ import java.util.Arrays;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.style.ImageSpan;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -173,17 +179,45 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
-		
-		BitmapFactory.Options o = new BitmapFactory.Options();
-		o.inSampleSize = 2;
-		Button imagen = (Button)findViewById(R.id.foto_boton);
-		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		byte[] bitmapdata = stream.toByteArray();
+		String bitmapdata =crearImagen();
 		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,bitmapdata);
 
 		return vaca;
+	}
+	
+	private String crearImagen(){
+		Button imagen = (Button)findViewById(R.id.foto_boton);
+		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
+		bitmap = redimensionarImagenMaximo(bitmap, 20, 10);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+		byte[] bitmapdata = stream.toByteArray();
+		System.out.println(" TAMAÑO  :"+bitmapdata.length);
+		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+		System.out.println("TAMAÑO STRING  "+encodedImage.length());
+		return encodedImage;
+	}
+	
+	/**
+	 * Redimensionar un Bitmap. By TutorialAndroid.com
+	* @param Bitmap mBitmap
+	* @param float newHeight
+	* @param float newHeight
+	 * @param float newHeight
+	 * @return Bitmap
+	 */
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
+	   //Redimensionamos
+	   int width = mBitmap.getWidth();
+	   int height = mBitmap.getHeight();
+	   float scaleWidth = ((float) newWidth) / width;
+	   float scaleHeight = ((float) newHeigth) / height;
+	   // create a matrix for the manipulation
+	   Matrix matrix = new Matrix();
+	   // resize the bit map
+	   matrix.postScale(scaleWidth, scaleHeight);
+	   // recreate the new Bitmap
+	   return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
 	/**

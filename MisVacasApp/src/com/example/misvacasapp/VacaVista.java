@@ -80,7 +80,7 @@ public class VacaVista extends ActionBarActivity {
 					public void run() {
 						vaca = json.fromJson(res, Vaca.class);
 						TextView idVaca = (TextView) findViewById(R.id.idVaca);
-						idVaca.setText("ID VACA: " + vaca.getId_vaca());
+						idVaca.setText(vaca.getId_vaca());
 						TextView raza = (TextView) findViewById(R.id.raza);
 						raza.setText("RAZA: " + vaca.getRaza());
 						TextView sexo = (TextView) findViewById(R.id.sexo);
@@ -90,11 +90,11 @@ public class VacaVista extends ActionBarActivity {
 								+ vaca.getFecha_nacimiento());
 						TextView idMadre = (TextView) findViewById(R.id.idMadre);
 						idMadre.setText("ID MADRE: " + vaca.getId_madre());
-						ImageView imagen =
-						(ImageView)findViewById(R.id.imageView1);
-						ByteArrayInputStream bis = new ByteArrayInputStream(vaca.getFoto());
-						Drawable foto = new BitmapDrawable(bis);
-						imagen.setBackgroundDrawable(foto);
+//						ImageView imagen =
+//						(ImageView)findViewById(R.id.imageView1);
+//						ByteArrayInputStream bis = new ByteArrayInputStream(vaca.getFoto());
+//						Drawable foto = new BitmapDrawable(bis);
+//						imagen.setBackgroundDrawable(foto);
 					}
 				});
 			}
@@ -109,7 +109,6 @@ public class VacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}

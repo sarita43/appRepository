@@ -61,6 +61,7 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
+		lista = new ArrayList<Vaca>();
 		mostrarListado();
 	}
 
@@ -269,6 +270,7 @@ public class UsuarioVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
+
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade

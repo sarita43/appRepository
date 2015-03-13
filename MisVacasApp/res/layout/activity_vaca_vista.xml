@@ -5,22 +5,10 @@
     android:background="@drawable/fondos_layout" >
 
     <TextView
-        android:id="@+id/raza"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/idVaca"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/idVaca"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="30dp"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
         android:id="@+id/sexo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/idVaca"
+        android:layout_alignLeft="@+id/raza"
         android:layout_alignRight="@+id/raza"
         android:layout_below="@+id/raza"
         android:layout_marginTop="30dp"
@@ -55,37 +43,67 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/idMadre"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/raza"
+        android:layout_alignRight="@+id/idMadre"
         android:layout_marginBottom="26dp"
-        android:onClick="onClickMedicamentos"
-        android:text="@string/botonMedicamentos" />
-
-    <TextView
-        android:id="@+id/idVaca"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imageView1"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/imageView2"
-        android:layout_marginRight="30dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/raza"
-        android:layout_marginTop="15dp"
-        android:layout_toRightOf="@+id/imageView1"
-        android:src="@drawable/crotal" />
+        android:background="@drawable/boton_jeringuilla"
+        android:onClick="onClickMedicamentos" />
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="120dp"
         android:layout_height="130dp"
+        android:layout_alignBottom="@+id/imageView2"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/imageView2"
-        android:layout_marginLeft="31dp" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/imageView1"
+        android:src="@drawable/crotal" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/imageView1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/preidVaca"
+            android:layout_width="197dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="18dp"
+            android:gravity="center"
+            android:text="ES03081115" />
+
+        <TextView
+            android:id="@+id/idVaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="9013"
+            android:layout_marginBottom="10dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/raza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

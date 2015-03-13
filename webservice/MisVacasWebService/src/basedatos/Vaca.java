@@ -1,15 +1,13 @@
 package basedatos;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.sql.Blob;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -29,7 +27,7 @@ public class Vaca {
 	/** Id de la madre del animal */
 	private String id_madre;
 	/** Foto del animal o foto por defecto */
-	private byte[] foto;
+	private String foto;
 	/** Id del usuario del animal */
 	private String id_usuario;
 	/** Sexo del animal */
@@ -62,7 +60,7 @@ public class Vaca {
 	 *            Foto del animal
 	 * */
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String id_usuario, String sexo, byte[] foto) {
+			String id_madre, String id_usuario, String sexo,String foto) {
 		setId_vaca(id_vaca);
 		setRaza(raza);
 		setFecha_nacimiento(fecha_nacimiento);
@@ -95,10 +93,13 @@ public class Vaca {
 								+ id_usuario + "'");
 				while (result.next()) {
 					try {
+						Blob blobFoto = result.getBlob(7);
+						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
+						String foto = new String(dataFoto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
-								result.getString(6), result.getBytes(7));
+								result.getString(6), foto);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
@@ -135,10 +136,13 @@ public class Vaca {
 				ResultSet result = ps.executeQuery();
 				while (result.next()) {
 					try {
+						Blob blobFoto = result.getBlob(7);
+						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
+						String foto = new String(dataFoto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
-								result.getString(6), result.getBytes(7));
+								result.getString(6), foto);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
@@ -208,8 +212,11 @@ public class Vaca {
 		c.Conectar();
 		if (c.getConexion() != null) {
 			try {
-				
-				ByteArrayInputStream is = new ByteArrayInputStream(v.getFoto());
+				String is = v.getFoto();
+				System.out.println(is);
+				byte[] datafoto = is.getBytes();
+				Blob blobfoto = c.getConexion().createBlob();
+				blobfoto.setBytes(1, datafoto);
 				PreparedStatement pstmt = c.getConexion().prepareStatement(
 						INSERT_RECORD);
 				pstmt.setString(1, v.getId_vaca());
@@ -218,7 +225,7 @@ public class Vaca {
 				pstmt.setString(4, v.getId_madre());
 				pstmt.setString(5, v.getId_usuario());
 				pstmt.setString(6, v.getSexo());
-				pstmt.setBlob(7, is);
+				pstmt.setBlob(7, blobfoto);
 				pstmt.executeUpdate();
 				pstmt.close();
 			} catch (SQLException e) {
@@ -330,18 +337,18 @@ public class Vaca {
 	 * 
 	 * @return byte[] Foto del animal
 	 * */
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
 	/**
 	 * Guarda la foto del animal
 	 * 
-	 * @param foto
+	 * @param foto2
 	 *            Foto del animal
 	 * */
-	public void setFoto(byte[] foto) {
-		this.foto = foto;
+	public void setFoto(String foto2) {
+		this.foto = foto2;
 	}
 
 	/**

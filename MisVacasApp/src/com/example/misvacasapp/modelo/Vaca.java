@@ -18,7 +18,7 @@ public class Vaca {
 	/** Id de la madre del animal */
 	private String id_madre;
 	/** Foto del animal o foto por defecto */
-	private byte[] foto;
+	private String foto;
 	/** Id del usuario del animal */
 	private String id_usuario;
 	/** Sexo del animal */
@@ -52,16 +52,16 @@ public class Vaca {
 	 *            Id del usuario del animal
 	 * @param sexo
 	 *            Sexo del animal
-	 * @param foto
+	 * @param bitmapdata
 	 *            Foto del animal
 	 * */
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String id_usuario, String sexo, byte[] foto) {
+			String id_madre, String id_usuario, String sexo, String bitmapdata) {
 		setId_vaca(id_vaca);
 		setRaza(raza);
 		setFecha_nacimiento(fecha_nacimiento);
 		setId_madre(id_madre);
-		setFoto(foto);
+		setFoto(bitmapdata);
 		setId_usuario(id_usuario);
 		setSexo(sexo);
 	}
@@ -147,18 +147,18 @@ public class Vaca {
 	 * 
 	 * @return byte[] Foto del animal
 	 * */
-	public byte[] getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
 	/**
 	 * Guarda la foto del animal
 	 * 
-	 * @param foto
+	 * @param bitmapdata
 	 *            Foto del animal
 	 * */
-	public void setFoto(byte[] foto) {
-		this.foto = foto;
+	public void setFoto(String bitmapdata) {
+		this.foto = bitmapdata;
 	}
 
 	/**
