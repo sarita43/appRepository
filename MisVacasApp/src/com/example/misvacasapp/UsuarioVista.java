@@ -254,6 +254,7 @@ public class UsuarioVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						System.out.println(res);
 						lista = json.fromJson(res,
 								new TypeToken<ArrayList<Vaca>>() {
 								}.getType());

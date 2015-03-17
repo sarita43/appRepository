@@ -7,10 +7,13 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,11 +93,10 @@ public class VacaVista extends ActionBarActivity {
 								+ vaca.getFecha_nacimiento());
 						TextView idMadre = (TextView) findViewById(R.id.idMadre);
 						idMadre.setText("ID MADRE: " + vaca.getId_madre());
-//						ImageView imagen =
-//						(ImageView)findViewById(R.id.imageView1);
-//						ByteArrayInputStream bis = new ByteArrayInputStream(vaca.getFoto());
-//						Drawable foto = new BitmapDrawable(bis);
-//						imagen.setBackgroundDrawable(foto);
+						ImageView imagen =(ImageView)findViewById(R.id.imageView1);
+						byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
+						Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+						imagen.setImageBitmap(decodedByte);
 					}
 				});
 			}

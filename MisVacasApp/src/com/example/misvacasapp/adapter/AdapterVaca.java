@@ -6,6 +6,9 @@ import com.example.misvacasapp.TableSeleccionado;
 import com.example.misvacasapp.modelo.Vaca;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,9 +104,12 @@ public class AdapterVaca extends BaseAdapter {
 			v = inf.inflate(R.layout.lista_vacas, null);
 		}
 		Vaca vaca = this.lista.get(position);
-		ImageView imagen = (ImageView) v.findViewById(R.id.imagenVaca);
 		TextView cargo = (TextView) v.findViewById(R.id.idVaca_texto);
 		cargo.setText("Id: " + vaca.getId_vaca());
+		ImageView imagen =(ImageView)v.findViewById(R.id.imagenVaca);
+		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
+		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+		imagen.setImageBitmap(decodedByte);
 		v.setBackgroundResource(!getSeleccionado().getTable().get(position) ? R.drawable.abc_item_background_holo_dark
 				: R.drawable.abc_list_selector_disabled_holo_dark);
 		return v;

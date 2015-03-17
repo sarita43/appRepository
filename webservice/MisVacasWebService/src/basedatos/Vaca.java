@@ -96,6 +96,7 @@ public class Vaca {
 						Blob blobFoto = result.getBlob(7);
 						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
 						String foto = new String(dataFoto);
+						System.out.println("FOTO   "+foto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
@@ -139,6 +140,7 @@ public class Vaca {
 						Blob blobFoto = result.getBlob(7);
 						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
 						String foto = new String(dataFoto);
+						System.out.println("FOTO   "+foto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
 								result.getString(4), result.getString(5),
