@@ -1,7 +1,5 @@
 package com.example.misvacasapp;
 
-import java.io.ByteArrayInputStream;
-
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
@@ -9,8 +7,6 @@ import com.google.gson.GsonBuilder;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
@@ -78,7 +74,6 @@ public class VacaVista extends ActionBarActivity {
 			public void run() {
 				res = llamada.LlamadaVaca(id_vaca, id_usuario);
 				runOnUiThread(new Runnable() {
-					@SuppressWarnings("deprecation")
 					@Override
 					public void run() {
 						vaca = json.fromJson(res, Vaca.class);

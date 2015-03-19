@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="9013"
+            android:text=""
             android:layout_marginBottom="10dp"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>

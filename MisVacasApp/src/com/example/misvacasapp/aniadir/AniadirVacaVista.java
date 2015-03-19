@@ -1,8 +1,10 @@
 package com.example.misvacasapp.aniadir;
 
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Date;
@@ -13,19 +15,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
-import android.text.style.ImageSpan;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +52,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 	private Gson json;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
+	
+	private static final Logger logger = Logger.getLogger(AniadirVacaVista.class);
 
 	// Métodos
 	/**
@@ -70,6 +71,9 @@ public class AniadirVacaVista extends ActionBarActivity {
 		lista = new ArrayList<Vaca>();
 		rellenarSpinner();
 		listaVacas();
+		
+		  BasicConfigurator.configure();
+	       logger.debug("Hola esto es una traza");
 	}
 
 	/**

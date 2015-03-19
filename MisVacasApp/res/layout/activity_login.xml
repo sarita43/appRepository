@@ -9,14 +9,15 @@
     tools:context="com.example.misvacasapp.Login" >
 
   	<TextView
-        android:id="@+id/usuarioTexto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/usuario"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentLeft="true"
-        android:text="@string/usuarioTexto"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+  	    android:id="@+id/usuarioTexto"
+  	    android:layout_width="wrap_content"
+  	    android:layout_height="wrap_content"
+  	    android:layout_above="@+id/usuario"
+  	    android:layout_alignParentLeft="true"
+  	    android:layout_marginBottom="15dp"
+  	    android:text="@string/usuarioTexto"
+  	    android:textAppearance="?android:attr/textAppearanceLarge"
+  	    android:textSize="15dp" />
 
     <EditText
         android:id="@+id/usuario"
@@ -24,11 +25,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/contrasenaTexto"
         android:layout_alignLeft="@+id/contrasena"
-        android:layout_alignRight="@+id/contrasena"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:ems="10"
-         android:inputType="text"
+        android:inputType="text"
         android:text="@string/usuario" >
+
     </EditText>  
     
     <TextView
@@ -39,7 +41,8 @@
         android:layout_alignLeft="@+id/usuario"
         android:layout_marginBottom="15dp"
         android:text="@string/contrasenaTexto"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15dp" />
     
     <EditText
         android:id="@+id/contrasena"
@@ -47,31 +50,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/checkBox"
         android:layout_alignLeft="@+id/usuarioTexto"
-        android:layout_alignRight="@+id/botonAceptar"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:ems="10"
         android:inputType="textPassword"
         android:text="@string/contrasena" />
-
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/botonAceptar"
-        android:layout_alignRight="@+id/botonAceptar"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="19dp"
-        android:text="@string/autologinTexto" />
-    
-    <Button
-        android:id="@+id/botonAceptar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
-        android:onClick="onClick"
-        android:text="@string/botonAceptar" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -89,5 +72,49 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:src="@drawable/misvacasapp" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/botonAceptar"
+        android:layout_alignRight="@+id/contrasena"
+        android:layout_marginBottom="30dp"
+        android:text="@string/autologinTexto" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/checkBox"
+        android:layout_alignBottom="@+id/checkBox"
+        android:layout_alignLeft="@+id/contrasena"
+        android:onClick="onClickNuevoUsuario"
+        android:text="Nuevo Usuario"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#0080FF"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/botonAceptar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:text="¿Has olvidado la contraseña?"
+        android:onClick="onClickPedirContraseña"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#0080FF"
+        android:textSize="15dp" />
+
+    <Button
+        android:id="@+id/botonAceptar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"
+        android:text="Entrar" />
   
 </RelativeLayout>

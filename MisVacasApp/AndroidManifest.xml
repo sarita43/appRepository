@@ -61,6 +61,7 @@
             android:name=".aniadir.AniadirVacaVista"
             android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".aniadir.NuevoUsuarioVista"></activity>
     </application>
 
 </manifest>

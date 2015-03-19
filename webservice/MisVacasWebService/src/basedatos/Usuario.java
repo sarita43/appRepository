@@ -1,10 +1,12 @@
 package basedatos;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Clase usuario
@@ -31,6 +33,10 @@ public class Usuario {
 	private String contraseña;
 	/** Rol que tiene el usuario. Usuario o administrador */
 	private int rol;
+	/** Correo del usuario */
+	private String correo;
+	/** Codigo de la explotacion del usuario */
+	private String codigo_explotacion;
 
 	// Métodos
 	/** Constructor del usuario sin atributos */
@@ -60,21 +66,19 @@ public class Usuario {
 	 *            Rol que tiene el usuario. Usuario o administrador
 	 * */
 	public Usuario(String nombre, String apellido1, String apellido2,
-			String direccion, String poblacion, String telefono, String dni,
-			String contraseña, int rol) {
+			String direccion, String poblacion, int telefono, String dni,
+			String contraseña, int rol, String correo, String codigo_explotacion) {
 		setNombre(nombre);
 		setApellido1(apellido1);
 		setApellido2(apellido2);
 		setDireccion(direccion);
 		setPoblacion(poblacion);
-		if (telefono != null) {
-			setTelefono(Integer.parseInt(telefono));
-		} else {
-			setTelefono(0);
-		}
+		setTelefono(telefono);
 		setDni(dni);
 		setContraseña(contraseña);
 		setRol(rol);
+		setCorreo(correo);
+		setCodigo_explotacion(codigo_explotacion);
 	}
 
 	/**
@@ -99,15 +103,17 @@ public class Usuario {
 						usuario = new Usuario(result.getString(1),
 								result.getString(2), result.getString(3),
 								result.getString(4), result.getString(5),
-								result.getString(6), result.getString(7),
+								Integer.parseInt(result
+										.getString(6)), result.getString(7),
 								result.getString(8), Integer.parseInt(result
-										.getString(9)));
+										.getString(9)), result.getString(10),
+								result.getString(11));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
-					lista.add(usuario);
-					select.close();
+					lista.add(usuario);	
 				}
+				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -140,9 +146,11 @@ public class Usuario {
 						usuario = new Usuario(result.getString(1),
 								result.getString(2), result.getString(3),
 								result.getString(4), result.getString(5),
-								result.getString(6), result.getString(7),
+								Integer.parseInt(result
+										.getString(6)), result.getString(7),
 								result.getString(8), Integer.parseInt(result
-										.getString(9)));
+										.getString(9)), result.getString(10),
+								result.getString(11));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
@@ -152,6 +160,13 @@ public class Usuario {
 			}
 		}
 		return usuario;
+	}
+
+	public String listaUsuariosString() {
+		ArrayList<Usuario> lista = listaUsuarios();
+		Gson gson = new Gson();
+		String usuarios = gson.toJson(lista);
+		return usuarios;
 	}
 
 	/**
@@ -282,6 +297,40 @@ public class Usuario {
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
 				select.close();
+			} catch (SQLException e) {
+			}
+		}
+	}
+	
+	/**
+	 * Método que se conecta con la base de datos para añadir un nuevo usuario
+	 * @param usuario Usuario como String
+	 */
+	public void añadirUsuario(String usuario) {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		String INSERT_RECORD = "INSERT INTO usuario(nombre,apellido1,apellido2,direccion,poblacion,telefono,dni,contraseña,rol,correo,codigo_explotacion) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+		Usuario u = json.fromJson(usuario, Usuario.class);
+		OracleConection c = new OracleConection();
+		c.Conectar();
+		if (c.getConexion() != null) {
+			try {
+				PreparedStatement pstmt = c.getConexion().prepareStatement(
+						INSERT_RECORD);
+				pstmt.setString(1, u.getNombre());
+				pstmt.setString(2, u.getApellido1());
+				pstmt.setString(3, u.getApellido2());
+				pstmt.setString(4, u.getDireccion());
+				pstmt.setString(5, u.getPoblacion());
+				pstmt.setInt(6, u.getTelefono());
+				pstmt.setString(7, u.getDni());
+				pstmt.setString(8, u.getContraseña());
+				pstmt.setInt(9, u.getRol());
+				pstmt.setString(10, u.getCorreo());
+				pstmt.setString(11, u.getCodigo_explotacion());
+
+				pstmt.executeUpdate();
+				pstmt.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -456,5 +505,41 @@ public class Usuario {
 	 * */
 	public void setRol(int rol) {
 		this.rol = rol;
+	}
+
+	/**
+	 * Devuelve el correo del usuario
+	 * 
+	 * @return String Correo del usuario
+	 */
+	public String getCorreo() {
+		return correo;
+	}
+
+	/**
+	 * Guarda el correo del usuario
+	 * 
+	 * @param correo
+	 */
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	/**
+	 * Devuelve el codigo de explotacion
+	 * 
+	 * @return String Codigo de explotacion
+	 */
+	public String getCodigo_explotacion() {
+		return codigo_explotacion;
+	}
+
+	/**
+	 * Guarda el codigo de explotacion
+	 * 
+	 * @param codigo_explotacion
+	 */
+	public void setCodigo_explotacion(String codigo_explotacion) {
+		this.codigo_explotacion = codigo_explotacion;
 	}
 }

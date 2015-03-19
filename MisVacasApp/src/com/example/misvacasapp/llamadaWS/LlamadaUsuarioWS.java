@@ -146,6 +146,29 @@ public class LlamadaUsuarioWS {
 	}
 
 	/**
+	 * Método que añade un usuario. El usuario se pasa como parámetro como String
+	 * 
+	 * @param usuario
+	 *            Usuario a añadir como String
+	 * */
+	public void añadirUsuario(String usuario) {
+		METHOD_NAME = "añadirUsuario";
+		SOAP_ACTION = "urn:añadirUsuario";
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("usuario", usuario);
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Método que cambia los parametros del usuario: id, nombre, apellidos,
 	 * dirección, pobñación, teléfono
 	 * 
@@ -186,5 +209,24 @@ public class LlamadaUsuarioWS {
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String LlamadaListaUsuarios() {
+		String res = "";
+		METHOD_NAME = "listaUsuarios";
+		SOAP_ACTION = "urn:listaUsuarios";
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+			res = resultsRequestSOAP.toString();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 }

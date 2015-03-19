@@ -7,25 +7,28 @@ package com.example.misvacasapp.modelo;
  * */
 public class Usuario {
 	// Atributos
-	/** Nombre del usuario */
-	private String nombre;
-	/** Primer apellido */
-	private String apellido1;
-	/** Segundo apellido */
-	private String apellido2;
-	/** Dirección del usuario */
-	private String direccion;
-	/** Población del usuario */
-	private String poblacion;
-	/** Teléfono del usuario */
-	private int telefono;
-	/** Dni o id del usuario */
-	private String dni;
-	/** Contraseña del usuario */
-	private String contraseña;
-	/** Rol que tiene el usuario. Usuario o administrador */
-	private int rol;
-
+		/** Nombre del usuario */
+		private String nombre;
+		/** Primer apellido */
+		private String apellido1;
+		/** Segundo apellido */
+		private String apellido2;
+		/** Dirección del usuario */
+		private String direccion;
+		/** Población del usuario */
+		private String poblacion;
+		/** Teléfono del usuario */
+		private int telefono;
+		/** Dni o id del usuario */
+		private String dni;
+		/** Contraseña del usuario */
+		private String contraseña;
+		/** Rol que tiene el usuario. Usuario o administrador */
+		private int rol;
+		/** Correo del usuario */
+		private String correo;
+		/** Codigo de la explotacion del usuario */
+		private String codigo_explotacion;
 	// Métodos
 	/** Constructor del usuario sin atributos */
 	public Usuario() {
@@ -54,21 +57,19 @@ public class Usuario {
 	 *            Rol que tiene el usuario. Usuario o administrador
 	 * */
 	public Usuario(String nombre, String apellido1, String apellido2,
-			String direccion, String poblacion, String telefono, String dni,
-			String contraseña, int rol) {
+			String direccion, String poblacion, int telefono, String dni,
+			String contraseña, int rol, String correo, String codigo_explotacion) {
 		setNombre(nombre);
 		setApellido1(apellido1);
 		setApellido2(apellido2);
 		setDireccion(direccion);
 		setPoblacion(poblacion);
-		if (telefono != null) {
-			setTelefono(Integer.parseInt(telefono));
-		} else {
-			setTelefono(0);
-		}
+		setTelefono(telefono);
 		setDni(dni);
 		setContraseña(contraseña);
 		setRol(rol);
+		setCorreo(correo);
+		setCodigo_explotacion(codigo_explotacion);
 	}
 
 	/**
@@ -240,5 +241,37 @@ public class Usuario {
 	 * */
 	public void setRol(int rol) {
 		this.rol = rol;
+	}
+	
+	/**
+	 * Devuelve el correo del usuario
+	 * @return String Correo del usuario
+	 */
+	public String getCorreo() {
+		return correo;
+	}
+
+	/**
+	 * Guarda el correo del usuario
+	 * @param correo
+	 */
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	/**
+	 * Devuelve el codigo de explotacion
+	 * @return String Codigo de explotacion
+	 */
+	public String getCodigo_explotacion() {
+		return codigo_explotacion;
+	}
+
+	/**
+	 * Guarda el codigo de explotacion
+	 * @param codigo_explotacion
+	 */
+	public void setCodigo_explotacion(String codigo_explotacion) {
+		this.codigo_explotacion = codigo_explotacion;
 	}
 }

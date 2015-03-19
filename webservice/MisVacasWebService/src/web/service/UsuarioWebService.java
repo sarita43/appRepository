@@ -74,4 +74,20 @@ public class UsuarioWebService {
 	public void eliminarUsuario(String id_usuario) {
 		new Usuario().eliminarUsuario(id_usuario);
 	}
+	
+	/**
+	 * Método que devuelve la lista de usuarios como String
+	 * @return String Lista de usuarios
+	 */
+	public String listaUsuarios(){
+		return new Usuario().listaUsuariosString();
+	}
+	
+	/**
+	 * Método que añade un nuevo usuario
+	 * @param usuario Usuario como String
+	 */
+	public void añadirUsuario(String usuario){
+		new Usuario().añadirUsuario(usuario);
+	}
 }

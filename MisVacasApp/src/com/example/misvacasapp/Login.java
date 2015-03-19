@@ -5,6 +5,7 @@ import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,12 +51,12 @@ public class Login extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						
+
 						if (res.compareTo("true") == 0) {
 							Toast.makeText(Login.this, "Conectando...",
 									Toast.LENGTH_SHORT).show();
 							rol();
-						} else if(res.compareTo("false")==0){
+						} else if (res.compareTo("false") == 0) {
 							Toast.makeText(Login.this, "Usuario no existe",
 									Toast.LENGTH_SHORT).show();
 						} else {
@@ -100,12 +101,47 @@ public class Login extends ActionBarActivity {
 	 * Cambia a la vista del usuario
 	 * */
 	private void lanzarUsuario() {
-		Intent i = new Intent(this, UsuarioVista.class);
-		i.putExtra("id_usuario", usuario);
-		i.putExtra("contraseña", contraseña);
-		startActivity(i);
+		new LanzarVista(this).lanzarUsuarioVista(usuario,contraseña);
 		finish();
 	}
+
+	/**
+	 * Método que se acciona cuando pulsas sobre "Nuevo Ususario". Cambia a la
+	 * vista para crear un nuevo usuario
+	 * 
+	 * @param v
+	 *            Vista
+	 */
+	public void onClickNuevoUsuario(View v) {
+		new LanzarVista(this).lanzarNuevoUsusario();
+	}
+
+	/**
+	 * Método que se acciona cuando pulsas sobre "¿Has olvidado la contraseña?".
+	 * Muestra la alerta para enviar el usuario y la contraseña por correo
+	 * 
+	 * @param v
+	 */
+	public void onClickPedirContraseña(View v) {
+		String[] to = { "destinatario" };
+        String[] cc = { "copia" };
+        enviar(to, cc, "Hola",
+                "Esto es un email enviado desde una app de Android");
+    }
+ 
+    private void enviar(String[] to, String[] cc,
+        String asunto, String mensaje) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        //String[] to = direccionesEmail;
+        //String[] cc = copias;
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
+        emailIntent.putExtra(Intent.EXTRA_CC, cc);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, asunto);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, mensaje);
+        emailIntent.setType("message/rfc822");
+        startActivity(Intent.createChooser(emailIntent, "Email "));
+    }
 
 	/**
 	 * Añade la vista del login

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/buscar_vaca"
-        android:title="@string/buscar_vaca">
-    </item>
     <item
         android:id="@+id/administrar_cuenta"
         android:title="@string/menu_administrar_cuenta">
