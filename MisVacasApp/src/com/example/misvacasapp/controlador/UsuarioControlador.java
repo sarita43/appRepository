@@ -3,6 +3,8 @@ package com.example.misvacasapp.controlador;
 import java.util.ArrayList;
 
 
+import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
+import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.example.misvacasapp.modelo.Vaca;
@@ -55,6 +57,17 @@ public class UsuarioControlador {
 		return usuario;
 	}
 	
+	public Usuario getUsuario(String correo){
+		AgregadoUsuario agregado = new AgregadoUsuario();
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
+		while (i.hasNext()){
+			if(i.actualElement().getCorreo().equals(correo))
+				usuario = i.actualElement();
+			i.next();
+		}
+		return usuario;
+	}
+	
 	public ArrayList<Usuario> listaUsuarios(){
 		Thread hilo = new Thread() {
 			String res = "";
@@ -72,7 +85,13 @@ public class UsuarioControlador {
 	}
 	
 	public boolean correoExistente(String correo){
-		//TODO CON EL ITERATOR
+		AgregadoUsuario agregado = new AgregadoUsuario();
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
+		while (i.hasNext()){
+			if(i.actualElement().getCorreo().equals(correo))
+				resultado = true;
+			i.next();
+		}
 		return resultado;
 	}
 }

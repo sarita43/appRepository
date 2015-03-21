@@ -1,13 +1,8 @@
 package com.example.misvacasapp.vista;
 
-import java.util.ArrayList;
-
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.controlador.UsuarioControlador;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
@@ -108,6 +103,11 @@ public class Login extends ActionBarActivity {
 		alertaCorreo();
 	}
 
+	/**
+	 * Alerta para introducir el correo electronico y decir si el correo esta en
+	 * la base de datos o no. Si el correo esta en la base de datos envia un
+	 * mensaje al usuario para recordarle la contraseña
+	 */
 	private void alertaCorreo() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View layout = inflater.inflate(R.layout.buscar_layout, null);
@@ -122,11 +122,27 @@ public class Login extends ActionBarActivity {
 				if (texto.getText().toString().equals("")) {
 					dialog.cancel();
 				} else {
-					
-					enviar(texto.getText().toString(), "",
-							"misvacasapp@gmail.es", "Mis Vacas APP",
-							"Correo de autenticacion",
-							"Correo enviado desde la aplicacion :)");
+					if (new UsuarioControlador().correoExistente(texto
+							.getText().toString())) {
+						Usuario u = new UsuarioControlador().getUsuario(texto
+								.getText().toString());
+						enviar(texto.getText().toString(),
+								"",
+								"misvacasapp@gmail.es",
+								"Mis Vacas APP",
+								"Correo de autenticacion",
+								"Su usuario y contraseña son: /n Usuario: "
+										+ u.getDni() + "/nContraseña"
+										+ u.getContraseña());
+					} else {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								Toast.makeText(Login.this, "Correo no existe",
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+					}
 				}
 			}
 		});
@@ -140,34 +156,17 @@ public class Login extends ActionBarActivity {
 		dialogo.show();
 	}
 
-	private boolean correoExiste(ArrayList<Usuario> usuarios, String correo) {
-		boolean correoOk = false;
-
-		for (int i = 0; i < usuarios.size(); i++) {
-			if (correo.equals(usuarios.get(i))) {
-				correoOk = true;
-			}
-		}
-		return correoOk;
-	}
-
-	private void getListaUsuarios(String correo) {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new Gson();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-
-			public void run() {
-				res = llamada.LlamadaListaUsuarios();
-				ArrayList<Usuario> lista = json.fromJson(res,
-						new TypeToken<ArrayList<Usuario>>() {
-						}.getType());
-
-			}
-		};
-		hilo.start();
-	}
-
+	/**
+	 * Métodos que envia un correo electronico al usuario recordandole el
+	 * usuario y contraseña que ha olvidado
+	 * 
+	 * @param emailTo
+	 * @param nameTo
+	 * @param emailFrom
+	 * @param nameFrom
+	 * @param subject
+	 * @param body
+	 */
 	private void enviar(String emailTo, String nameTo, String emailFrom,
 			String nameFrom, String subject, String body) {
 

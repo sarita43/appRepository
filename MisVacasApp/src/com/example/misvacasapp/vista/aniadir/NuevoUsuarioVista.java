@@ -3,10 +3,12 @@ package com.example.misvacasapp.vista.aniadir;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
+import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
+import com.example.misvacasapp.controlador.UsuarioControlador;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -75,18 +77,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	 * Método que rellena la lista de usuarios
 	 */
 	private void getListaUsuarios() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new Gson();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-
-			public void run() {
-				res = llamada.LlamadaListaUsuarios();
-				lista = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
-				}.getType());
-			}
-		};
-		hilo.start();
+		lista = new UsuarioControlador().listaUsuarios();
 	}
 
 	/**
@@ -97,9 +88,11 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 		boolean dniOk = true;
 		String dni = ((TextView) findViewById(R.id.dni_nuevo_usuario))
 				.getText().toString();
-		for (int i = 0; i < lista.size(); i++) {
-			if (dni.compareTo(lista.get(i).getDni()) == 0) {
-				dniOk = false;
+		AgregadoUsuario agregado = new AgregadoUsuario();
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
+		while (i.hasNext()){
+			if(i.actualElement().getDni().equals(dni))
+				dniOk = true;
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -107,7 +100,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 								"Usuario ya existe", Toast.LENGTH_SHORT).show();
 					}
 				});
-			}
+			i.next();
 		}
 		return dniOk;
 	}
@@ -120,18 +113,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 		boolean correoOk = true;
 		String correo = ((TextView) findViewById(R.id.correo_nuevo_usuario))
 				.getText().toString();
-		for (int i = 0; i < lista.size(); i++) {
-			if (correo.compareTo(lista.get(i).getCorreo()) == 0) {
-				correoOk = false;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(NuevoUsuarioVista.this,
-								"Correo ya existe", Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
-		}
+		correoOk = new UsuarioControlador().correoExistente(correo);
 		return correoOk;
 	}
 
