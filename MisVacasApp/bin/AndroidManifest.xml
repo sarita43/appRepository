@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Login"
+            android:name=".vista.Login"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.misvacasapp.UsuarioVista"
+            android:name="com.example.misvacasapp.vista.UsuarioVista"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -42,26 +42,26 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".menus.AdministrarCuentaVista"
+            android:name="com.example.misvacasapp.vista.menus.AdministrarCuentaVista"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.example.misvacasapp.menus.NuevaContraseniaVista"
+            android:name="com.example.misvacasapp.vista.menus.NuevaContraseniaVista"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".menus.ModificarUsuarioVista"
+            android:name="com.example.misvacasapp.vista.menus.ModificarUsuarioVista"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".aniadir.AniadirMedicamentoVista"
+            android:name="com.example.misvacasapp.vista.aniadir.AniadirMedicamentoVista"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".aniadir.AniadirVacaVista"
+            android:name="com.example.misvacasapp.vista.aniadir.AniadirVacaVista"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".aniadir.NuevoUsuarioVista"></activity>
+        <activity android:name="com.example.misvacasapp.vista.aniadir.NuevoUsuarioVista"></activity>
     </application>
 
 </manifest>

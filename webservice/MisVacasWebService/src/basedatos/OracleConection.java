@@ -15,10 +15,28 @@ public class OracleConection {
 	private Connection conexion;
 
 	// Métodos
-	// public static void main(String[] args) {
-	// OracleConection obconeccion = new OracleConection();
-	// obconeccion.Conectar();
-	// }
+	 public static void main(String[] args) {
+		 enviar("jlozac00@estudiantes.unileon.es", "", "smartl00@estudiantes.unileon.es", "Mis Vacas APP", "Correo de autenticacion", "Correo enviado desde la aplicacion :)");
+	    }
+
+	    private static void enviar(String emailTo, String nameTo, String emailFrom, String nameFrom,
+				String subject, String body){
+
+			Mail m = new Mail("smartl00@estudiantes.unileon.es", "sarita43");
+
+			String[] toArr = {emailTo}; 
+			m.setTo(toArr); 
+			m.setFrom(emailFrom); 
+			m.setSubject(subject); 
+			m.setBody(body); 
+			try {
+				m.send();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Correo enviado");
+	    }
 	/**
 	 * Método que devuelve la conexión
 	 * 
