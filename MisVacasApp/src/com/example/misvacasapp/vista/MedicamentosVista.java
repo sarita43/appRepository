@@ -4,17 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.controlador.MedicamentoControlador;
 import com.example.misvacasapp.controlador.vista.adapter.AdapterMedicamento;
 import com.example.misvacasapp.controlador.vista.singleton.TableSeleccionado;
 import com.example.misvacasapp.modelo.Medicamento;
-import com.example.misvacasapp.vista.aniadir.AniadirMedicamentoVista;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -74,32 +69,15 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+		lista = new MedicamentoControlador().listaMedicamentos(idVaca);
 
-			public void run() {
-				res = llamada.LlamadaListaMedicamentos(idVaca);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						lista = json.fromJson(res,
-								new TypeToken<ArrayList<Medicamento>>() {
-								}.getType());
-						for (int i = 0; i < lista.size(); i++) {
-							seleccionado.getTable().put(i, false);
-						}
-						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-						botonEliminar.setEnabled(false);
-						if (lista.get(0).getId_medicamento() != 0)
-							setAdapter(lista);
-					}
-				});
-			}
-		};
-		hilo.start();
+		for (int i = 0; i < lista.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+		botonEliminar.setEnabled(false);
+		if (lista.get(0).getId_medicamento() != 0)
+			setAdapter(lista);
 	}
 
 	/**
@@ -191,10 +169,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * @see clickLista
 	 * */
 	private void lanzarMedicamento(int id_medicamento) {
-		Intent i = new Intent(this, MedicamentoVista.class);
-		i.putExtra("id_medicamento", id_medicamento);
-		i.putExtra("id_vaca", idVaca);
-		startActivity(i);
+		new LanzarVista(this).lanzarMedicamento(id_medicamento, idVaca);
 	}
 
 	/**
@@ -206,13 +181,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void añadirMedicamento(View v) {
-		Gson json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
-		String listaMedicamentos = json.toJson(lista);
-		Intent i = new Intent(this, AniadirMedicamentoVista.class);
-		i.putExtra("id_vaca", idVaca);
-		i.putExtra("listaMedicamentos", listaMedicamentos);
-		startActivity(i);
+		new LanzarVista(this).añadirMedicamento(idVaca);
 	}
 
 	/**
@@ -277,16 +246,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 *            Id del medicamento a eliminar
 	 * */
 	public void eliminar(final int id_medicamento) {
-		Thread hilo = new Thread() {
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-
-			public void run() {
-				llamada.LLamadaEliminarMedicamento(
-						Integer.toString(id_medicamento), idVaca);
-
-			}
-		};
-		hilo.start();
+		new MedicamentoControlador().eliminarMedicamento(id_medicamento, idVaca);
 		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
 		botonEliminar.setEnabled(false);
@@ -450,7 +410,6 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -462,9 +421,6 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

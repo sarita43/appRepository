@@ -1,11 +1,8 @@
 package com.example.misvacasapp.vista;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.controlador.VacaControlador;
 import com.example.misvacasapp.modelo.Vaca;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,7 +24,7 @@ public class VacaVista extends ActionBarActivity {
 	// Atributos
 	/** Id de la vaca */
 	private String id_vaca;
-	/** Id delusuario */
+ 	/** Id del usuario */
 	private String id_usuario;
 
 	// Métodos
@@ -53,9 +50,7 @@ public class VacaVista extends ActionBarActivity {
 	 * @param v
 	 * */
 	public void onClickMedicamentos(View v) {
-		Intent i = new Intent(this, MedicamentosVista.class);
-		i.putExtra("id_vaca", id_vaca);
-		startActivity(i);
+		new LanzarVista(this).lanzarMedicamentos(id_vaca);
 	}
 
 	/**
@@ -65,39 +60,24 @@ public class VacaVista extends ActionBarActivity {
 	 * @see onCreate
 	 * */
 	private void rellenarCamposVaca() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			Vaca vaca = new Vaca();
 
-			public void run() {
-				res = llamada.LlamadaVaca(id_vaca, id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						vaca = json.fromJson(res, Vaca.class);
-						TextView idVaca = (TextView) findViewById(R.id.idVaca);
-						idVaca.setText(vaca.getId_vaca());
-						TextView raza = (TextView) findViewById(R.id.raza);
-						raza.setText("RAZA: " + vaca.getRaza());
-						TextView sexo = (TextView) findViewById(R.id.sexo);
-						sexo.setText("SEXO: " + vaca.getSexo());
-						TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
-						fechaNacimiento.setText("FECHA DE NACIMIENTO: "
-								+ vaca.getFecha_nacimiento());
-						TextView idMadre = (TextView) findViewById(R.id.idMadre);
-						idMadre.setText("ID MADRE: " + vaca.getId_madre());
-						ImageView imagen =(ImageView)findViewById(R.id.imageView1);
-						byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
-						Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-						imagen.setImageBitmap(decodedByte);
-					}
-				});
-			}
-		};
-		hilo.start();
+		Vaca vaca = new VacaControlador().getVaca(id_vaca, id_usuario);
+		TextView idVaca = (TextView) findViewById(R.id.idVaca);
+		idVaca.setText(vaca.getId_vaca());
+		TextView raza = (TextView) findViewById(R.id.raza);
+		raza.setText("RAZA: " + vaca.getRaza());
+		TextView sexo = (TextView) findViewById(R.id.sexo);
+		sexo.setText("SEXO: " + vaca.getSexo());
+		TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
+		fechaNacimiento.setText("FECHA DE NACIMIENTO: "
+				+ vaca.getFecha_nacimiento());
+		TextView idMadre = (TextView) findViewById(R.id.idMadre);
+		idMadre.setText("ID MADRE: " + vaca.getId_madre());
+		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
+		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
+		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+				decodedString.length);
+		imagen.setImageBitmap(decodedByte);
 	}
 
 	/**
@@ -118,9 +98,6 @@ public class VacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

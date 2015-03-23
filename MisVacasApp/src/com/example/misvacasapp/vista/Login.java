@@ -26,11 +26,11 @@ import android.widget.Toast;
 public class Login extends ActionBarActivity {
 	// Atributos
 	/*
-	 * Id usuario que introduce a traves de la pantalla login
+	 * Id usuario que se introduce a través de la pantalla login
 	 */
 	private String usuario;
 	/*
-	 * Contraseña del usuario que introduce a traves de la pantalla login
+	 * Contraseña del usuario que se introduce a través de la pantalla login
 	 */
 	private String contraseña;
 
@@ -119,9 +119,7 @@ public class Login extends ActionBarActivity {
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				if (texto.getText().toString().equals("")) {
-					dialog.cancel();
-				} else {
+				
 					if (new UsuarioControlador().correoExistente(texto
 							.getText().toString())) {
 						Usuario u = new UsuarioControlador().getUsuario(texto
@@ -143,7 +141,7 @@ public class Login extends ActionBarActivity {
 							}
 						});
 					}
-				}
+				
 			}
 		});
 		/** Método del botón cancelar del dialogo */
@@ -203,7 +201,6 @@ public class Login extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -215,9 +212,6 @@ public class Login extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			System.out.println("click menu ayuda");

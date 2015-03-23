@@ -2,19 +2,13 @@ package com.example.misvacasapp.vista;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.controlador.VacaControlador;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaMedicamentoWS;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.controlador.vista.adapter.AdapterVaca;
 import com.example.misvacasapp.controlador.vista.singleton.TableSeleccionado;
 import com.example.misvacasapp.modelo.Vaca;
-import com.example.misvacasapp.vista.aniadir.AniadirVacaVista;
-import com.example.misvacasapp.vista.menus.AdministrarCuentaVista;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -74,9 +68,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void añadirVaca(View v) {
-		Intent i = new Intent(this, AniadirVacaVista.class);
-		i.putExtra("id_usuario", id_usuario);
-		startActivity(i);
+		new LanzarVista(this).lanzarAñadirVaca(id_usuario);
 	}
 
 	/**
@@ -90,7 +82,8 @@ public class UsuarioVista extends ActionBarActivity {
 		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
-				eliminados = eliminados + " " + lista.get(i).getId_vaca()+"\n";
+				eliminados = eliminados + " " + lista.get(i).getId_vaca()
+						+ "\n";
 			}
 		}
 		alertaConfirmarEliminar(eliminados);
@@ -140,22 +133,18 @@ public class UsuarioVista extends ActionBarActivity {
 	 *            Id de la vaca a eliminar
 	 * */
 	public void eliminar(final String id_vaca) {
-		Thread hilo = new Thread() {
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			public void run() {
-				eliminarMedicamentosVaca(id_vaca);
-				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
-				mostrarListado();
-			}
-		};
-		hilo.start();
+
+		new VacaControlador().eliminarVaca(id_vaca, this.id_usuario);
+		mostrarListado();
+			
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
 		botonEliminar.setEnabled(false);
-		
+
 	}
-	
-	private void eliminarMedicamentosVaca(final String id_vaca){
+
+	//TODO Esto se hara mejor desde el controlador de vacas y de medicamentos
+	private void eliminarMedicamentosVaca(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 
@@ -244,41 +233,23 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-		
-			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						System.out.println(res);
-						lista = json.fromJson(res,
-								new TypeToken<ArrayList<Vaca>>() {
-								}.getType());
-						for (int i = 0; i < lista.size(); i++) {
-							seleccionado.getTable().put(i, false);
-						}
-						if (lista.get(0).getId_vaca().equals("0")) {
-						} else {
-							setAdapter(lista);
-						}
-					}
-				});
-			}
-		};
-		hilo.start();
-	}
+		lista = new VacaControlador().listaVacas(id_usuario);
 
+		for (int i = 0; i < lista.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		if (lista.get(0).getId_vaca().equals("0")) {
+		} else {
+			setAdapter(lista);
+		}
+	}
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
 	 * 
 	 * @see mostrarListado
-	 * @param lista ArrayList de vacas
+	 * @param lista
+	 *            ArrayList de vacas
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista, seleccionado);
@@ -320,14 +291,16 @@ public class UsuarioVista extends ActionBarActivity {
 
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
-						botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
+						botonEliminar
+								.setBackgroundResource(R.drawable.boton_eliminar_2);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
-					botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
+					botonEliminar
+							.setBackgroundResource(R.drawable.boton_eliminar);
 				}
 				adapter.setSeleccionado(seleccionado);
 				setAdapter(lista);
@@ -344,10 +317,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see clickLista
 	 * */
 	private void lanzarVaca(String id_vaca) {
-		Intent i = new Intent(this, VacaVista.class);
-		i.putExtra("id_vaca", id_vaca);
-		i.putExtra("id_usuario", this.id_usuario);
-		startActivity(i);
+		new LanzarVista(this).lanzarVaca(id_vaca, this.id_usuario);
 	}
 
 	/**
@@ -385,10 +355,8 @@ public class UsuarioVista extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.administrar_cuenta) {
-			Intent i = new Intent(this, AdministrarCuentaVista.class);
-			i.putExtra("id_usuario", this.id_usuario);
-			i.putExtra("contraseña", this.contraseña);
-			startActivity(i);
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
+					contraseña);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

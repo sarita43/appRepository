@@ -1,6 +1,5 @@
 package com.example.misvacasapp.vista.aniadir;
 
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
@@ -29,12 +28,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.controlador.UsuarioControlador;
+import com.example.misvacasapp.controlador.VacaControlador;
 import com.example.misvacasapp.modelo.Vaca;
-import com.example.misvacasapp.vista.UsuarioVista;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.example.misvacasapp.vista.LanzarVista;
+
 
 /**
  * Clase de la actividad de añadir vaca. En ella se implementan los métodos que
@@ -46,14 +44,12 @@ public class AniadirVacaVista extends ActionBarActivity {
 	// Atributos
 	/** Id del usuario */
 	private String id_usuario;
-	/** Lista de vacas del usuario */
-	private ArrayList<Vaca> lista;
-	/** Tipo que serializa o deserializa para enviar a traves del servicio web */
-	private Gson json;
+
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
-	
-	private static final Logger logger = Logger.getLogger(AniadirVacaVista.class);
+
+	private static final Logger logger = Logger
+			.getLogger(AniadirVacaVista.class);
 
 	// Métodos
 	/**
@@ -64,16 +60,12 @@ public class AniadirVacaVista extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aniadir_vaca);
-		json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		lista = new ArrayList<Vaca>();
 		rellenarSpinner();
-		listaVacas();
-		
-		  BasicConfigurator.configure();
-	       logger.debug("Hola esto es una traza");
+
+		BasicConfigurator.configure();
+		logger.debug("Hola esto es una traza");
 	}
 
 	/**
@@ -103,28 +95,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Recoge la lista de vacas del usuario y lo guarda en el arrayList de lista
-	 * Para ello se llama al servicio web de vacas
-	 * 
-	 * @see onCreate
-	 * */
-	private void listaVacas() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
-				lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
-				}.getType());
-			}
-		};
-		hilo.start();
-	}
-
-	/**
 	 * Comprueba que el id de la vaca nueva introducido sea correcto Para ello
 	 * comprueba que no sea vacio y que no exista ya ese animal
 	 * 
@@ -135,27 +105,26 @@ public class AniadirVacaVista extends ActionBarActivity {
 		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
-		for (int i = 0; lista.size() > i; i++) {
-			if (id_vaca.equals(lista.get(i).getId_vaca())) {
-				id_correcto = false;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(AniadirVacaVista.this, "Id ya existe",
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-			} else if (id_vaca.equals("")) {
-				id_correcto = false;
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(AniadirVacaVista.this, "Id vacio",
-								Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
+		if (new VacaControlador().vacaExistente(id_vaca, id_usuario)) {
+			id_correcto = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Id ya existe",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else if (id_vaca.equals("")) {
+			id_correcto = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Id vacio",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
+
 		return id_correcto;
 	}
 
@@ -183,45 +152,47 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
-		String bitmapdata =crearImagen();
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,bitmapdata);
+		String bitmapdata = crearImagen();
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
+				bitmapdata);
 
 		return vaca;
 	}
-	
-	private String crearImagen(){
-		Button imagen = (Button)findViewById(R.id.foto_boton);
-		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
+
+	private String crearImagen() {
+		Button imagen = (Button) findViewById(R.id.foto_boton);
+		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
 		bitmap = redimensionarImagenMaximo(bitmap, 200, 100);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
 		byte[] bitmapdata = stream.toByteArray();
-		System.out.println(" TAMAÑO  :"+bitmapdata.length);
 		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
-		System.out.println("TAMAÑO STRING  "+encodedImage.length());
 		return encodedImage;
 	}
-	
+
 	/**
 	 * Redimensionar un Bitmap. By TutorialAndroid.com
-	* @param Bitmap mBitmap
-	* @param float newHeight
-	* @param float newHeight
+	 * 
+	 * @param Bitmap
+	 *            mBitmap
+	 * @param float newHeight
+	 * @param float newHeight
 	 * @param float newHeight
 	 * @return Bitmap
 	 */
-	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
-	   //Redimensionamos
-	   int width = mBitmap.getWidth();
-	   int height = mBitmap.getHeight();
-	   float scaleWidth = ((float) newWidth) / width;
-	   float scaleHeight = ((float) newHeigth) / height;
-	   // create a matrix for the manipulation
-	   Matrix matrix = new Matrix();
-	   // resize the bit map
-	   matrix.postScale(scaleWidth, scaleHeight);
-	   // recreate the new Bitmap
-	   return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
+			float newHeigth) {
+		// Redimensionamos
+		int width = mBitmap.getWidth();
+		int height = mBitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeigth) / height;
+		// create a matrix for the manipulation
+		Matrix matrix = new Matrix();
+		// resize the bit map
+		matrix.postScale(scaleWidth, scaleHeight);
+		// recreate the new Bitmap
+		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
 	/**
@@ -321,7 +292,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	private boolean comprobarIdMadre() {
-
 		boolean id_correcto = true;
 		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
 				.getText().toString();
@@ -347,41 +317,33 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void nuevaVaca(View view) {
-		Thread hilo = new Thread() {
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
-			public void run() {
-				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
-					final Vaca v = crearVaca();
+		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()
+				&& comprobarIdMadre()) {
+			new VacaControlador().añadirVaca(crearVaca());
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario,
+					new UsuarioControlador().getUsuarioPorId(id_usuario)
+							.getContraseña());
 
-					String vaca = json.toJson(v);
-					llamada.LLamadaAñadirVaca(vaca);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(AniadirVacaVista.this,
-									"Añadido correctamente", Toast.LENGTH_SHORT)
-									.show();
-							Intent i = new Intent(getApplicationContext(),
-									UsuarioVista.class);
-							i.putExtra("id_usuario", id_usuario);
-							startActivity(i);
-							finish();
-						}
-					});
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this,
+							"Añadido correctamente", Toast.LENGTH_SHORT).show();
 				}
-			}
-		};
-		hilo.start();
+			});
+		}
+
 	}
-	
-	public void cargarFoto(View v){
+
+	public void cargarFoto(View v) {
 		String name = Environment.getExternalStorageDirectory() + "/test.jpg";
-		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		startActivityForResult(intent, 2);
-		
+
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -393,11 +355,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 			Bitmap bitmap = BitmapFactory.decodeStream(bis);
 			Button imagen = (Button) findViewById(R.id.foto_boton);
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
-			
+
 		} catch (FileNotFoundException e) {
 		}
 	}
-	
+
 	/**
 	 * Añade el menu a la vista aniadirVaca
 	 * 
@@ -405,7 +367,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -417,9 +378,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

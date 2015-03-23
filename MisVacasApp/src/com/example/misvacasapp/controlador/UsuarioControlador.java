@@ -2,7 +2,6 @@ package com.example.misvacasapp.controlador;
 
 import java.util.ArrayList;
 
-
 import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
 import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
@@ -16,14 +15,15 @@ public class UsuarioControlador {
 	private boolean resultado;
 	private ArrayList<Usuario> lista;
 	private Usuario usuario;
-	
-	public UsuarioControlador(){
+
+	public UsuarioControlador() {
 		resultado = false;
 		lista = new ArrayList<Usuario>();
 		usuario = new Usuario();
 	}
-	
-	public boolean UsuarioExistente(final String id_usuario,final String contraseña){
+
+	public boolean UsuarioExistente(final String id_usuario,
+			final String contraseña) {
 		Thread hilo = new Thread() {
 			String res = "";
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
@@ -34,15 +34,15 @@ public class UsuarioControlador {
 					resultado = true;
 				} else if (res.compareTo("false") == 0) {
 					resultado = false;
-				}//TODO COMPROBAR CUANDO NO HAY CONEXION
+				}// TODO COMPROBAR CUANDO NO HAY CONEXION
 			}
 		};
 		hilo.start();
 		return false;
-		
+
 	}
-	
-	public Usuario getUsuario(final String id_usuario,final String contraseña){
+
+	public Usuario getUsuario(final String id_usuario, final String contraseña) {
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
@@ -56,19 +56,32 @@ public class UsuarioControlador {
 		hilo.start();
 		return usuario;
 	}
-	
-	public Usuario getUsuario(String correo){
+
+	public Usuario getUsuario(String correo) {
 		AgregadoUsuario agregado = new AgregadoUsuario();
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
-		while (i.hasNext()){
-			if(i.actualElement().getCorreo().equals(correo))
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
 				usuario = i.actualElement();
 			i.next();
 		}
 		return usuario;
 	}
-	
-	public ArrayList<Usuario> listaUsuarios(){
+
+	public Usuario getUsuarioPorId(String id_usuario) {
+		AgregadoUsuario agregado = new AgregadoUsuario();
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(id_usuario))
+				usuario = i.actualElement();
+			i.next();
+		}
+		return usuario;
+	}
+
+	public ArrayList<Usuario> listaUsuarios() {
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new Gson();
@@ -83,15 +96,67 @@ public class UsuarioControlador {
 		hilo.start();
 		return lista;
 	}
-	
-	public boolean correoExistente(String correo){
+
+	public boolean correoExistente(String correo) {
 		AgregadoUsuario agregado = new AgregadoUsuario();
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
-		while (i.hasNext()){
-			if(i.actualElement().getCorreo().equals(correo))
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
 				resultado = true;
 			i.next();
 		}
 		return resultado;
+	}
+
+	public void añadirUsuario(final Usuario nuevoUsuario) {
+		Thread hilo = new Thread() {
+			Gson json = new Gson();
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+			String usuario;
+
+			public void run() {
+				usuario = json.toJson(nuevoUsuario);
+				llamada.añadirUsuario(usuario);
+			}
+		};
+		hilo.start();
+	}
+
+	public void eliminarUsuario(final String id_usuario) {
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.eliminarUsuario(id_usuario);
+			}
+		};
+		hilo.start();
+	}
+
+	public void actualizarUsuario(final String id_usuario, final String nombre,
+			final String apellido1, final String apellido2,
+			final String direccion, final String poblacion, final int telefono) {
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.actualizarUsuario(id_usuario, nombre, apellido1,
+						apellido2, direccion, poblacion, telefono);
+			}
+		};
+		hilo.start();
+	}
+	
+	public void cambiarContraseña(final String id_usuario,final String nuevaContraseña){
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.actualizarContraseña(id_usuario, nuevaContraseña);
+			}
+		};
+		hilo.start();
+		
 	}
 }

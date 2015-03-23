@@ -6,9 +6,7 @@ import com.example.misvacasapp.R;
 import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
 import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.controlador.UsuarioControlador;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
-import com.google.gson.Gson;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -64,11 +62,19 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 				.getText().toString();
 		String codigo_explotacion = ((TextView) findViewById(R.id.codigo_explotacion_nuevo_usuario))
 				.getText().toString();
-		if (comprobarDni()&& comprobarCorreo()) {
+		if (comprobarDni(dni)&& comprobarCorreo(correo)) {
 			nuevoUsuario = new Usuario(nombre, apellido1, apellido2, direccion,
 					poblacion, telefono, dni, contraseña, 0, correo,
 					codigo_explotacion);
-			añadirUsuario();
+			new UsuarioControlador().añadirUsuario(nuevoUsuario);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(NuevoUsuarioVista.this,
+							"Usuario creado", Toast.LENGTH_SHORT).show();
+				}
+			});
+			//TODO ENVIAR EMAIL??
 			finish();
 		}
 	}	
@@ -82,16 +88,15 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 
 	/**
 	 * Método que comprueba si el dni ya existe. Si existe quiere decir que el usuario ya esta registrado
+	 * @param dni 
 	 * @return boolean Dni correcto o no
 	 */
-	private boolean comprobarDni() {
+	private boolean comprobarDni(String dni) {
 		boolean dniOk = true;
-		String dni = ((TextView) findViewById(R.id.dni_nuevo_usuario))
-				.getText().toString();
 		AgregadoUsuario agregado = new AgregadoUsuario();
 		IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
 		while (i.hasNext()){
-			if(i.actualElement().getDni().equals(dni))
+			if(i.actualElement().getDni().equals(dni)){
 				dniOk = true;
 				runOnUiThread(new Runnable() {
 					@Override
@@ -100,6 +105,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 								"Usuario ya existe", Toast.LENGTH_SHORT).show();
 					}
 				});
+			}
 			i.next();
 		}
 		return dniOk;
@@ -107,37 +113,21 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 
 	/**
 	 * Método que comprueba si el correo ya existe. Si existe quiere decir que el usuario ya esta registrado
+	 * @param correo 
 	 * @return boolean Correo correcto o no
 	 */
-	private boolean comprobarCorreo() {
+	private boolean comprobarCorreo(String correo) {
 		boolean correoOk = true;
-		String correo = ((TextView) findViewById(R.id.correo_nuevo_usuario))
-				.getText().toString();
 		correoOk = new UsuarioControlador().correoExistente(correo);
+		if (correoOk) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(NuevoUsuarioVista.this,
+							"Correo ya existe", Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
 		return correoOk;
-	}
-
-	/**
-	 * Método que llama al srevicio web del usuario para añadir un usuario nuevo.
-	 */
-	private void añadirUsuario() {
-		Thread hilo = new Thread() {
-			Gson json = new Gson();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-			String usuario;
-
-			public void run() {
-				usuario = json.toJson(nuevoUsuario);
-				llamada.añadirUsuario(usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(NuevoUsuarioVista.this,
-								"Usuario creado", Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
-		};
-		hilo.start();
 	}
 }

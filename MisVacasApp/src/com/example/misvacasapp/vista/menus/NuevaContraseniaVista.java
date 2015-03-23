@@ -1,9 +1,9 @@
 package com.example.misvacasapp.vista.menus;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.controlador.UsuarioControlador;
+import com.example.misvacasapp.vista.LanzarVista;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -79,10 +79,8 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 			Toast.makeText(NuevaContraseniaVista.this,
 					"La contraseña ha sido cambiada correctamente",
 					Toast.LENGTH_LONG).show();
-			Intent i = new Intent(this, AdministrarCuentaVista.class);
-			i.putExtra("id_usuario", id_usuario);
-			i.putExtra("contraseña", contraseñaNueva.getText().toString());
-			startActivity(i);
+
+			new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña, AdministrarCuentaVista.class);
 			finish();
 		} else {
 			Toast.makeText(NuevaContraseniaVista.this,
@@ -95,14 +93,6 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 	 * usuario
 	 * */
 	private void cambiarContraseña() {
-		Thread hilo = new Thread() {
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-
-			public void run() {
-				llamada.actualizarContraseña(id_usuario, contraseñaNueva
-						.getText().toString());
-			}
-		};
-		hilo.start();
+		new UsuarioControlador().cambiarContraseña(id_usuario, contraseñaNueva.getText().toString());
 	}
 }

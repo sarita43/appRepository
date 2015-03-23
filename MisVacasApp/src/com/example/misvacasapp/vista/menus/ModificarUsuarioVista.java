@@ -1,10 +1,9 @@
 package com.example.misvacasapp.vista.menus;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.controlador.UsuarioControlador;
 import com.example.misvacasapp.modelo.Usuario;
-import com.google.gson.Gson;
-import android.content.Intent;
+import com.example.misvacasapp.vista.LanzarVista;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -26,8 +25,6 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	private String id_usuario;
 	/** Contraseña del usuario */
 	private String contraseña;
-	/** Usuario de la clase Usuario @see Usuario */
-	private Usuario usuario;
 	/** TextView que aparece en la vista que es el nombre del usuario */
 	private TextView nombre;
 	/** TextView que aparece en la vista que es el primer apellido del usuario */
@@ -68,28 +65,16 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	 * Usuario
 	 * */
 	private void rellenarCamposTexto() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new Gson();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+		Usuario usuario = new UsuarioControlador().getUsuario(id_usuario,
+				contraseña);
 
-			public void run() {
-				res = llamada.LlamadaUsuario(id_usuario, contraseña);
-				usuario = json.fromJson(res, Usuario.class);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						nombre.setText(usuario.getNombre());
-						apellido1.setText(usuario.getApellido1());
-						apellido2.setText(usuario.getApellido2());
-						direccion.setText(usuario.getDireccion());
-						poblacion.setText(usuario.getPoblacion());
-						telefono.setText(Integer.toString(usuario.getTelefono()));
-					}
-				});
-			}
-		};
-		hilo.start();
+		nombre.setText(usuario.getNombre());
+		apellido1.setText(usuario.getApellido1());
+		apellido2.setText(usuario.getApellido2());
+		direccion.setText(usuario.getDireccion());
+		poblacion.setText(usuario.getPoblacion());
+		telefono.setText(Integer.toString(usuario.getTelefono()));
+
 	}
 
 	/**
@@ -102,38 +87,33 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void onClickActualizarUsuario(View view) {
-		Thread hilo = new Thread() {
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
-			public void run() {
-				if (telefono.getText().toString().trim().length() == 0) {
-				} else {
-					llamada.actualizarUsuario(id_usuario, nombre.getText()
-							.toString(), apellido1.getText().toString(),
-							apellido2.getText().toString(), direccion.getText()
-									.toString(),
-							poblacion.getText().toString(), Integer
-									.parseInt(telefono.getText().toString()));
-					modificarUsuarioOk();
+		if (telefono.getText().toString().trim().length() == 0) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(ModificarUsuarioVista.this,
+							"Telefono no puede ser vacio", Toast.LENGTH_LONG)
+							.show();
 				}
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (telefono.getText().toString().trim().length() == 0) {
-							Toast.makeText(ModificarUsuarioVista.this,
-									"Telefono no puede ser vacio",
-									Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(
-									ModificarUsuarioVista.this,
-									"El usuario ha sido modificado correctamente",
-									Toast.LENGTH_LONG).show();
-						}
-					}
-				});
-			}
-		};
-		hilo.start();
+			});
+		} else {
+			new UsuarioControlador().actualizarUsuario(id_usuario, nombre
+					.getText().toString(), apellido1.getText().toString(),
+					apellido2.getText().toString(), direccion.getText()
+							.toString(), poblacion.getText().toString(),
+					Integer.parseInt(telefono.getText().toString()));
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(ModificarUsuarioVista.this,
+							"El usuario ha sido modificado correctamente",
+							Toast.LENGTH_LONG).show();
+				}
+			});
+
+			modificarUsuarioOk();
+		}
 	}
 
 	/**
@@ -141,10 +121,7 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	 * anterior AdministrarCuentaVista
 	 * */
 	private void modificarUsuarioOk() {
-		Intent i = new Intent(this, AdministrarCuentaVista.class);
-		i.putExtra("id_usuario", id_usuario);
-		i.putExtra("contraseña", contraseña);
-		startActivity(i);
+		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña, AdministrarCuentaVista.class);
 		finish();
 	}
 }

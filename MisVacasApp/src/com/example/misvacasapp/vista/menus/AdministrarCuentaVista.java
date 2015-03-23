@@ -2,14 +2,14 @@ package com.example.misvacasapp.vista.menus;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.controlador.UsuarioControlador;
 import com.example.misvacasapp.controlador.vista.adapter.AdapterListaMenu;
+import com.example.misvacasapp.vista.LanzarVista;
 import com.example.misvacasapp.vista.Login;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -96,10 +96,8 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	 *            Clase de la ventana
 	 * */
 	private void nuevaVentana(Class ventanaNombre) {
-		Intent i = new Intent(this, ventanaNombre);
-		i.putExtra("id_usuario", id_usuario);
-		i.putExtra("contraseña", contraseña);
-		startActivity(i);
+		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña,
+				ventanaNombre);
 	}
 
 	/**
@@ -111,23 +109,16 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	 * @see alertaEliminarUsuario
 	 * */
 	private void eliminarCuenta() {
-		Thread hilo = new Thread() {
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-
+		new UsuarioControlador().eliminarUsuario(id_usuario);
+		runOnUiThread(new Runnable() {
+			@Override
 			public void run() {
-				llamada.eliminarUsuario(id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						nuevaVentana(Login.class);
-						Toast.makeText(AdministrarCuentaVista.this,
-								"Usuario elimidado", Toast.LENGTH_LONG).show();
-						finish();
-					}
-				});
+				nuevaVentana(Login.class);
+				Toast.makeText(AdministrarCuentaVista.this,
+						"Usuario elimidado", Toast.LENGTH_LONG).show();
+				finish();
 			}
-		};
-		hilo.start();
+		});
 	}
 
 	/**
