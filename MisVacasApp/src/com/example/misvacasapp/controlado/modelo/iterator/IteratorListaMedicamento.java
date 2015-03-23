@@ -1,20 +1,20 @@
 package com.example.misvacasapp.controlado.modelo.iterator;
 
-import com.example.misvacasapp.modelo.Usuario;
+import com.example.misvacasapp.modelo.Medicamento;
 
-public class IteratorListaUsuario implements Iterator {
-	
+public class IteratorListaMedicamento implements Iterator {
+
 	private Agregado agregado;
 	private int actual;
 	
-	public IteratorListaUsuario(AgregadoUsuario agregado){
+	public IteratorListaMedicamento(AgregadoMedicamento agregado){
 		this.agregado = agregado;
 		first();
 	}
-
+	
 	@Override
 	public void first() {
-		this.actual = 0;		
+		actual = 0;
 	}
 
 	@Override
@@ -24,12 +24,12 @@ public class IteratorListaUsuario implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		return actual<=agregado.count();
+		return false;
 	}
 
 	@Override
-	public Usuario actualElement() {
-		return (Usuario) this.agregado.get(actual);
+	public Medicamento actualElement() {
+		return (Medicamento)this.agregado.get(actual);
 	}
 
 }
