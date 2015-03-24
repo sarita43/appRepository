@@ -2,8 +2,8 @@ package com.example.misvacasapp.controlador;
 
 import java.util.ArrayList;
 
-import com.example.misvacasapp.controlado.modelo.iterator.AgregadoVaca;
-import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaVaca;
+import com.example.misvacasapp.controlador.modelo.iterator.AgregadoVaca;
+import com.example.misvacasapp.controlador.modelo.iterator.IteratorListaVaca;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;

@@ -2,6 +2,7 @@ package com.example.misvacasapp.vista;
 
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.controlador.UsuarioControlador;
+import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 
 import android.support.v7.app.ActionBarActivity;
@@ -34,6 +35,8 @@ public class Login extends ActionBarActivity {
 	 */
 	private String contraseña;
 
+	boolean existe;
+
 	// Metodos
 	/**
 	 * Recoge el usuario y contraseña introducidos por el usuario y comprueba si
@@ -43,12 +46,33 @@ public class Login extends ActionBarActivity {
 	 *            Vista que hace el click en el boton
 	 */
 	public void onClick(View v) {
-		usuario = ((TextView) findViewById(R.id.usuario)).getText().toString();
-		contraseña = ((TextView) findViewById(R.id.contrasena)).getText()
-				.toString();
 
-		boolean existe = new UsuarioControlador().UsuarioExistente(usuario,
-				contraseña);
+		Thread hilo = new Thread() {
+			String res = "";
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				usuario = ((TextView) findViewById(R.id.usuario)).getText()
+						.toString();
+				contraseña = ((TextView) findViewById(R.id.contrasena))
+						.getText().toString();
+				res = llamada.LlamadaUsuarioExistente(usuario, contraseña);
+				System.out.println("RES" + res);
+				if (res.compareTo("true") == 0) {
+					existe = true;
+					exixt(existe);
+				} else if (res.compareTo("false") == 0) {
+					existe = false;
+					exixt(existe);
+				}// TODO COMPROBAR CUANDO NO HAY CONEXION
+			}
+		};
+		hilo.start();
+		
+
+	}
+
+	private void exixt(boolean existe) {
 		if (existe) {
 			rol();
 		} else {
@@ -60,6 +84,7 @@ public class Login extends ActionBarActivity {
 				}
 			});
 		}
+
 	}
 
 	/**
@@ -67,6 +92,7 @@ public class Login extends ActionBarActivity {
 	 */
 	private void rol() {
 		Usuario u = new UsuarioControlador().getUsuario(usuario, contraseña);
+		System.out.println(u.getRol());
 		if (u.getRol() == 1) {
 			// Admin
 		} else if (u.getRol() == 0) {
@@ -119,29 +145,26 @@ public class Login extends ActionBarActivity {
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
-					if (new UsuarioControlador().correoExistente(texto
-							.getText().toString())) {
-						Usuario u = new UsuarioControlador().getUsuario(texto
-								.getText().toString());
-						enviar(texto.getText().toString(),
-								"",
-								"misvacasapp@gmail.es",
-								"Mis Vacas APP",
-								"Correo de autenticacion",
-								"Su usuario y contraseña son: /n Usuario: "
-										+ u.getDni() + "/nContraseña"
-										+ u.getContraseña());
-					} else {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Toast.makeText(Login.this, "Correo no existe",
-										Toast.LENGTH_SHORT).show();
-							}
-						});
-					}
-				
+
+				if (new UsuarioControlador().correoExistente(texto.getText()
+						.toString())) {
+					Usuario u = new UsuarioControlador().getUsuario(texto
+							.getText().toString());
+					enviar(texto.getText().toString(),
+							"",
+							"Su usuario y contraseña son: /n Usuario: "
+									+ u.getDni() + "/nContraseña"
+									+ u.getContraseña());
+				} else {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(Login.this, "Correo no existe",
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+
 			}
 		});
 		/** Método del botón cancelar del dialogo */
@@ -165,15 +188,12 @@ public class Login extends ActionBarActivity {
 	 * @param subject
 	 * @param body
 	 */
-	private void enviar(String emailTo, String nameTo, String emailFrom,
-			String nameFrom, String subject, String body) {
+	private void enviar(String emailTo, String nameTo, String body) {
 
-		Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
+		Mail m = new Mail();
 
 		String[] toArr = { emailTo, "misvacasapp@gmail.es" };
 		m.setTo(toArr);
-		m.setFrom(emailFrom);
-		m.setSubject(subject);
 		m.setBody(body);
 		try {
 			m.send();

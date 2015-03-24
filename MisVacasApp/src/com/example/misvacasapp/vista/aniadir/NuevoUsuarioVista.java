@@ -3,9 +3,9 @@ package com.example.misvacasapp.vista.aniadir;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
-import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.controlador.UsuarioControlador;
+import com.example.misvacasapp.controlador.modelo.iterator.AgregadoUsuario;
+import com.example.misvacasapp.controlador.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.modelo.Usuario;
 
 import android.os.Bundle;
@@ -33,6 +33,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nuevo_usuario);
+		lista = new ArrayList<Usuario>();
 		getListaUsuarios();
 	}
 

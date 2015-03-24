@@ -1,4 +1,4 @@
-package com.example.misvacasapp.controlado.modelo.iterator;
+package com.example.misvacasapp.controlador.modelo.iterator;
 
 import com.example.misvacasapp.modelo.Medicamento;
 

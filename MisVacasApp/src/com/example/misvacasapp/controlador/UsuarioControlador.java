@@ -2,8 +2,8 @@ package com.example.misvacasapp.controlador;
 
 import java.util.ArrayList;
 
-import com.example.misvacasapp.controlado.modelo.iterator.AgregadoUsuario;
-import com.example.misvacasapp.controlado.modelo.iterator.IteratorListaUsuario;
+import com.example.misvacasapp.controlador.modelo.iterator.AgregadoUsuario;
+import com.example.misvacasapp.controlador.modelo.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.controlador.modelo.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.example.misvacasapp.modelo.Vaca;
@@ -30,6 +30,7 @@ public class UsuarioControlador {
 
 			public void run() {
 				res = llamada.LlamadaUsuarioExistente(id_usuario, contraseña);
+				System.out.println("RES"+res);
 				if (res.compareTo("true") == 0) {
 					resultado = true;
 				} else if (res.compareTo("false") == 0) {
