@@ -1,15 +1,24 @@
 package com.example.misvacasapp;
 
+import java.util.ArrayList;
+
+import com.example.misvacasapp.iterator.AgregadoUsuario;
+import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import android.support.v7.app.ActionBarActivity;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +30,17 @@ import android.widget.Toast;
  * */
 public class Login extends ActionBarActivity {
 	// Atributos
-	/*
+	/**
 	 * Id usuario que introduce a traves de la pantalla login
 	 */
 	private String usuario;
-	/*
+	/**
 	 * Contraseña del usuario que introduce a traves de la pantalla login
 	 */
 	private String contraseña;
+
+	/** Lista de usuarios de la aplicación */
+	private ArrayList<Usuario> lista;
 
 	// Metodos
 	/**
@@ -101,7 +113,7 @@ public class Login extends ActionBarActivity {
 	 * Cambia a la vista del usuario
 	 * */
 	private void lanzarUsuario() {
-		new LanzarVista(this).lanzarUsuarioVista(usuario,contraseña);
+		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
 		finish();
 	}
 
@@ -123,25 +135,125 @@ public class Login extends ActionBarActivity {
 	 * @param v
 	 */
 	public void onClickPedirContraseña(View v) {
-		String[] to = { "destinatario" };
-        String[] cc = { "copia" };
-        enviar(to, cc, "Hola",
-                "Esto es un email enviado desde una app de Android");
-    }
- 
-    private void enviar(String[] to, String[] cc,
-        String asunto, String mensaje) {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        //String[] to = direccionesEmail;
-        //String[] cc = copias;
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
-        emailIntent.putExtra(Intent.EXTRA_CC, cc);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, asunto);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, mensaje);
-        emailIntent.setType("message/rfc822");
-        startActivity(Intent.createChooser(emailIntent, "Email "));
-    }
+		alertaCorreo();
+	}
+
+	/**
+	 * Alerta para introducir el correo electronico y decir si el correo esta en
+	 * la base de datos o no. Si el correo esta en la base de datos envia un
+	 * mensaje al usuario para recordarle la contraseña
+	 */
+	private void alertaCorreo() {
+
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View layout = inflater.inflate(R.layout.buscar_layout, null);
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setView(layout);
+		dialogo.setMessage("Introduzca el correo electronico");
+		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+		/** Método del botón aceptar del dialogo */
+		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (correoExistente(texto.getText().toString())) {
+					Usuario u = getUsuario(texto.getText().toString());
+					enviar(texto.getText().toString(),
+							"",
+							"misvacasapp@gmail.es",
+							"Mis Vacas APP",
+							"Correo de autenticacion",
+							"Su usuario y contraseña son:  Usuario: "
+									+ u.getDni() + " Contraseña: "
+									+ u.getContraseña());
+				} else {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(Login.this, "Correo no existe",
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			}
+		});
+		/** Método del botón cancelar del dialogo */
+		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		dialogo.show();
+	}
+
+	/**
+	 * Métodos que envia un correo electronico al usuario recordandole el
+	 * usuario y contraseña que ha olvidado
+	 * 
+	 * @param emailTo
+	 * @param nameTo
+	 * @param emailFrom
+	 * @param nameFrom
+	 * @param subject
+	 * @param body
+	 */
+	private void enviar(String emailTo, String nameTo, String emailFrom,
+			String nameFrom, String subject, String body) {
+		Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
+		String[] toArr = { emailTo, "misvacasapp@gmail.es" };
+		m.setTo(toArr);
+		m.setFrom(emailFrom);
+		m.setSubject(subject);
+		m.setBody(body);
+		try {
+			m.send();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Correo enviado");
+	}
+
+	private void getListaUsuarios() {
+		lista = new ArrayList<Usuario>();
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new Gson();
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				res = llamada.LlamadaListaUsuarios();
+				lista = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
+				}.getType());
+			}
+		};
+		hilo.start();
+	}
+
+	private boolean correoExistente(String correo) {
+		boolean resultado = false;
+		AgregadoUsuario agregado = new AgregadoUsuario(lista);
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
+				resultado = true;
+			i.next();
+		}
+		return resultado;
+	}
+
+	private Usuario getUsuario(String correo) {
+		Usuario u = new Usuario();
+		AgregadoUsuario agregado = new AgregadoUsuario(lista);
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
+				u = i.actualElement();
+			i.next();
+		}
+		return u;
+	}
 
 	/**
 	 * Añade la vista del login
@@ -152,6 +264,7 @@ public class Login extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		getListaUsuarios();
 	}
 
 	/**
@@ -161,7 +274,6 @@ public class Login extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -173,9 +285,6 @@ public class Login extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			System.out.println("click menu ayuda");

@@ -6,7 +6,6 @@ import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.aniadir.AniadirVacaVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
-import com.example.misvacasapp.menus.AdministrarCuentaVista;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -383,11 +382,11 @@ public class UsuarioVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.administrar_cuenta) {
-			Intent i = new Intent(this, AdministrarCuentaVista.class);
-			i.putExtra("id_usuario", this.id_usuario);
-			i.putExtra("contraseña", this.contraseña);
-			startActivity(i);
+		if (id == R.id.cerrar_sesion){
+			new LanzarVista(this).lanzarLogin();
+			finish();
+		}else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, contraseña);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
