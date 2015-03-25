@@ -1,6 +1,8 @@
 package com.example.misvacasapp.menus;
 
 import java.util.ArrayList;
+
+import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.Login;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
@@ -8,7 +10,6 @@ import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -95,10 +96,7 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	 *            Clase de la ventana
 	 * */
 	private void nuevaVentana(Class ventanaNombre) {
-		Intent i = new Intent(this, ventanaNombre);
-		i.putExtra("id_usuario", id_usuario);
-		i.putExtra("contraseña", contraseña);
-		startActivity(i);
+		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña, ventanaNombre);
 	}
 
 	/**

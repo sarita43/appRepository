@@ -4,7 +4,6 @@ import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -52,9 +51,7 @@ public class VacaVista extends ActionBarActivity {
 	 * @param v
 	 * */
 	public void onClickMedicamentos(View v) {
-		Intent i = new Intent(this, MedicamentosVista.class);
-		i.putExtra("id_vaca", id_vaca);
-		startActivity(i);
+		new LanzarVista(this).lanzarMedicamentos(id_vaca);
 	}
 
 	/**
@@ -117,9 +114,6 @@ public class VacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

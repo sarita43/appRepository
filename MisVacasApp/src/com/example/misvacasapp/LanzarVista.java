@@ -1,7 +1,9 @@
 package com.example.misvacasapp;
 
+import com.example.misvacasapp.aniadir.AniadirMedicamentoVista;
 import com.example.misvacasapp.aniadir.AniadirVacaVista;
 import com.example.misvacasapp.aniadir.NuevoUsuarioVista;
+import com.example.misvacasapp.menus.AdministrarCuentaVista;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +33,7 @@ public class LanzarVista {
 	}
 
 	public void lanzarAdministrarCuenta(String id_usuario, String contraseña) {
-		Intent i = new Intent(context, UsuarioVista.class);
+		Intent i = new Intent(context, AdministrarCuentaVista.class);
 		i.putExtra("id_usuario", id_usuario);
 		i.putExtra("contraseña", contraseña);
 		context.startActivity(i);
@@ -69,6 +71,13 @@ public class LanzarVista {
 		Intent i = new Intent(context, MedicamentoVista.class);
 		i.putExtra("id_medicamento", id_medicamento);
 		i.putExtra("id_vaca", id_vaca);
+		context.startActivity(i);
+	}
+	
+	public void lanzarAñadirMedicamento(String id_vaca,String listaMedicamentos){
+		Intent i = new Intent(context, AniadirMedicamentoVista.class);
+		i.putExtra("id_vaca", id_vaca);
+		i.putExtra("listaMedicamentos", listaMedicamentos);
 		context.startActivity(i);
 	}
 

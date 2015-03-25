@@ -24,7 +24,6 @@ public class IteratorListaUsuario implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		System.out.println("HASNEST  "+ actual);
 		return actual<agregado.count();
 	}
 

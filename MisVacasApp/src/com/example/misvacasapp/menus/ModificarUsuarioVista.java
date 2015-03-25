@@ -1,10 +1,10 @@
 package com.example.misvacasapp.menus;
 
+import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -141,10 +141,6 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	 * anterior AdministrarCuentaVista
 	 * */
 	private void modificarUsuarioOk() {
-		Intent i = new Intent(this, AdministrarCuentaVista.class);
-		i.putExtra("id_usuario", id_usuario);
-		i.putExtra("contraseña", contraseña);
-		startActivity(i);
-		finish();
+		new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, contraseña);
 	}
 }

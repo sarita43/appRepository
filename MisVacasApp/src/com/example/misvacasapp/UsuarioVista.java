@@ -3,7 +3,6 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
-import com.example.misvacasapp.aniadir.AniadirVacaVista;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
@@ -12,7 +11,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -72,9 +70,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void añadirVaca(View v) {
-		Intent i = new Intent(this, AniadirVacaVista.class);
-		i.putExtra("id_usuario", id_usuario);
-		startActivity(i);
+		new LanzarVista(this).lanzarAñadirVaca(id_usuario);
 	}
 
 	/**
@@ -342,10 +338,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see clickLista
 	 * */
 	private void lanzarVaca(String id_vaca) {
-		Intent i = new Intent(this, VacaVista.class);
-		i.putExtra("id_vaca", id_vaca);
-		i.putExtra("id_usuario", this.id_usuario);
-		startActivity(i);
+		new LanzarVista(this).lanzarVaca(id_vaca, id_usuario);
 	}
 
 	/**

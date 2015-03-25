@@ -155,16 +155,18 @@ public class Login extends ActionBarActivity {
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+
 				if (correoExistente(texto.getText().toString())) {
 					Usuario u = getUsuario(texto.getText().toString());
-					enviar(texto.getText().toString(),
-							"",
-							"misvacasapp@gmail.es",
-							"Mis Vacas APP",
-							"Correo de autenticacion",
-							"Su usuario y contraseña son:  Usuario: "
-									+ u.getDni() + " Contraseña: "
-									+ u.getContraseña());
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							enviar(texto.getText().toString(), "",
+									"misvacasapp@gmail.es", "Mis Vacas APP",
+									"Correo de autenticacion",
+									"Su usuario y contraseña son: ");
+						}
+					});
 				} else {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -174,6 +176,7 @@ public class Login extends ActionBarActivity {
 						}
 					});
 				}
+
 			}
 		});
 		/** Método del botón cancelar del dialogo */
@@ -222,6 +225,7 @@ public class Login extends ActionBarActivity {
 
 			public void run() {
 				res = llamada.LlamadaListaUsuarios();
+				System.out.println(res);
 				lista = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
 				}.getType());
 			}
@@ -235,6 +239,7 @@ public class Login extends ActionBarActivity {
 		IteratorListaUsuario i = (IteratorListaUsuario) agregado
 				.createIterator();
 		while (i.hasNext()) {
+			System.out.println(i.actualElement().getCorreo());
 			if (i.actualElement().getCorreo().equals(correo))
 				resultado = true;
 			i.next();

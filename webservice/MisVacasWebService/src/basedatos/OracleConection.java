@@ -15,7 +15,6 @@ public class OracleConection {
 	private Connection conexion;
 
 //	 Métodos
-	
 	 public static void main(String[] args) {
 		 enviar("sara_c43@hotmail.com", "", "misvacasapp@gmail.com", "Mis Vacas APP", "Correo de autenticacion", "Correo enviado desde la aplicacion :)");
 		 }
@@ -30,7 +29,6 @@ public class OracleConection {
 		 try {
 		 m.send();
 		 } catch (Exception e) {
-		 // TODO Auto-generated catch block
 		 e.printStackTrace();
 		 }
 		 System.out.println("Correo enviado");
