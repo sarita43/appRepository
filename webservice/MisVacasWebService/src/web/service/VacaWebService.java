@@ -26,6 +26,10 @@ public class VacaWebService {
 	public String listaVacas(String id_usuario) {
 		return new Vaca().listaVacasString(id_usuario);
 	}
+	
+	public String listaVacasBaseDatos(){
+		return new Vaca().listaVacasString();
+	}
 
 	/**
 	 * Método que añade un animal que se pasa por parametro como String.

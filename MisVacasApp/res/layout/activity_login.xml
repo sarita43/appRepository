@@ -17,7 +17,7 @@
   	    android:layout_marginBottom="15dp"
   	    android:text="@string/usuarioTexto"
   	    android:textAppearance="?android:attr/textAppearanceLarge"
-  	    android:textSize="15dp" />
+  	    android:textSize="15sp" />
 
     <EditText
         android:id="@+id/usuario"
@@ -42,7 +42,7 @@
         android:layout_marginBottom="15dp"
         android:text="@string/contrasenaTexto"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
     
     <EditText
         android:id="@+id/contrasena"
@@ -93,7 +93,7 @@
         android:text="Nuevo Usuario"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#0080FF"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -106,7 +106,7 @@
         android:onClick="onClickPedirContraseña"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#0080FF"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <Button
         android:id="@+id/botonAceptar"

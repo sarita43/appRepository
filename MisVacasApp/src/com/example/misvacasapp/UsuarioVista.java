@@ -10,7 +10,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -249,7 +251,6 @@ public class UsuarioVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						System.out.println(res);
 						lista = json.fromJson(res,
 								new TypeToken<ArrayList<Vaca>>() {
 								}.getType());
@@ -376,6 +377,11 @@ public class UsuarioVista extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.cerrar_sesion){
+			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", "");
+			editor.putString("contraseña","");
+			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
 		}else if (id == R.id.administrar_cuenta) {

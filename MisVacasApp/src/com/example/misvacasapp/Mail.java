@@ -16,7 +16,7 @@ import javax.mail.internet.MimeMultipart;
  * Clase para el envio email
  * 
  */
-public class Mail extends javax.mail.Authenticator {
+public class Mail extends javax.mail.Authenticator  {
 	private String _user;
 	private String _pass;
 	private String[] _to;

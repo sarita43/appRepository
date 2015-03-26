@@ -25,7 +25,6 @@ public class AgregadoUsuario implements Agregado {
 
 	@Override
 	public int count() {
-		System.out.println("COUNT  "+this.listaUsuarios.size());
 		return this.listaUsuarios.size();
 	}
 

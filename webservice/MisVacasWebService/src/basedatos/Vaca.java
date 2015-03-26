@@ -60,7 +60,7 @@ public class Vaca {
 	 *            Foto del animal
 	 * */
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String id_usuario, String sexo,String foto) {
+			String id_madre, String id_usuario, String sexo, String foto) {
 		setId_vaca(id_vaca);
 		setRaza(raza);
 		setFecha_nacimiento(fecha_nacimiento);
@@ -94,7 +94,39 @@ public class Vaca {
 				while (result.next()) {
 					try {
 						Blob blobFoto = result.getBlob(7);
-						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
+						byte[] dataFoto = blobFoto.getBytes(1,
+								(int) blobFoto.length());
+						String foto = new String(dataFoto);
+						vaca = new Vaca(result.getString(1),
+								result.getString(2), result.getDate(3),
+								result.getString(4), result.getString(5),
+								result.getString(6), foto);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+					lista.add(vaca);
+				}
+				select.close();
+			} catch (SQLException e) {
+			}
+		}
+		return lista;
+	}
+
+	public ArrayList<Vaca> listaVacas() {
+		OracleConection c = new OracleConection();
+		ArrayList<Vaca> lista = new ArrayList<Vaca>();
+		c.Conectar();
+		Vaca vaca = new Vaca();
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				ResultSet result = select.executeQuery("SELECT * from vaca");
+				while (result.next()) {
+					try {
+						Blob blobFoto = result.getBlob(7);
+						byte[] dataFoto = blobFoto.getBytes(1,
+								(int) blobFoto.length());
 						String foto = new String(dataFoto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
@@ -137,7 +169,8 @@ public class Vaca {
 				while (result.next()) {
 					try {
 						Blob blobFoto = result.getBlob(7);
-						byte[] dataFoto = blobFoto.getBytes(1, (int) blobFoto.length());
+						byte[] dataFoto = blobFoto.getBytes(1,
+								(int) blobFoto.length());
 						String foto = new String(dataFoto);
 						vaca = new Vaca(result.getString(1),
 								result.getString(2), result.getDate(3),
@@ -194,6 +227,20 @@ public class Vaca {
 			return listaVacas;
 		}
 	}
+	
+	public String listaVacasString() {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		ArrayList<Vaca> lista = listaVacas();
+		if (lista.size() == 0) {
+			lista.add(new Vaca());
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		} else {
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		}
+	}
 
 	/**
 	 * Método que añade un animal a la base de datos. Hace la conexión con la
@@ -213,7 +260,6 @@ public class Vaca {
 		if (c.getConexion() != null) {
 			try {
 				String is = v.getFoto();
-				System.out.println(is);
 				byte[] datafoto = is.getBytes();
 				Blob blobfoto = c.getConexion().createBlob();
 				blobfoto.setBytes(1, datafoto);

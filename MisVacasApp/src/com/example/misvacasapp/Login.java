@@ -7,17 +7,22 @@ import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +46,9 @@ public class Login extends ActionBarActivity {
 
 	/** Lista de usuarios de la aplicación */
 	private ArrayList<Usuario> lista;
+	
+	/**CheckBox que guarda el login para no volver a introducir los datos de nuevo y entre directamente en la aplicacion*/
+	private CheckBox autoLoginCheck;
 
 	// Metodos
 	/**
@@ -67,6 +75,7 @@ public class Login extends ActionBarActivity {
 						if (res.compareTo("true") == 0) {
 							Toast.makeText(Login.this, "Conectando...",
 									Toast.LENGTH_SHORT).show();
+							autoLogin(usuario, contraseña);
 							rol();
 						} else if (res.compareTo("false") == 0) {
 							Toast.makeText(Login.this, "Usuario no existe",
@@ -80,6 +89,16 @@ public class Login extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+	
+	private void autoLogin(String id_usuario, String contraseña){
+		if(autoLoginCheck.isChecked()){
+			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", id_usuario);
+			editor.putString("contraseña", contraseña);
+			editor.commit();
+		}
 	}
 
 	/**
@@ -137,7 +156,7 @@ public class Login extends ActionBarActivity {
 	public void onClickPedirContraseña(View v) {
 		alertaCorreo();
 	}
-
+	
 	/**
 	 * Alerta para introducir el correo electronico y decir si el correo esta en
 	 * la base de datos o no. Si el correo esta en la base de datos envia un
@@ -158,15 +177,11 @@ public class Login extends ActionBarActivity {
 
 				if (correoExistente(texto.getText().toString())) {
 					Usuario u = getUsuario(texto.getText().toString());
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
 							enviar(texto.getText().toString(), "",
 									"misvacasapp@gmail.es", "Mis Vacas APP",
 									"Correo de autenticacion",
 									"Su usuario y contraseña son: ");
-						}
-					});
+					
 				} else {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -200,19 +215,39 @@ public class Login extends ActionBarActivity {
 	 * @param subject
 	 * @param body
 	 */
-	private void enviar(String emailTo, String nameTo, String emailFrom,
-			String nameFrom, String subject, String body) {
-		Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
-		String[] toArr = { emailTo, "misvacasapp@gmail.es" };
-		m.setTo(toArr);
-		m.setFrom(emailFrom);
-		m.setSubject(subject);
-		m.setBody(body);
-		try {
-			m.send();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private void enviar(final String emailTo, String nameTo, final String emailFrom,
+			String nameFrom, final String subject, final String body) {
+					new AsyncTask<Void, Void, Void>() {
+
+		        @Override
+		        protected void onPreExecute()
+		        {
+		        }
+
+		        @Override
+		        protected Void doInBackground(Void... params)
+		        {
+		        	Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
+		    		String[] toArr = { emailTo, "misvacasapp@gmail.es" };
+		    		m.setTo(toArr);
+		    		m.setFrom(emailFrom);
+		    		m.setSubject(subject);
+		    		m.setBody(body);
+		            try {
+						m.send();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		            return null;
+		        }
+
+		        @Override
+		        protected void onPostExecute(Void res)
+		        {
+		           
+		        }
+		    }.execute();
+	
 		System.out.println("Correo enviado");
 	}
 
@@ -220,12 +255,12 @@ public class Login extends ActionBarActivity {
 		lista = new ArrayList<Usuario>();
 		Thread hilo = new Thread() {
 			String res = "";
-			Gson json = new Gson();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
 				res = llamada.LlamadaListaUsuarios();
-				System.out.println(res);
 				lista = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
 				}.getType());
 			}
@@ -239,7 +274,6 @@ public class Login extends ActionBarActivity {
 		IteratorListaUsuario i = (IteratorListaUsuario) agregado
 				.createIterator();
 		while (i.hasNext()) {
-			System.out.println(i.actualElement().getCorreo());
 			if (i.actualElement().getCorreo().equals(correo))
 				resultado = true;
 			i.next();
@@ -269,7 +303,17 @@ public class Login extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		getListaUsuarios();
+		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
+		SharedPreferences prefs = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+		String id_usuarioGuardado = prefs.getString("id_usuario","");
+		String contraseñaGuardado = prefs.getString("id_usuario", "");
+		if(id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")){
+			getListaUsuarios();
+		}else{
+			usuario = id_usuarioGuardado;
+			contraseña = contraseñaGuardado;
+			rol();
+		}
 	}
 
 	/**

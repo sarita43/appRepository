@@ -62,6 +62,25 @@ public class LlamadaVacaWS {
 		}
 		return res;
 	}
+	
+	public String LlamadaListaVacas() {
+		String res = "";
+		METHOD_NAME = "listaVacas";
+		SOAP_ACTION = "urn:listaVacas";
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+			res = resultsRequestSOAP.toString();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 
 	/**
 	 * Método que devuelve una vaca de un usuario, sabiendo el id de la vaca y

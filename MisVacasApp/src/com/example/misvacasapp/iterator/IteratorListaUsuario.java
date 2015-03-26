@@ -24,7 +24,11 @@ public class IteratorListaUsuario implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		return actual<agregado.count();
+		if(actual==agregado.count()-1){
+			return false;
+		}else{
+			return actual<agregado.count()-1;
+		}
 	}
 
 	@Override
