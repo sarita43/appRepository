@@ -10,6 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -20,6 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tipoTexto"
+        android:layout_margin="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

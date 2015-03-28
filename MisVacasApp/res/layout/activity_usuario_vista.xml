@@ -17,33 +17,35 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/fondo_blanco"
+        android:baselineAligned="true"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/aniadir"
-            android:layout_width="77dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="0.07"
-            android:background="@drawable/boton_nuevo2"
+            android:layout_weight="1"
+            android:background="@drawable/boton_nuevo3"
             android:onClick="añadirVaca" />
 
         <Button
             android:id="@+id/eliminar"
-            android:layout_width="78dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="0.09"
-            android:background="@drawable/boton_eliminar_2"
+            android:layout_weight="1"
+            android:background="@drawable/boton_eliminar_5"
             android:enabled="false"
             android:onClick="eliminarVaca" />
 
         <Button
             android:id="@+id/buscar"
-            android:layout_width="86dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@drawable/boton_buscar"
+            android:layout_weight="1"
+            android:background="@drawable/boton_buscar_2"
             android:onClick="buscarVaca" />
     </LinearLayout>
 

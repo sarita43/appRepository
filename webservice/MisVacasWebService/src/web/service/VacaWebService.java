@@ -17,7 +17,7 @@ public class VacaWebService {
 	}
 
 	/**
-	 * Método que devuelve la lista de animales como String.
+	 * Método que devuelve la lista de animales que tiene un usuario como String.
 	 * 
 	 * @param id_vaca
 	 *            Id de la vaca
@@ -27,6 +27,7 @@ public class VacaWebService {
 		return new Vaca().listaVacasString(id_usuario);
 	}
 	
+	/**Método que devuelve la lista de animales que hay en la base de datos como String*/
 	public String listaVacasBaseDatos(){
 		return new Vaca().listaVacasString();
 	}

@@ -3,25 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ImageView
+        android:id="@+id/imagenVaca"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp" />
+
     <TextView
         android:id="@+id/idVaca_texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imagenVaca"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/imagenVaca"
         android:layout_margin="5dp"
-        android:layout_marginRight="119dp"
         android:layout_toRightOf="@+id/imagenVaca"
         android:gravity="center|left"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/imagenVaca"
-        android:layout_width="40dp"
-        android:layout_height="70dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="5dp" />
 
 </RelativeLayout>

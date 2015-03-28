@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/fondos_layout" >
+    android:layout_height="match_parent" >
 
-    <ListView
-        android:id="@+id/lista_medicamentos_vista"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/aniadir_medicamento" >
-
-    </ListView>
-
-    <Button
-        android:id="@+id/aniadir_medicamento"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/eliminar_medicamento"
-        android:layout_margin="10dp"
-        android:background="@drawable/boton_nuevo"
-        android:onClick="añadirMedicamento"
-        android:text="" />
+        android:baselineAligned="true" >
 
-    <Button
-        android:id="@+id/eliminar_medicamento"
+        <Button
+            android:id="@+id/aniadir_medicamento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/boton_nuevo3"
+            android:onClick="añadirMedicamento" />
+
+        <Button
+            android:id="@+id/eliminar_medicamento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/boton_eliminar_5"
+            android:enabled="false"
+            android:onClick="eliminarMedicamento" />
+
+        <Button
+            android:id="@+id/buscar_medicamento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/boton_buscar_2"
+            android:onClick="buscarMedicamento" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/lista_medicamentos_vista"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/boton_eliminar_2"
-        android:enabled="false"
-        android:layout_margin="10dp"
-        android:onClick="eliminarMedicamento"
-        android:text="" />
+        android:layout_below="@+id/linearLayout1"
+        android:background="@drawable/fondo_hierba"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/buscar_medicamento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/eliminar_medicamento"
-        android:onClick="buscarMedicamento"
-        android:layout_margin="10dp"
-        android:background="@drawable/boton_buscar"
-        android:text="" />
+        <ListView
+            android:id="@+id/lista_medicamentos_vista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/fondo_blanco" >
+
+        </ListView>
+
+    </LinearLayout>
 
 </RelativeLayout>

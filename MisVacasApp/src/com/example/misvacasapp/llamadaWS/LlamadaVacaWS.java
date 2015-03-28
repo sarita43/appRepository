@@ -65,8 +65,8 @@ public class LlamadaVacaWS {
 	
 	public String LlamadaListaVacas() {
 		String res = "";
-		METHOD_NAME = "listaVacas";
-		SOAP_ACTION = "urn:listaVacas";
+		METHOD_NAME = "listaVacasBaseDatos";
+		SOAP_ACTION = "urn:listaVacasBaseDatos";
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;

@@ -116,7 +116,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
+				res = llamada.LlamadaListaVacas();
 				lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
 				}.getType());
 			}
