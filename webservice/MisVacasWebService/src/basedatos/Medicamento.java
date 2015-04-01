@@ -201,18 +201,21 @@ public class Medicamento {
 			}
 		}
 	}
-	
+
 	/**
-	 * Método que elimina todos los medicamentos de un animal de la base de datos
+	 * Método que elimina todos los medicamentos de un animal de la base de
+	 * datos
+	 * 
 	 * @param id_vaca
 	 */
-	public void eliminarMedicamentos(String id_vaca){
+	public void eliminarMedicamentos(String id_vaca) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
-				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='" + id_vaca + "'");
+				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
+						+ id_vaca + "'");
 				select.close();
 			} catch (SQLException e) {
 			}
@@ -229,9 +232,10 @@ public class Medicamento {
 	 *            Medicamento como String para deserializar
 	 * */
 	public void añadirMedicamento(String medicamento) {
+		System.out.println("MEDICAMENTO WEB SERVICE  "+medicamento);
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
-		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento, fecha, tipo,descripcion,id_vaca) VALUES(?,?,?,?,?)";
+		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento,fecha ,tipo ,descripcion ,id_vaca) VALUES(?,?,?,?,?)";
 		Medicamento m = json.fromJson(medicamento, Medicamento.class);
 		OracleConection c = new OracleConection();
 		c.Conectar();

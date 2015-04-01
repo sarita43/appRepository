@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +111,8 @@ public class AdapterVaca extends BaseAdapter {
 		ImageView imagen =(ImageView)v.findViewById(R.id.imagenVaca);
 		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
 		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-		imagen.setImageBitmap(decodedByte);
+		Drawable i = new BitmapDrawable(decodedByte);
+		imagen.setBackground(i);
 		v.setBackgroundResource(!getSeleccionado().getTable().get(position) ? R.drawable.abc_item_background_holo_dark
 				: R.drawable.abc_list_selector_disabled_holo_dark);
 		return v;

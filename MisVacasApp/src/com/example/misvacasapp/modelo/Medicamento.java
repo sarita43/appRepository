@@ -20,7 +20,7 @@ public class Medicamento {
 	/** Id de la vaca*/
 	private String id_vaca;
 
-	//MÃ©todos
+	//Métodos
 	
 	/**Constructor del medicamento sin atributos*/
 	public Medicamento() {

@@ -41,6 +41,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/linearLayout1"
         android:background="@drawable/fondo_hierba"
         android:orientation="vertical" >
@@ -48,9 +51,11 @@
         <ListView
             android:id="@+id/lista_medicamentos_vista"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:background="@drawable/fondo_blanco" >
+            android:background="@drawable/fondo_blanco"
+            android:divider="#31B404"
+            android:dividerHeight="2dp" >
 
         </ListView>
 

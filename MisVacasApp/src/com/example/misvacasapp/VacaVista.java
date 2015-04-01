@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
@@ -73,9 +75,11 @@ public class VacaVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						vaca = json.fromJson(res, Vaca.class);
+						vaca = json.fromJson(res, Vaca.class);	
+						TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
+						preidVaca.setText(vaca.getId_vaca().substring(0, vaca.getId_vaca().length()-4));
 						TextView idVaca = (TextView) findViewById(R.id.idVaca);
-						idVaca.setText(vaca.getId_vaca());
+						idVaca.setText(vaca.getId_vaca().substring(vaca.getId_vaca().length()-4, vaca.getId_vaca().length()));
 						TextView raza = (TextView) findViewById(R.id.raza);
 						raza.setText("RAZA: " + vaca.getRaza());
 						TextView sexo = (TextView) findViewById(R.id.sexo);
@@ -88,7 +92,8 @@ public class VacaVista extends ActionBarActivity {
 						ImageView imagen =(ImageView)findViewById(R.id.imageView1);
 						byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
 						Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-						imagen.setImageBitmap(decodedByte);
+						Drawable i = new BitmapDrawable(decodedByte);
+						imagen.setBackground(i);
 					}
 				});
 			}

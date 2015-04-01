@@ -7,8 +7,8 @@ import com.example.misvacasapp.modelo.Medicamento;
 public class AgregadoMedicamento implements Agregado {
 	
 	ArrayList<Medicamento> listaMedicamentos;
-	public AgregadoMedicamento(){
-		this.listaMedicamentos = new ArrayList<Medicamento>();
+	public AgregadoMedicamento(ArrayList<Medicamento> listaMedicamentos){
+		this.listaMedicamentos = listaMedicamentos;
 	}
 
 	@Override

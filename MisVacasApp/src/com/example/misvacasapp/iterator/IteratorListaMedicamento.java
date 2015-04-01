@@ -24,7 +24,11 @@ public class IteratorListaMedicamento implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		return false;
+		if(actual==agregado.count()-1){
+			return false;
+		}else{
+			return actual<agregado.count()-1;
+		}
 	}
 
 	@Override

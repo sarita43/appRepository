@@ -59,6 +59,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		Bundle bundle = getIntent().getExtras();
 		idVaca = bundle.getString("id_vaca");
 		listaVista = (ListView) findViewById(R.id.lista_medicamentos_vista);
+		lista = new ArrayList<Medicamento>();
 		mostrarListado();
 	}
 
@@ -147,14 +148,14 @@ public class MedicamentosVista extends ActionBarActivity {
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 						botonEliminar
-								.setBackgroundResource(R.drawable.boton_eliminar_2);
+								.setBackgroundResource(R.drawable.boton_eliminar_5);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 					botonEliminar
-							.setBackgroundResource(R.drawable.boton_eliminar);
+							.setBackgroundResource(R.drawable.boton_borrar2);
 					botonEliminar.setEnabled(true);
 				}
 				adapter.setSeleccionado(seleccionado);
@@ -202,7 +203,8 @@ public class MedicamentosVista extends ActionBarActivity {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String listaMedicamentos = json.toJson(lista);
-		new LanzarVista(this).lanzarAdministrarCuenta(idVaca, listaMedicamentos);
+		new LanzarVista(this).lanzarAñadirMedicamento(idVaca, listaMedicamentos);
+		finish();
 	}
 
 	/**
@@ -278,7 +280,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		};
 		hilo.start();
 		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
+		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
 		botonEliminar.setEnabled(false);
 	}
 

@@ -113,7 +113,6 @@ public class UsuarioVista extends ActionBarActivity {
 						eliminar(lista.get(i).getId_vaca());
 					}
 				}
-				mostrarListado();
 			}
 		});
 		dialogo.setNegativeButton("No", new OnClickListener() {
@@ -136,19 +135,14 @@ public class UsuarioVista extends ActionBarActivity {
 	 *            Id de la vaca a eliminar
 	 * */
 	public void eliminar(final String id_vaca) {
+		eliminarMedicamentosVaca(id_vaca);
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 			public void run() {
-				eliminarMedicamentosVaca(id_vaca);
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
-				mostrarListado();
 			}
 		};
 		hilo.start();
-		Button botonEliminar = (Button) findViewById(R.id.eliminar);
-		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
-		botonEliminar.setEnabled(false);
-		
 	}
 	
 	private void eliminarMedicamentosVaca(final String id_vaca){
@@ -225,7 +219,7 @@ public class UsuarioVista extends ActionBarActivity {
 				seleccionado.getTable().put(i, true);
 				Button botonEliminar = (Button) findViewById(R.id.eliminar);
 				botonEliminar.setEnabled(true);
-				botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
+				botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
 				setAdapter(lista);
 			}
 			i++;
@@ -239,6 +233,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
+		//TODO NO FUNCIONA SI ELIMINO Y MUESTRO OTRA VEZ
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
@@ -248,6 +243,7 @@ public class UsuarioVista extends ActionBarActivity {
 		
 			public void run() {
 				res = llamada.LlamadaListaVacas(id_usuario);
+				System.out.println(res);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -315,14 +311,14 @@ public class UsuarioVista extends ActionBarActivity {
 
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
-						botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_2);
+						botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
-					botonEliminar.setBackgroundResource(R.drawable.boton_eliminar);
+					botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
 				}
 				adapter.setSeleccionado(seleccionado);
 				setAdapter(lista);

@@ -29,7 +29,6 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
-
 	// Atributos
 	/** Id del animal */
 	private String id_vaca;
@@ -128,7 +127,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		Date fecha = new Date(año, mes, dia);
 		String tipo = spinnerMedicamento.getSelectedItem().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
-				.getText().toString()+" ";
+				.getText().toString() + " ";
 		Medicamento medicamento = new Medicamento();
 		medicamento = new Medicamento(crearIdMedicamento(), fecha, tipo,
 				descripcion, id_vaca);
@@ -146,7 +145,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	@SuppressWarnings("deprecation")
 	private boolean comprobarFecha() {
 		boolean fechaOk = false;
-
 		if (((TextView) findViewById(R.id.fecha_medicamento_dia)).getText()
 				.toString().equals("")
 				|| ((TextView) findViewById(R.id.fecha_medicamento_mes))
@@ -167,18 +165,22 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 							.getText().toString());
 			int mes = Integer
 					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_mes))
-							.getText().toString())-1;
+							.getText().toString()) - 1;
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.fecha_medicamento_anio))
-							.getText().toString())-1900;
-			int añoActual=new java.util.Date().getYear();
-			int mesActual=new java.util.Date().getMonth();
-			int diaActual=new java.util.Date().getDate();
+							.getText().toString()) - 1900;
+			int añoActual = new java.util.Date().getYear();
+			int mesActual = new java.util.Date().getMonth();
+			int diaActual = new java.util.Date().getDate();
+			System.out.println("AÑO ACTUAL:  "+añoActual+"  año:"+año);
+			System.out.println("MES ACTUAL:  "+mesActual+"  mes:"+mes);
+			System.out.println("DIA ACTUAL:  "+diaActual+"  dia:"+dia);
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
-				
 			} else if (año == añoActual) {
-				if (dia <= diaActual && mes<= mesActual) {
+				if (dia <= diaActual && mes == mesActual) {
+					fechaOk = true;
+				}else if(mes<mesActual && dia<=31){
 					fechaOk = true;
 				} else {
 					fechaOk = false;
@@ -202,7 +204,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 				});
 			}
 		}
-
 		return fechaOk;
 	}
 
@@ -220,6 +221,9 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			public void run() {
 				if (comprobarFecha()) {
 					String m = json.toJson(crearMedicamento());
+					System.out.println(m);
+					Medicamento medi = json.fromJson(m, Medicamento.class);
+					System.out.println(medi.getClass());
 					llamada.LLamadaAñadirMedicamento(m);
 					runOnUiThread(new Runnable() {
 						@Override
@@ -238,7 +242,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
-
 	}
 
 	/**
