@@ -53,4 +53,13 @@ public class VacaWebService {
 	public void eliminarVaca(String id_vaca, String id_usuario) {
 		new Vaca().eliminarVaca(id_vaca, id_usuario);
 	}
+	
+	/**
+	 * Método que elimina la lista de vacas de un usuario
+	 * 
+	 * @param id_usuario
+	 */
+	public void eliminarVacas(String id_usuario){
+		new Vaca().eliminarVacas(id_usuario);
+	}
 }

@@ -379,7 +379,7 @@ int id action_mode_bar 0x7f090030
 int id action_mode_bar_stub 0x7f09002f
 int id action_mode_close_button 0x7f090022
 int id activity_chooser_view_content 0x7f090023
-int id administrar_cuenta 0x7f09009a
+int id administrar_cuenta 0x7f09009c
 int id always 0x7f090014
 int id aniadir 0x7f090075
 int id aniadir_medicamento 0x7f090060
@@ -400,7 +400,7 @@ int id bottom 0x7f09001e
 int id busca 0x7f090092
 int id buscar 0x7f09008a
 int id buscar_medicamento 0x7f090062
-int id cerrar_sesion 0x7f09009b
+int id cerrar_sesion 0x7f09009d
 int id checkBox 0x7f090068
 int id checkbox 0x7f09002b
 int id codigo_explotacion_nuevo_usuario 0x7f090084
@@ -459,6 +459,7 @@ int id lista_medicamentos_vista 0x7f090063
 int id lista_usuario_vista 0x7f09008b
 int id mes_vaca 0x7f090050
 int id middle 0x7f09001d
+int id mis_vacas 0x7f09009a
 int id never 0x7f090017
 int id nombre_nuevo_usuario 0x7f09007a
 int id nombre_texto 0x7f090077
@@ -487,6 +488,7 @@ int id search_mag_icon 0x7f09003a
 int id search_plate 0x7f09003b
 int id search_src_text 0x7f09003c
 int id search_voice_btn 0x7f090040
+int id seleccionar_todo 0x7f09009b
 int id sexo 0x7f09008c
 int id sexo_nuevo_vaca 0x7f090055
 int id shortcut 0x7f09002c
@@ -599,6 +601,8 @@ int string fecha 0x7f0a0027
 int string menu_administrar_cuenta 0x7f0a0019
 int string menu_ayuda 0x7f0a0017
 int string menu_cerrar_sesion 0x7f0a001a
+int string menu_mis_vacas 0x7f0a0030
+int string menu_seleccionar_todo 0x7f0a0031
 int string modificar_usuario 0x7f0a001d
 int string nombre_usuario 0x7f0a0021
 int string nueva_contrasena 0x7f0a001f

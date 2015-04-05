@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
+        android:id="@+id/mis_vacas"
+        android:title="@string/menu_mis_vacas">
+    </item>
+    <item
+        android:id="@+id/seleccionar_todo"
+        android:title="@string/menu_seleccionar_todo">
+    </item>
+    <item
         android:id="@+id/administrar_cuenta"
         android:title="@string/menu_administrar_cuenta">
     </item>

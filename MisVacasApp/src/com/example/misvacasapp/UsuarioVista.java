@@ -113,6 +113,7 @@ public class UsuarioVista extends ActionBarActivity {
 						eliminar(lista.get(i).getId_vaca());
 					}
 				}
+				mostrarListadoDespuesEliminar();
 			}
 		});
 		dialogo.setNegativeButton("No", new OnClickListener() {
@@ -233,7 +234,6 @@ public class UsuarioVista extends ActionBarActivity {
 	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
-		//TODO NO FUNCIONA SI ELIMINO Y MUESTRO OTRA VEZ
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
 			String res = "";
@@ -243,7 +243,36 @@ public class UsuarioVista extends ActionBarActivity {
 		
 			public void run() {
 				res = llamada.LlamadaListaVacas(id_usuario);
-				System.out.println(res);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						lista = json.fromJson(res,
+								new TypeToken<ArrayList<Vaca>>() {
+								}.getType());
+						for (int i = 0; i < lista.size(); i++) {
+							seleccionado.getTable().put(i, false);
+						}
+						if (lista.get(0).getId_vaca().equals("0")) {
+						} else {
+							setAdapter(lista);
+						}
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+	
+	private void mostrarListadoDespuesEliminar(){
+		seleccionado = new TableSeleccionado();
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaVacaWS llamada = new LlamadaVacaWS();
+		
+			public void run() {
+				res = llamada.LlamadaListaVacas(id_usuario);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -353,6 +382,18 @@ public class UsuarioVista extends ActionBarActivity {
 		return resultado;
 	}
 
+	private void seleccionarTodo(){
+		for (int i = 0; i < seleccionado.getTable().size(); i++) {
+			seleccionado.getTable().put(i, true);
+		}
+		adapter.setSeleccionado(seleccionado);
+		setAdapter(lista);
+		
+		Button botonEliminar = (Button) findViewById(R.id.eliminar);
+		botonEliminar.setEnabled(true);
+		botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);		
+	}
+
 	/**
 	 * Añade el menu a la vista login
 	 * 
@@ -372,6 +413,7 @@ public class UsuarioVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
+
 		if (id == R.id.cerrar_sesion){
 			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
@@ -380,6 +422,12 @@ public class UsuarioVista extends ActionBarActivity {
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
+		}else if(id== R.id.mis_vacas){
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
+			finish();
+			return true;
+		}else if(id == R.id.seleccionar_todo){
+			seleccionarTodo();
 		}else if (id == R.id.administrar_cuenta) {
 			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, contraseña);
 			return true;

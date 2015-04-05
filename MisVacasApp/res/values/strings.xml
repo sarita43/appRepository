@@ -34,5 +34,7 @@
     <string name="aniadir_vaca_fecha_nacimiento">Fecha nacimiento</string>
     <string name="aniadir_vaca_id_madre">Id madre</string>
     <string name="sexo">Sexo</string>
+    <string name="menu_mis_vacas">Mis Vacas</string>
+    <string name="menu_seleccionar_todo">Seleccionar todo</string>
 
 </resources>

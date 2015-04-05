@@ -3,12 +3,20 @@ package com.example.misvacasapp.menus;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.LanzarVista;
-import com.example.misvacasapp.Login;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Vaca;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -34,6 +42,8 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	private String id_usuario;
 	/** Contraseña del usuario */
 	private String contraseña;
+	/** Lista de vacas del usuario */
+	private ArrayList<Vaca> listaVacas;
 
 	// Métodos
 	/**
@@ -96,7 +106,8 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	 *            Clase de la ventana
 	 * */
 	private void nuevaVentana(Class ventanaNombre) {
-		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña, ventanaNombre);
+		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña,
+				ventanaNombre);
 	}
 
 	/**
@@ -112,16 +123,71 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
+				eliminarVacas(id_usuario);
 				llamada.eliminarUsuario(id_usuario);
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						nuevaVentana(Login.class);
+						lanzarLogin();
 						Toast.makeText(AdministrarCuentaVista.this,
 								"Usuario elimidado", Toast.LENGTH_LONG).show();
 						finish();
 					}
 				});
+			}
+		};
+		hilo.start();
+	}
+
+	private void lanzarLogin(){
+		SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("id_usuario", "");
+		editor.putString("contraseña","");
+		editor.commit();
+		new LanzarVista(this).lanzarLogin();
+	}
+	private void listaVacas(final String id_usuario) {
+		listaVacas = new ArrayList<Vaca>();
+
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaVacaWS llamada = new LlamadaVacaWS();
+
+			public void run() {
+				res = llamada.LlamadaListaVacas(id_usuario);
+
+				listaVacas = json.fromJson(res,
+						new TypeToken<ArrayList<Vaca>>() {
+						}.getType());
+			}
+		};
+		hilo.start();
+	}
+
+	private void eliminarVacas(final String id_usuario) {
+		listaVacas(id_usuario);
+		for (int i = 0; i < listaVacas.size(); i++) {
+			eliminarMedicamentosVaca(listaVacas.get(i).getId_vaca());
+		}
+		Thread hilo = new Thread() {
+			LlamadaVacaWS llamada = new LlamadaVacaWS();
+
+			public void run() {
+				llamada.LLamadaEliminarVacas(id_usuario);
+			}
+		};
+		hilo.start();
+	}
+
+	private void eliminarMedicamentosVaca(final String id_vaca) {
+		Thread hilo = new Thread() {
+			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+
+			public void run() {
+				llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
 			}
 		};
 		hilo.start();

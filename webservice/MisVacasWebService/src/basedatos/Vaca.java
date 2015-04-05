@@ -301,6 +301,23 @@ public class Vaca {
 			}
 		}
 	}
+	
+	public void eliminarVacas(String id_usuario){
+		ArrayList<Vaca> listaVacas = listaVacas(id_usuario);
+		for (int i = 0; i < listaVacas.size(); i++) {
+			OracleConection c = new OracleConection();
+			c.Conectar();
+			if (c.getConexion() != null) {
+				try {
+					Statement select = c.getConexion().createStatement();
+					select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
+							+ listaVacas().get(i).getId_vaca() + "' AND id_usuario='" + id_usuario + "'");
+					select.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 
 	/**
 	 * Devuelve el id del animal
