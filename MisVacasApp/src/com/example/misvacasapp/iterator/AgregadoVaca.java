@@ -8,8 +8,8 @@ public class AgregadoVaca implements Agregado {
 	
 	ArrayList<Vaca> listaVacas;
 	
-	public AgregadoVaca(){
-		listaVacas = new ArrayList<Vaca>();
+	public AgregadoVaca(ArrayList<Vaca> listaVacas){
+		this.listaVacas = listaVacas;
 	}
 
 	@Override

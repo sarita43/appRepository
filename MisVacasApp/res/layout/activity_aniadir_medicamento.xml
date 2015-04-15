@@ -65,6 +65,7 @@
         android:nextFocusDown="@+id/fecha_medicamento_mes"
         android:ems="10"
         android:gravity="center"
+        android:hint="dd"
         android:inputType="number" >
 
         <requestFocus />
@@ -92,6 +93,7 @@
         android:inputType="number"
         android:gravity="center"
         android:nextFocusDown="@+id/fecha_medicamento_anio"
+        android:hint="mm"
         android:width="100dp" >
     </EditText>
 
@@ -104,6 +106,7 @@
         android:layout_toRightOf="@+id/textView5"
         android:ems="10"
         android:gravity="center"
+        android:hint="aaaa"
         android:inputType="number" />
 
     <Button

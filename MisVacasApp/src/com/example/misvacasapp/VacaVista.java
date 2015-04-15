@@ -1,9 +1,19 @@
 package com.example.misvacasapp;
 
+import java.util.ArrayList;
+
+import com.example.misvacasapp.iterator.AgregadoUsuario;
+import com.example.misvacasapp.iterator.IteratorListaUsuario;
+import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Usuario;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +24,7 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +40,8 @@ public class VacaVista extends ActionBarActivity {
 	private String id_vaca;
 	/** Id delusuario */
 	private String id_usuario;
-
+	/**Usuario*/
+	private Usuario usuario;
 	// Métodos
 	/**
 	 * Añade la vista de la vaca
@@ -100,6 +112,32 @@ public class VacaVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
+	
+	private Usuario getUsuario(final String id_usuario){
+		
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+		LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+		public void run() {
+			res = llamada.LlamadaListaUsuarios();
+			ArrayList<Usuario> listaUsuario = json.fromJson(res,
+					new TypeToken<ArrayList<Vaca>>() {
+					}.getType());
+			AgregadoUsuario agregado = new AgregadoUsuario(listaUsuario);
+			IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
+			while(i.hasNext()){
+				if(i.actualElement().getDni().equals(id_usuario)){
+					usuario = i.actualElement();
+				}
+			}
+		}
+		};
+		hilo.start();
+		return usuario;
+		
+	}
 
 	/**
 	 * Añade el menu a la vista login
@@ -108,7 +146,7 @@ public class VacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.menu_vaca, menu);
 		return true;
 	}
 
@@ -120,7 +158,21 @@ public class VacaVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.ayuda) {
+
+		if (id == R.id.cerrar_sesion){
+			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", "");
+			editor.putString("contraseña","");
+			editor.commit();
+			new LanzarVista(this).lanzarLogin();
+			finish();
+		}else if(id== R.id.mis_vacas){
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario, getUsuario(id_usuario).getContraseña());
+			finish();
+			return true;
+		}else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, getUsuario(id_usuario).getContraseña());
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

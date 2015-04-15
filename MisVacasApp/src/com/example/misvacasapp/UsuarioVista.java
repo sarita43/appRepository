@@ -3,6 +3,7 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
@@ -213,12 +214,14 @@ public class UsuarioVista extends ActionBarActivity {
 			seleccionado.getTable().put(i, false);
 			i++;
 		}
+		Button botonEliminar = (Button) findViewById(R.id.eliminar);
+		botonEliminar.setEnabled(false);
+		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
 		setAdapter(lista);
 		i = 0;
 		while (lista.size() > i) {
 			if (item.equals(lista.get(i).getId_vaca())) {
 				seleccionado.getTable().put(i, true);
-				Button botonEliminar = (Button) findViewById(R.id.eliminar);
 				botonEliminar.setEnabled(true);
 				botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
 				setAdapter(lista);
@@ -292,7 +295,6 @@ public class UsuarioVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade

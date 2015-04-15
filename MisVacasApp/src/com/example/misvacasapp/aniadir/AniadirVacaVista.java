@@ -192,7 +192,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	private String crearImagen(){
 		Button imagen = (Button)findViewById(R.id.foto_boton);
 		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
-		bitmap = redimensionarImagenMaximo(bitmap, 200, 100);
+		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
 		byte[] bitmapdata = stream.toByteArray();

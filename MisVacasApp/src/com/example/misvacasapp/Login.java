@@ -2,6 +2,8 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
+import com.example.misvacasapp.bbddinterna.VacaBbdd;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
@@ -16,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -181,6 +184,13 @@ public class Login extends ActionBarActivity {
 									"misvacasapp@gmail.es", "Mis Vacas APP",
 									"Correo de autenticacion",
 									"Su usuario y contraseña son: ");
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(Login.this, "No funciona",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
 					
 				} else {
 					runOnUiThread(new Runnable() {
@@ -303,6 +313,9 @@ public class Login extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		System.out.println("PRIMER PASO PARA CREAR LA BASE DE DATOS");
+		VacaDatosBbdd vdbbdd = new VacaDatosBbdd(this);
+		
 		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
 		SharedPreferences prefs = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
 		String id_usuarioGuardado = prefs.getString("id_usuario","");

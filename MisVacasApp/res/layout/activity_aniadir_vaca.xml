@@ -49,6 +49,7 @@
         android:gravity="center"
         android:inputType="number"
         android:nextFocusDown="@+id/mes_vaca"
+        android:hint="dd"
         android:textSize="@dimen/abc_text_size_body_1_material" />
 
     <TextView
@@ -74,6 +75,7 @@
         android:gravity="center"
         android:inputType="number"
         android:nextFocusDown="@+id/anio_vaca"
+        android:hint="mm"
         android:textSize="@dimen/abc_text_size_body_1_material" />
 
     <TextView
@@ -108,6 +110,7 @@
         android:layout_below="@+id/textView6"
         android:layout_marginTop="20dp"
         android:inputType="textCapCharacters"
+        android:hint="Ej: ES111111111111"
         android:textSize="@dimen/abc_text_size_body_1_material"
         android:ems="10" />
 
@@ -145,6 +148,7 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textCapWords"
+        android:hint="M/H"
         android:nextFocusDown="@+id/dia_vaca"
         android:singleLine="true" />
 
@@ -181,6 +185,7 @@
         android:ems="10"
         android:inputType="textCapCharacters"
         android:layout_marginRight="30dp"
+        android:hint="Ej: ES111111111111"
         android:nextFocusDown="@+id/raza_nuevo_texto"
         android:textSize="@dimen/abc_text_size_body_1_material" >
                 <requestFocus />
@@ -198,6 +203,7 @@
         android:inputType="number"
         android:layout_marginLeft="15dp"
         android:nextFocusDown="@+id/id_madre_nuevo_vaca"
+        android:hint="aaaa"
         android:textSize="@dimen/abc_text_size_body_1_material" />
 
 </RelativeLayout>
