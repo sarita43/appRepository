@@ -16,13 +16,13 @@ public class VacaBbdd extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL("drop table if exists vaca");
 		db.execSQL(VacaDatosBbdd.tablaVacas);
-		onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION+1);
+		//onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION+1);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		
 		db.execSQL(VacaDatosBbdd.vaca);
 	}
 

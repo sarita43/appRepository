@@ -2,7 +2,6 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
-import com.example.misvacasapp.bbddinterna.VacaBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
@@ -18,7 +17,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,7 +76,7 @@ public class Login extends ActionBarActivity {
 						if (res.compareTo("true") == 0) {
 							Toast.makeText(Login.this, "Conectando...",
 									Toast.LENGTH_SHORT).show();
-							autoLogin(usuario, contraseña);
+							guardarAutoLogin(usuario, contraseña);
 							rol();
 						} else if (res.compareTo("false") == 0) {
 							Toast.makeText(Login.this, "Usuario no existe",
@@ -94,7 +92,7 @@ public class Login extends ActionBarActivity {
 		hilo.start();
 	}
 	
-	private void autoLogin(String id_usuario, String contraseña){
+	private void guardarAutoLogin(String id_usuario, String contraseña){
 		if(autoLoginCheck.isChecked()){
 			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
@@ -313,8 +311,6 @@ public class Login extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		System.out.println("PRIMER PASO PARA CREAR LA BASE DE DATOS");
-		VacaDatosBbdd vdbbdd = new VacaDatosBbdd(this);
 		
 		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
 		SharedPreferences prefs = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);

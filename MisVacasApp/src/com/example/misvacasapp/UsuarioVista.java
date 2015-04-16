@@ -239,6 +239,7 @@ public class UsuarioVista extends ActionBarActivity {
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
 		Thread hilo = new Thread() {
+			
 			String res = "";
 			Gson json = new GsonBuilder().setPrettyPrinting()
 					.setDateFormat("dd-MM-yyyy").create();
@@ -252,6 +253,8 @@ public class UsuarioVista extends ActionBarActivity {
 						lista = json.fromJson(res,
 								new TypeToken<ArrayList<Vaca>>() {
 								}.getType());
+						VacaDatosBbdd vdbbdd = new VacaDatosBbdd(getApplicationContext(),lista);
+						vdbbdd.getIdVacas(id_usuario);
 						for (int i = 0; i < lista.size(); i++) {
 							seleccionado.getTable().put(i, false);
 						}
