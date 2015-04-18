@@ -2,7 +2,6 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
-import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;

@@ -3,9 +3,13 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.iterator.AgregadoVaca;
+import com.example.misvacasapp.iterator.IteratorListaVaca;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,9 +48,12 @@ public class UsuarioVista extends ActionBarActivity {
 	/** Adaptador de la lista */
 	private AdapterVaca adapter;
 	/** Lista de las vacas que tiene el usuario */
-	private ArrayList<Vaca> lista;
+	private ArrayList<Vaca> listaVacas;
+	private ArrayList<Medicamento> listaMedicamentos;
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
+
+	private VacaDatosBbdd vdbbdd;
 
 	// Métodos
 	/**
@@ -61,8 +68,73 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-		lista = new ArrayList<Vaca>();
+
+		listaVacas = new ArrayList<Vaca>();
+		listaMedicamentos = new ArrayList<Medicamento>();
+
+		vdbbdd = new VacaDatosBbdd(getApplicationContext());
+		// MedicamentoDatosBbdd mbbdd = new MedicamentoDatosBbdd(
+		// getApplicationContext());
+		Thread hilo = new Thread() {
+			public void run() {
+				if (vdbbdd.getRegistros() == 0) {
+
+					// getListaMedicamentos();
+					vdbbdd = new VacaDatosBbdd(getApplicationContext(),
+							getListaVacas());
+
+					System.out.println("TAMAÑO LISTA VACAS:   "
+							+ listaVacas.size());
+					// mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
+					// listaMedicamentos);
+				}
+			}
+		};
+		hilo.start();
 		mostrarListado();
+	}
+
+	public ArrayList<Vaca> getListaVacas() {
+
+		String res = "";
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		LlamadaVacaWS llamada = new LlamadaVacaWS();
+
+		res = llamada.LlamadaListaVacas(id_usuario);
+		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
+		}.getType());
+
+		return listaVacas;
+	}
+
+	public void getListaMedicamentos() {
+
+		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
+		final IteratorListaVaca i = new IteratorListaVaca(agregado);
+		while (i.hasNext()) {
+			Thread hilo = new Thread() {
+				String res = "";
+				Gson json = new GsonBuilder().setPrettyPrinting()
+						.setDateFormat("dd-MM-yyyy").create();
+				LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+
+				public void run() {
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							res = llamada.LlamadaListaMedicamentos(i
+									.actualElement().getId_vaca());
+							listaMedicamentos = json.fromJson(res,
+									new TypeToken<ArrayList<Medicamento>>() {
+									}.getType());
+						}
+					});
+				}
+			};
+			hilo.start();
+		}
 	}
 
 	/**
@@ -87,7 +159,8 @@ public class UsuarioVista extends ActionBarActivity {
 		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
-				eliminados = eliminados + " " + lista.get(i).getId_vaca()+"\n";
+				eliminados = eliminados + " " + listaVacas.get(i).getId_vaca()
+						+ "\n";
 			}
 		}
 		alertaConfirmarEliminar(eliminados);
@@ -111,7 +184,7 @@ public class UsuarioVista extends ActionBarActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				for (int i = 0; i < seleccionado.getTable().size(); i++) {
 					if (seleccionado.getTable().get(i)) {
-						eliminar(lista.get(i).getId_vaca());
+						eliminar(listaVacas.get(i).getId_vaca());
 					}
 				}
 				mostrarListadoDespuesEliminar();
@@ -140,14 +213,15 @@ public class UsuarioVista extends ActionBarActivity {
 		eliminarMedicamentosVaca(id_vaca);
 		Thread hilo = new Thread() {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
+
 			public void run() {
 				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
 			}
 		};
 		hilo.start();
 	}
-	
-	private void eliminarMedicamentosVaca(final String id_vaca){
+
+	private void eliminarMedicamentosVaca(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 
@@ -210,21 +284,21 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	public void seleccionarEnLista(String item) {
 		int i = 0;
-		while (lista.size() > i) {
+		while (listaVacas.size() > i) {
 			seleccionado.getTable().put(i, false);
 			i++;
 		}
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setEnabled(false);
 		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
-		setAdapter(lista);
+		setAdapter(listaVacas);
 		i = 0;
-		while (lista.size() > i) {
-			if (item.equals(lista.get(i).getId_vaca())) {
+		while (listaVacas.size() > i) {
+			if (item.equals(listaVacas.get(i).getId_vaca())) {
 				seleccionado.getTable().put(i, true);
 				botonEliminar.setEnabled(true);
 				botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
-				setAdapter(lista);
+				setAdapter(listaVacas);
 			}
 			i++;
 		}
@@ -238,72 +312,40 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
-		Thread hilo = new Thread() {
-			
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-		
-			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						lista = json.fromJson(res,
-								new TypeToken<ArrayList<Vaca>>() {
-								}.getType());
-						VacaDatosBbdd vdbbdd = new VacaDatosBbdd(getApplicationContext(),lista);
-						vdbbdd.getIdVacas(id_usuario);
-						for (int i = 0; i < lista.size(); i++) {
-							seleccionado.getTable().put(i, false);
-						}
-						if (lista.get(0).getId_vaca().equals("0")) {
-						} else {
-							setAdapter(lista);
-						}
-					}
-				});
-			}
-		};
-		hilo.start();
+
+		listaVacas = vdbbdd.getListaVacas(id_usuario);
+
+		for (int i = 0; i < listaVacas.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+
+		// TODO Comprobar si hace falta esta comprobacion
+		if (listaVacas.size() == 0) {
+		} else {
+			setAdapter(listaVacas);
+		}
+
 	}
-	
-	private void mostrarListadoDespuesEliminar(){
-		seleccionado = new TableSeleccionado();
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-		
-			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						lista = json.fromJson(res,
-								new TypeToken<ArrayList<Vaca>>() {
-								}.getType());
-						for (int i = 0; i < lista.size(); i++) {
-							seleccionado.getTable().put(i, false);
-						}
-						if (lista.get(0).getId_vaca().equals("0")) {
-						} else {
-							setAdapter(lista);
-						}
-					}
-				});
-			}
-		};
-		hilo.start();
+
+	// TODO Comprobar si con el mostrar listado ahora no da fallos
+	private void mostrarListadoDespuesEliminar() {
+
+		for (int i = 0; i < listaVacas.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		if (listaVacas.get(0).getId_vaca().equals("0")) {
+		} else {
+			setAdapter(listaVacas);
+		}
+
 	}
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
 	 * 
 	 * @see mostrarListado
-	 * @param lista ArrayList de vacas
+	 * @param lista
+	 *            ArrayList de vacas
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista, seleccionado);
@@ -345,17 +387,19 @@ public class UsuarioVista extends ActionBarActivity {
 
 					if (!activarBoton()) {
 						Button botonEliminar = (Button) findViewById(R.id.eliminar);
-						botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
+						botonEliminar
+								.setBackgroundResource(R.drawable.boton_eliminar_5);
 						botonEliminar.setEnabled(false);
 					}
 				} else {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
-					botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
+					botonEliminar
+							.setBackgroundResource(R.drawable.boton_borrar2);
 				}
 				adapter.setSeleccionado(seleccionado);
-				setAdapter(lista);
+				setAdapter(listaVacas);
 				return true;
 			}
 		});
@@ -379,7 +423,7 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	private boolean activarBoton() {
 		boolean resultado = false;
-		for (int i = 0; i < lista.size(); i++) {
+		for (int i = 0; i < listaVacas.size(); i++) {
 			if (seleccionado.getTable().get(i)) {
 				resultado = true;
 			}
@@ -387,16 +431,16 @@ public class UsuarioVista extends ActionBarActivity {
 		return resultado;
 	}
 
-	private void seleccionarTodo(){
+	private void seleccionarTodo() {
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			seleccionado.getTable().put(i, true);
 		}
 		adapter.setSeleccionado(seleccionado);
-		setAdapter(lista);
-		
+		setAdapter(listaVacas);
+
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setEnabled(true);
-		botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);		
+		botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
 	}
 
 	/**
@@ -419,22 +463,24 @@ public class UsuarioVista extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.cerrar_sesion){
-			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+		if (id == R.id.cerrar_sesion) {
+			SharedPreferences settings = getSharedPreferences("MisDatos",
+					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", "");
-			editor.putString("contraseña","");
+			editor.putString("contraseña", "");
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
-		}else if(id== R.id.mis_vacas){
+		} else if (id == R.id.mis_vacas) {
 			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
 			finish();
 			return true;
-		}else if(id == R.id.seleccionar_todo){
+		} else if (id == R.id.seleccionar_todo) {
 			seleccionarTodo();
-		}else if (id == R.id.administrar_cuenta) {
-			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, contraseña);
+		} else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
+					contraseña);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
