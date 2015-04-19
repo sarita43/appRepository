@@ -5,7 +5,9 @@ import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.iterator.AgregadoMedicamento;
 import com.example.misvacasapp.iterator.AgregadoVaca;
+import com.example.misvacasapp.iterator.IteratorListaMedicamento;
 import com.example.misvacasapp.iterator.IteratorListaVaca;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
@@ -54,6 +56,7 @@ public class UsuarioVista extends ActionBarActivity {
 	private TableSeleccionado seleccionado;
 
 	private VacaDatosBbdd vdbbdd;
+	private MedicamentoDatosBbdd mbbdd;
 
 	// Métodos
 	/**
@@ -73,20 +76,13 @@ public class UsuarioVista extends ActionBarActivity {
 		listaMedicamentos = new ArrayList<Medicamento>();
 
 		vdbbdd = new VacaDatosBbdd(getApplicationContext());
-		// MedicamentoDatosBbdd mbbdd = new MedicamentoDatosBbdd(
-		// getApplicationContext());
+		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
 		Thread hilo = new Thread() {
 			public void run() {
 				if (vdbbdd.getRegistros() == 0) {
-
-					// getListaMedicamentos();
 					vdbbdd = new VacaDatosBbdd(getApplicationContext(),
 							getListaVacas());
-
-					System.out.println("TAMAÑO LISTA VACAS:   "
-							+ listaVacas.size());
-					// mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
-					// listaMedicamentos);
+					getListaMedicamentos();
 				}
 			}
 		};
@@ -95,7 +91,6 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	public ArrayList<Vaca> getListaVacas() {
-
 		String res = "";
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
@@ -110,31 +105,32 @@ public class UsuarioVista extends ActionBarActivity {
 
 	public void getListaMedicamentos() {
 
+		
 		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
-		final IteratorListaVaca i = new IteratorListaVaca(agregado);
+		IteratorListaVaca i = new IteratorListaVaca(agregado);
 		while (i.hasNext()) {
-			Thread hilo = new Thread() {
-				String res = "";
-				Gson json = new GsonBuilder().setPrettyPrinting()
-						.setDateFormat("dd-MM-yyyy").create();
-				LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-
-				public void run() {
-
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							res = llamada.LlamadaListaMedicamentos(i
-									.actualElement().getId_vaca());
-							listaMedicamentos = json.fromJson(res,
-									new TypeToken<ArrayList<Medicamento>>() {
-									}.getType());
-						}
-					});
-				}
-			};
-			hilo.start();
+			String res = "";
+			ArrayList<Medicamento> listaAux = new ArrayList<Medicamento>();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+			res = llamada.LlamadaListaMedicamentos(i.actualElement()
+					.getId_vaca());
+			listaAux = json.fromJson(res,
+					new TypeToken<ArrayList<Medicamento>>() {
+					}.getType());
+			AgregadoMedicamento agregadoMedicamento = new AgregadoMedicamento(
+					listaAux);
+			IteratorListaMedicamento iMedicamento = new IteratorListaMedicamento(
+					agregadoMedicamento);
+			while (iMedicamento.hasNext()) {
+				listaMedicamentos.add(iMedicamento.actualElement());
+				iMedicamento.next();
+			}
+			i.next();
 		}
+		mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
+				listaMedicamentos);
 	}
 
 	/**
