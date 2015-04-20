@@ -45,8 +45,8 @@ public class VacaDatosBbdd {
 
 	public ArrayList<Vaca> getListaVacas(String id_usuario) {
 		ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
-		Cursor c = database.rawQuery("select * from vaca where id_usuario="
-				+ id_usuario, null);
+		Cursor c = database.rawQuery("select * from vaca where id_usuario='"
+				+ id_usuario+"'", null);
 		while(c.moveToNext()){
 			Vaca v = new Vaca();
 			v.setId_vaca(c.getString(0));

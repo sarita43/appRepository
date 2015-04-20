@@ -1,6 +1,7 @@
 package com.example.misvacasapp.bbddinterna;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.example.misvacasapp.modelo.Medicamento;
 
@@ -9,10 +10,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class MedicamentoDatosBbdd {
 
-	public static String tablaMedicamentos = "create table if not exists medicamento (id_medicamento varchar(15) primary key not null,"
-			+ "fecha date,tipo varchar(60),descripcion varchar(200),id_vaca varchar(15))";
+	public static String tablaMedicamentos = "create table if not exists medicamento (id_medicamento varchar(20),"
+			+ "fecha date,tipo varchar(40),descripcion varchar(250),id_vaca varchar(20),primary key (id_medicamento,id_vaca))";
 
-	public String medicamento;
+	public static String medicamento;
 
 	private MedicamentoBbdd mbbdd;
 	private SQLiteDatabase database;
@@ -24,10 +25,10 @@ public class MedicamentoDatosBbdd {
 
 	public MedicamentoDatosBbdd(Context context,
 			ArrayList<Medicamento> listaMedicamentos) {
-			mbbdd = new MedicamentoBbdd(context);
-			database = mbbdd.getWritableDatabase();
-			mbbdd.onConfigure(database);
-			guardarMedicamentos(listaMedicamentos);
+		mbbdd = new MedicamentoBbdd(context);
+		database = mbbdd.getWritableDatabase();
+		mbbdd.onConfigure(database);
+		guardarMedicamentos(listaMedicamentos);
 	}
 
 	private void guardarMedicamentos(ArrayList<Medicamento> listaMedicamentos) {

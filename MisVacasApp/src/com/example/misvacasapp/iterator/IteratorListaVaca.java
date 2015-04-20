@@ -1,12 +1,13 @@
 package com.example.misvacasapp.iterator;
+
 import com.example.misvacasapp.modelo.Vaca;
 
 public class IteratorListaVaca implements Iterator {
-	
+
 	private Agregado agregado;
 	private int actual;
-	
-	public IteratorListaVaca(AgregadoVaca agregado){
+
+	public IteratorListaVaca(AgregadoVaca agregado) {
 		this.agregado = agregado;
 		first();
 	}
@@ -23,11 +24,7 @@ public class IteratorListaVaca implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		if(actual==agregado.count()-1){
-			return false;
-		}else{
-			return actual<agregado.count()-1;
-		}
+		return actual < agregado.count();
 	}
 
 	@Override

@@ -24,14 +24,7 @@ public class IteratorListaMedicamento implements Iterator {
 
 	@Override
 	public boolean hasNext() {
-		//TODO Si es el primer elemento en un while no funciona
-		if(actual ==0 && agregado.count()==1){
-			return true;
-		}else if(actual==agregado.count()-1){
-			return false;
-		}else{
-			return actual<agregado.count()-1;
-		}
+			return actual<agregado.count();
 	}
 
 	@Override

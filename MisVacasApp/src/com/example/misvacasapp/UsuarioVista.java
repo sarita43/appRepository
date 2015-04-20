@@ -82,9 +82,11 @@ public class UsuarioVista extends ActionBarActivity {
 				if (vdbbdd.getRegistros() == 0) {
 					vdbbdd = new VacaDatosBbdd(getApplicationContext(),
 							getListaVacas());
-					getListaMedicamentos();
+					mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
+							listaMedicamentos);
 				}
 			}
+			
 		};
 		hilo.start();
 		mostrarListado();
@@ -103,9 +105,7 @@ public class UsuarioVista extends ActionBarActivity {
 		return listaVacas;
 	}
 
-	public void getListaMedicamentos() {
-
-		
+	public void getListaMedicamentos() {	
 		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
 		IteratorListaVaca i = new IteratorListaVaca(agregado);
 		while (i.hasNext()) {
@@ -129,8 +129,6 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 			i.next();
 		}
-		mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
-				listaMedicamentos);
 	}
 
 	/**

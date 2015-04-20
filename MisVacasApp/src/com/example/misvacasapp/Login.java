@@ -45,7 +45,7 @@ public class Login extends ActionBarActivity {
 	private String contraseña;
 
 	/** Lista de usuarios de la aplicación */
-	private ArrayList<Usuario> lista;
+	private ArrayList<Usuario> listaUsuarios;
 	
 	/**CheckBox que guarda el login para no volver a introducir los datos de nuevo y entre directamente en la aplicacion*/
 	private CheckBox autoLoginCheck;
@@ -259,7 +259,7 @@ public class Login extends ActionBarActivity {
 	}
 
 	private void getListaUsuarios() {
-		lista = new ArrayList<Usuario>();
+		listaUsuarios = new ArrayList<Usuario>();
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new GsonBuilder().setPrettyPrinting()
@@ -268,7 +268,7 @@ public class Login extends ActionBarActivity {
 
 			public void run() {
 				res = llamada.LlamadaListaUsuarios();
-				lista = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
+				listaUsuarios = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
 				}.getType());
 			}
 		};
@@ -277,7 +277,7 @@ public class Login extends ActionBarActivity {
 
 	private boolean correoExistente(String correo) {
 		boolean resultado = false;
-		AgregadoUsuario agregado = new AgregadoUsuario(lista);
+		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
 		IteratorListaUsuario i = (IteratorListaUsuario) agregado
 				.createIterator();
 		while (i.hasNext()) {
@@ -290,7 +290,7 @@ public class Login extends ActionBarActivity {
 
 	private Usuario getUsuario(String correo) {
 		Usuario u = new Usuario();
-		AgregadoUsuario agregado = new AgregadoUsuario(lista);
+		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
 		IteratorListaUsuario i = (IteratorListaUsuario) agregado
 				.createIterator();
 		while (i.hasNext()) {
@@ -311,6 +311,7 @@ public class Login extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
+		//TODO crear clase 
 		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
 		SharedPreferences prefs = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
 		String id_usuarioGuardado = prefs.getString("id_usuario","");
