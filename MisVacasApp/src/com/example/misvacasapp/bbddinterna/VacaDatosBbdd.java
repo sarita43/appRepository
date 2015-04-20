@@ -42,6 +42,21 @@ public class VacaDatosBbdd {
 			vbbdd.onUpgrade(database, i, i+1);
 		}
 	}
+	
+	public Vaca getVaca(String id_vaca){
+		Vaca v = new Vaca();
+		Cursor c = database.rawQuery("select * from vaca where id_vaca='"+id_vaca+"'", null);
+		while(c.moveToNext()){
+			v.setId_vaca(c.getString(0));
+			v.setRaza(c.getString(1));
+			v.setFecha_nacimiento(new Date(c.getLong(2)*1000));
+			v.setId_madre(c.getString(3));
+			v.setFoto(c.getString(4));
+			v.setId_usuario(c.getString(5));
+			v.setSexo(c.getString(6));
+		}
+		return v;
+	}
 
 	public ArrayList<Vaca> getListaVacas(String id_usuario) {
 		ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();

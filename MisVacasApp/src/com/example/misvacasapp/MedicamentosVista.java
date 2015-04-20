@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.example.misvacasapp.adapter.AdapterMedicamento;
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -34,7 +34,7 @@ import android.widget.Spinner;
 public class MedicamentosVista extends ActionBarActivity {
 	// Atributos
 	/** Id vaca */
-	private String idVaca;
+	private String id_vaca;
 	/**
 	 * Vista de la lista de medicamentos a mostrar en la vista de medicamentos
 	 * de una vaca
@@ -45,7 +45,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
 	/** Lista de los medicamentos que tiene una vaca */
-	private ArrayList<Medicamento> lista;
+	private ArrayList<Medicamento> listaMedicamentos;
 
 	// Métodos
 	/**
@@ -57,10 +57,17 @@ public class MedicamentosVista extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lista_medicamentos_vista);
 		Bundle bundle = getIntent().getExtras();
-		idVaca = bundle.getString("id_vaca");
+		id_vaca = bundle.getString("id_vaca");
 		listaVista = (ListView) findViewById(R.id.lista_medicamentos_vista);
-		lista = new ArrayList<Medicamento>();
+		listaMedicamentos = new ArrayList<Medicamento>();
+
 		mostrarListado();
+	}
+
+	private void getListaMedicamentos() {
+		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+				getApplicationContext());
+		listaMedicamentos = mdatos.getMedicamentos(id_vaca);
 	}
 
 	/**
@@ -71,32 +78,16 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+		getListaMedicamentos();
+		System.out.println("MEdicamentos Lista Tamaño:   "+listaMedicamentos.size());
+		for (int i = 0; i < listaMedicamentos.size(); i++) {
+			seleccionado.getTable().put(i, false);
+		}
+		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+		botonEliminar.setEnabled(false);
+		if (listaMedicamentos.size() != 0)
+			setAdapter(listaMedicamentos);
 
-			public void run() {
-				res = llamada.LlamadaListaMedicamentos(idVaca);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						lista = json.fromJson(res,
-								new TypeToken<ArrayList<Medicamento>>() {
-								}.getType());
-						for (int i = 0; i < lista.size(); i++) {
-							seleccionado.getTable().put(i, false);
-						}
-						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-						botonEliminar.setEnabled(false);
-						if (lista.get(0).getId_medicamento() != 0)
-							setAdapter(lista);
-					}
-				});
-			}
-		};
-		hilo.start();
 	}
 
 	/**
@@ -159,7 +150,7 @@ public class MedicamentosVista extends ActionBarActivity {
 					botonEliminar.setEnabled(true);
 				}
 				adapter.setSeleccionado(seleccionado);
-				setAdapter(lista);
+				setAdapter(listaMedicamentos);
 				return true;
 			}
 		});
@@ -172,7 +163,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * */
 	private boolean activarBoton() {
 		boolean resultado = false;
-		for (int i = 0; i < lista.size(); i++) {
+		for (int i = 0; i < listaMedicamentos.size(); i++) {
 			if (seleccionado.getTable().get(i)) {
 				resultado = true;
 			}
@@ -188,7 +179,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * @see clickLista
 	 * */
 	private void lanzarMedicamento(int id_medicamento) {
-		new LanzarVista(this).lanzarMedicamento(id_medicamento, idVaca);
+		new LanzarVista(this).lanzarMedicamento(id_medicamento, id_vaca);
 	}
 
 	/**
@@ -202,8 +193,8 @@ public class MedicamentosVista extends ActionBarActivity {
 	public void añadirMedicamento(View v) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
-		String listaMedicamentos = json.toJson(lista);
-		new LanzarVista(this).lanzarAñadirMedicamento(idVaca, listaMedicamentos);
+		String lista = json.toJson(listaMedicamentos);
+		new LanzarVista(this).lanzarAñadirMedicamento(id_vaca, lista);
 		finish();
 	}
 
@@ -218,8 +209,9 @@ public class MedicamentosVista extends ActionBarActivity {
 		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
-				eliminados = eliminados + " " + lista.get(i).getTipo() + "("
-						+ lista.get(i).getFecha() + ")" + "\n";
+				eliminados = eliminados + " "
+						+ listaMedicamentos.get(i).getTipo() + "("
+						+ listaMedicamentos.get(i).getFecha() + ")" + "\n";
 			}
 		}
 		alertaConfirmarEliminar(eliminados);
@@ -243,7 +235,7 @@ public class MedicamentosVista extends ActionBarActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				for (int i = 0; i < seleccionado.getTable().size(); i++) {
 					if (seleccionado.getTable().get(i)) {
-						eliminar(lista.get(i).getId_medicamento());
+						eliminar(listaMedicamentos.get(i).getId_medicamento());
 					}
 				}
 				mostrarListado();
@@ -274,7 +266,7 @@ public class MedicamentosVista extends ActionBarActivity {
 
 			public void run() {
 				llamada.LLamadaEliminarMedicamento(
-						Integer.toString(id_medicamento), idVaca);
+						Integer.toString(id_medicamento), id_vaca);
 
 			}
 		};
@@ -419,16 +411,16 @@ public class MedicamentosVista extends ActionBarActivity {
 		ArrayList<Medicamento> listaTipoFecha = new ArrayList<Medicamento>();
 
 		if (tipoSpinner.getSelectedItem().toString().equals("-")) {
-			for (int i = 0; i < lista.size(); i++) {
-				listaTipoFecha = lista;
+			for (int i = 0; i < listaMedicamentos.size(); i++) {
+				listaTipoFecha = listaMedicamentos;
 				seleccionado.getTable().put(i, false);
 			}
 
 		} else {
-			for (int i = 0; i < lista.size(); i++) {
-				if (lista.get(i).getTipo()
+			for (int i = 0; i < listaMedicamentos.size(); i++) {
+				if (listaMedicamentos.get(i).getTipo()
 						.equals(tipoSpinner.getSelectedItem().toString())) {
-					listaTipoFecha.add(lista.get(i));
+					listaTipoFecha.add(listaMedicamentos.get(i));
 				}
 			}
 		}

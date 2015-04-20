@@ -2,10 +2,20 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.iterator.AgregadoMedicamento;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
+import com.example.misvacasapp.iterator.AgregadoVaca;
+import com.example.misvacasapp.iterator.IteratorListaMedicamento;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
+import com.example.misvacasapp.iterator.IteratorListaVaca;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Usuario;
+import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -46,9 +56,19 @@ public class Login extends ActionBarActivity {
 
 	/** Lista de usuarios de la aplicación */
 	private ArrayList<Usuario> listaUsuarios;
-	
-	/**CheckBox que guarda el login para no volver a introducir los datos de nuevo y entre directamente en la aplicacion*/
+
+	/**
+	 * CheckBox que guarda el login para no volver a introducir los datos de
+	 * nuevo y entre directamente en la aplicacion
+	 */
 	private CheckBox autoLoginCheck;
+
+	/** Lista de las vacas que tiene el usuario */
+	private ArrayList<Vaca> listaVacas;
+	private ArrayList<Medicamento> listaMedicamentos;
+
+	private VacaDatosBbdd vdbbdd;
+	private MedicamentoDatosBbdd mbbdd;
 
 	// Metodos
 	/**
@@ -90,10 +110,11 @@ public class Login extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-	
-	private void guardarAutoLogin(String id_usuario, String contraseña){
-		if(autoLoginCheck.isChecked()){
-			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+
+	private void guardarAutoLogin(String id_usuario, String contraseña) {
+		if (autoLoginCheck.isChecked()) {
+			SharedPreferences settings = getSharedPreferences("MisDatos",
+					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", id_usuario);
 			editor.putString("contraseña", contraseña);
@@ -112,17 +133,14 @@ public class Login extends ActionBarActivity {
 
 			public void run() {
 				res = llamada.LlamadaUsuario(usuario, contraseña);
-				final Usuario usuario = json.fromJson(res, Usuario.class);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (usuario.getRol() == 1) {
-							// Admin
-						} else if (usuario.getRol() == 0) {
-							lanzarUsuario();
-						}
-					}
-				});
+				Usuario usuario = json.fromJson(res, Usuario.class);
+
+				if (usuario.getRol() == 1) {
+					// Admin
+				} else if (usuario.getRol() == 0) {
+					lanzarUsuario();
+				}
+
 			}
 		};
 		hilo.start();
@@ -132,6 +150,16 @@ public class Login extends ActionBarActivity {
 	 * Cambia a la vista del usuario
 	 * */
 	private void lanzarUsuario() {
+		vdbbdd = new VacaDatosBbdd(getApplicationContext());
+		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
+
+		if (vdbbdd.getRegistros() == 0) {
+			vdbbdd = new VacaDatosBbdd(getApplicationContext(), getListaVacas());
+			getListaMedicamentos();
+			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
+					listaMedicamentos);
+		}
+
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
 		finish();
 	}
@@ -156,7 +184,7 @@ public class Login extends ActionBarActivity {
 	public void onClickPedirContraseña(View v) {
 		alertaCorreo();
 	}
-	
+
 	/**
 	 * Alerta para introducir el correo electronico y decir si el correo esta en
 	 * la base de datos o no. Si el correo esta en la base de datos envia un
@@ -177,18 +205,18 @@ public class Login extends ActionBarActivity {
 
 				if (correoExistente(texto.getText().toString())) {
 					Usuario u = getUsuario(texto.getText().toString());
-							enviar(texto.getText().toString(), "",
-									"misvacasapp@gmail.es", "Mis Vacas APP",
-									"Correo de autenticacion",
-									"Su usuario y contraseña son: ");
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(Login.this, "No funciona",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-					
+					enviar(texto.getText().toString(), "",
+							"misvacasapp@gmail.es", "Mis Vacas APP",
+							"Correo de autenticacion",
+							"Su usuario y contraseña son: ");
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(Login.this, "No funciona",
+									Toast.LENGTH_SHORT).show();
+						}
+					});
+
 				} else {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -222,39 +250,37 @@ public class Login extends ActionBarActivity {
 	 * @param subject
 	 * @param body
 	 */
-	private void enviar(final String emailTo, String nameTo, final String emailFrom,
-			String nameFrom, final String subject, final String body) {
-					new AsyncTask<Void, Void, Void>() {
+	private void enviar(final String emailTo, String nameTo,
+			final String emailFrom, String nameFrom, final String subject,
+			final String body) {
+		new AsyncTask<Void, Void, Void>() {
 
-		        @Override
-		        protected void onPreExecute()
-		        {
-		        }
+			@Override
+			protected void onPreExecute() {
+			}
 
-		        @Override
-		        protected Void doInBackground(Void... params)
-		        {
-		        	Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
-		    		String[] toArr = { emailTo, "misvacasapp@gmail.es" };
-		    		m.setTo(toArr);
-		    		m.setFrom(emailFrom);
-		    		m.setSubject(subject);
-		    		m.setBody(body);
-		            try {
-						m.send();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-		            return null;
-		        }
+			@Override
+			protected Void doInBackground(Void... params) {
+				Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
+				String[] toArr = { emailTo, "misvacasapp@gmail.es" };
+				m.setTo(toArr);
+				m.setFrom(emailFrom);
+				m.setSubject(subject);
+				m.setBody(body);
+				try {
+					m.send();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
 
-		        @Override
-		        protected void onPostExecute(Void res)
-		        {
-		           
-		        }
-		    }.execute();
-	
+			@Override
+			protected void onPostExecute(Void res) {
+
+			}
+		}.execute();
+
 		System.out.println("Correo enviado");
 	}
 
@@ -268,11 +294,51 @@ public class Login extends ActionBarActivity {
 
 			public void run() {
 				res = llamada.LlamadaListaUsuarios();
-				listaUsuarios = json.fromJson(res, new TypeToken<ArrayList<Usuario>>() {
-				}.getType());
+				listaUsuarios = json.fromJson(res,
+						new TypeToken<ArrayList<Usuario>>() {
+						}.getType());
 			}
 		};
 		hilo.start();
+	}
+
+	public ArrayList<Vaca> getListaVacas() {
+		String res = "";
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		LlamadaVacaWS llamada = new LlamadaVacaWS();
+
+		res = llamada.LlamadaListaVacas(usuario);
+		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
+		}.getType());
+
+		return listaVacas;
+	}
+
+	public void getListaMedicamentos() {
+		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
+		IteratorListaVaca i = new IteratorListaVaca(agregado);
+		while (i.hasNext()) {
+			String res = "";
+			ArrayList<Medicamento> listaAux = new ArrayList<Medicamento>();
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
+			res = llamada.LlamadaListaMedicamentos(i.actualElement()
+					.getId_vaca());
+			listaAux = json.fromJson(res,
+					new TypeToken<ArrayList<Medicamento>>() {
+					}.getType());
+			AgregadoMedicamento agregadoMedicamento = new AgregadoMedicamento(
+					listaAux);
+			IteratorListaMedicamento iMedicamento = new IteratorListaMedicamento(
+					agregadoMedicamento);
+			while (iMedicamento.hasNext()) {
+				listaMedicamentos.add(iMedicamento.actualElement());
+				iMedicamento.next();
+			}
+			i.next();
+		}
 	}
 
 	private boolean correoExistente(String correo) {
@@ -310,15 +376,19 @@ public class Login extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
-		//TODO crear clase 
+
+		listaVacas = new ArrayList<Vaca>();
+		listaMedicamentos = new ArrayList<Medicamento>();
+
+		// TODO crear clase
 		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
-		SharedPreferences prefs = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
-		String id_usuarioGuardado = prefs.getString("id_usuario","");
+		SharedPreferences prefs = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		String id_usuarioGuardado = prefs.getString("id_usuario", "");
 		String contraseñaGuardado = prefs.getString("id_usuario", "");
-		if(id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")){
+		if (id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")) {
 			getListaUsuarios();
-		}else{
+		} else {
 			usuario = id_usuarioGuardado;
 			contraseña = contraseñaGuardado;
 			rol();

@@ -3,19 +3,10 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
-import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
-import com.example.misvacasapp.iterator.AgregadoMedicamento;
-import com.example.misvacasapp.iterator.AgregadoVaca;
-import com.example.misvacasapp.iterator.IteratorListaMedicamento;
-import com.example.misvacasapp.iterator.IteratorListaVaca;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
-import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,14 +40,12 @@ public class UsuarioVista extends ActionBarActivity {
 	private ListView listaVista;
 	/** Adaptador de la lista */
 	private AdapterVaca adapter;
-	/** Lista de las vacas que tiene el usuario */
+	
 	private ArrayList<Vaca> listaVacas;
-	private ArrayList<Medicamento> listaMedicamentos;
+	private VacaDatosBbdd vdatos;
+	
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
-
-	private VacaDatosBbdd vdbbdd;
-	private MedicamentoDatosBbdd mbbdd;
 
 	// Métodos
 	/**
@@ -71,66 +60,17 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-
+		
 		listaVacas = new ArrayList<Vaca>();
-		listaMedicamentos = new ArrayList<Medicamento>();
-
-		vdbbdd = new VacaDatosBbdd(getApplicationContext());
-		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
-		Thread hilo = new Thread() {
-			public void run() {
-				if (vdbbdd.getRegistros() == 0) {
-					vdbbdd = new VacaDatosBbdd(getApplicationContext(),
-							getListaVacas());
-					mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
-							listaMedicamentos);
-				}
-			}
-			
-		};
-		hilo.start();
 		mostrarListado();
 	}
-
-	public ArrayList<Vaca> getListaVacas() {
-		String res = "";
-		Gson json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
-		LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-		res = llamada.LlamadaListaVacas(id_usuario);
-		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
-		}.getType());
-
-		return listaVacas;
+	
+	public void getListaVacas(){
+		vdatos = new VacaDatosBbdd(getApplicationContext());
+		listaVacas =  vdatos.getListaVacas(id_usuario);
 	}
 
-	public void getListaMedicamentos() {	
-		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
-		IteratorListaVaca i = new IteratorListaVaca(agregado);
-		while (i.hasNext()) {
-			String res = "";
-			ArrayList<Medicamento> listaAux = new ArrayList<Medicamento>();
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-			res = llamada.LlamadaListaMedicamentos(i.actualElement()
-					.getId_vaca());
-			listaAux = json.fromJson(res,
-					new TypeToken<ArrayList<Medicamento>>() {
-					}.getType());
-			AgregadoMedicamento agregadoMedicamento = new AgregadoMedicamento(
-					listaAux);
-			IteratorListaMedicamento iMedicamento = new IteratorListaMedicamento(
-					agregadoMedicamento);
-			while (iMedicamento.hasNext()) {
-				listaMedicamentos.add(iMedicamento.actualElement());
-				iMedicamento.next();
-			}
-			i.next();
-		}
-	}
-
+	
 	/**
 	 * Método que utiliza el botón añadir Lanza la vista para añadir una vaca
 	 * pasandole el parametro del id de usuario
@@ -181,7 +121,7 @@ public class UsuarioVista extends ActionBarActivity {
 						eliminar(listaVacas.get(i).getId_vaca());
 					}
 				}
-				mostrarListadoDespuesEliminar();
+				mostrarListado();
 			}
 		});
 		dialogo.setNegativeButton("No", new OnClickListener() {
@@ -306,14 +246,11 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
-
-		listaVacas = vdbbdd.getListaVacas(id_usuario);
-
+		getListaVacas();
 		for (int i = 0; i < listaVacas.size(); i++) {
 			seleccionado.getTable().put(i, false);
 		}
 
-		// TODO Comprobar si hace falta esta comprobacion
 		if (listaVacas.size() == 0) {
 		} else {
 			setAdapter(listaVacas);
@@ -321,18 +258,6 @@ public class UsuarioVista extends ActionBarActivity {
 
 	}
 
-	// TODO Comprobar si con el mostrar listado ahora no da fallos
-	private void mostrarListadoDespuesEliminar() {
-
-		for (int i = 0; i < listaVacas.size(); i++) {
-			seleccionado.getTable().put(i, false);
-		}
-		if (listaVacas.get(0).getId_vaca().equals("0")) {
-		} else {
-			setAdapter(listaVacas);
-		}
-
-	}
 
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
@@ -398,6 +323,7 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		});
 	}
+	//TODO añadir clase activar y desactivar boton 
 
 	/**
 	 * Cambia a la vista de la vaca
@@ -411,8 +337,9 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que activa o desactiva el botón eliminar
+	 * Método que devuelve un true si el boton tiene que estar activado o no
 	 * 
+	 * TODO Posiblemente cambiar metodo en el que si tiene que estar activado lo active y si no lo desactive
 	 * @see clickLargoLista
 	 * */
 	private boolean activarBoton() {

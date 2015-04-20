@@ -12,6 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:inputType="text" />
+        android:inputType="textCapCharacters"
+       />
 
 </RelativeLayout>

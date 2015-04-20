@@ -2,6 +2,7 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
@@ -40,8 +41,9 @@ public class VacaVista extends ActionBarActivity {
 	private String id_vaca;
 	/** Id delusuario */
 	private String id_usuario;
-	/**Usuario*/
+	/** Usuario */
 	private Usuario usuario;
+
 	// Métodos
 	/**
 	 * Añade la vista de la vaca
@@ -75,68 +77,58 @@ public class VacaVista extends ActionBarActivity {
 	 * @see onCreate
 	 * */
 	private void rellenarCamposVaca() {
+		VacaDatosBbdd vdatos = new VacaDatosBbdd(getApplicationContext());
+		Vaca vaca = vdatos.getVaca(id_vaca);
+
+		TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
+		preidVaca.setText(vaca.getId_vaca().substring(0,
+				vaca.getId_vaca().length() - 4));
+		TextView idVaca = (TextView) findViewById(R.id.idVaca);
+		idVaca.setText(vaca.getId_vaca().substring(
+				vaca.getId_vaca().length() - 4, vaca.getId_vaca().length()));
+		TextView raza = (TextView) findViewById(R.id.raza);
+		raza.setText("RAZA: " + vaca.getRaza());
+		TextView sexo = (TextView) findViewById(R.id.sexo);
+		sexo.setText("SEXO: " + vaca.getSexo());
+		TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
+		fechaNacimiento.setText("FECHA DE NACIMIENTO: "
+				+ vaca.getFecha_nacimiento());
+		TextView idMadre = (TextView) findViewById(R.id.idMadre);
+		idMadre.setText("ID MADRE: " + vaca.getId_madre());
+		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
+		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
+		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+				decodedString.length);
+		Drawable i = new BitmapDrawable(decodedByte);
+		imagen.setBackground(i);
+	}
+
+	private Usuario getUsuario(final String id_usuario) {
+
 		Thread hilo = new Thread() {
 			String res = "";
 			Gson json = new GsonBuilder().setPrettyPrinting()
 					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-			Vaca vaca = new Vaca();
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				res = llamada.LlamadaVaca(id_vaca, id_usuario);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						vaca = json.fromJson(res, Vaca.class);	
-						TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
-						preidVaca.setText(vaca.getId_vaca().substring(0, vaca.getId_vaca().length()-4));
-						TextView idVaca = (TextView) findViewById(R.id.idVaca);
-						idVaca.setText(vaca.getId_vaca().substring(vaca.getId_vaca().length()-4, vaca.getId_vaca().length()));
-						TextView raza = (TextView) findViewById(R.id.raza);
-						raza.setText("RAZA: " + vaca.getRaza());
-						TextView sexo = (TextView) findViewById(R.id.sexo);
-						sexo.setText("SEXO: " + vaca.getSexo());
-						TextView fechaNacimiento = (TextView) findViewById(R.id.fechaNacimiento);
-						fechaNacimiento.setText("FECHA DE NACIMIENTO: "
-								+ vaca.getFecha_nacimiento());
-						TextView idMadre = (TextView) findViewById(R.id.idMadre);
-						idMadre.setText("ID MADRE: " + vaca.getId_madre());
-						ImageView imagen =(ImageView)findViewById(R.id.imageView1);
-						byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
-						Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-						Drawable i = new BitmapDrawable(decodedByte);
-						imagen.setBackground(i);
+				res = llamada.LlamadaListaUsuarios();
+				ArrayList<Usuario> listaUsuario = json.fromJson(res,
+						new TypeToken<ArrayList<Vaca>>() {
+						}.getType());
+				AgregadoUsuario agregado = new AgregadoUsuario(listaUsuario);
+				IteratorListaUsuario i = (IteratorListaUsuario) agregado
+						.createIterator();
+				while (i.hasNext()) {
+					if (i.actualElement().getDni().equals(id_usuario)) {
+						usuario = i.actualElement();
 					}
-				});
-			}
-		};
-		hilo.start();
-	}
-	
-	private Usuario getUsuario(final String id_usuario){
-		
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-		LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-		public void run() {
-			res = llamada.LlamadaListaUsuarios();
-			ArrayList<Usuario> listaUsuario = json.fromJson(res,
-					new TypeToken<ArrayList<Vaca>>() {
-					}.getType());
-			AgregadoUsuario agregado = new AgregadoUsuario(listaUsuario);
-			IteratorListaUsuario i = (IteratorListaUsuario) agregado.createIterator();
-			while(i.hasNext()){
-				if(i.actualElement().getDni().equals(id_usuario)){
-					usuario = i.actualElement();
 				}
 			}
-		}
 		};
 		hilo.start();
 		return usuario;
-		
+
 	}
 
 	/**
@@ -159,20 +151,23 @@ public class VacaVista extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.cerrar_sesion){
-			SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+		if (id == R.id.cerrar_sesion) {
+			SharedPreferences settings = getSharedPreferences("MisDatos",
+					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", "");
-			editor.putString("contraseña","");
+			editor.putString("contraseña", "");
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
-		}else if(id== R.id.mis_vacas){
-			new LanzarVista(this).lanzarUsuarioVista(id_usuario, getUsuario(id_usuario).getContraseña());
+		} else if (id == R.id.mis_vacas) {
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario,
+					getUsuario(id_usuario).getContraseña());
 			finish();
 			return true;
-		}else if (id == R.id.administrar_cuenta) {
-			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, getUsuario(id_usuario).getContraseña());
+		} else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
+					getUsuario(id_usuario).getContraseña());
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

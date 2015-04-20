@@ -1,5 +1,6 @@
 package com.example.misvacasapp;
 
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
@@ -45,34 +46,21 @@ public class MedicamentoVista extends ActionBarActivity {
 	 * @see onCreate
 	 * */
 	private void rellenarCampos() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
-			Medicamento medicamento = new Medicamento();
+		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+				getApplicationContext());
+		Medicamento medicamento = mdatos
+				.getMedicamento(id_medicamento, id_vaca);
 
-			public void run() {
-				res = llamada.LlamadaMedicamento(id_vaca, id_medicamento);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						medicamento = json.fromJson(res, Medicamento.class);
-						TextView idMedicamento = (TextView) findViewById(R.id.id_medicamento);
-						idMedicamento.setText("ID MEDICAMENTO: "
-								+ medicamento.getId_medicamento());
-						TextView fecha = (TextView) findViewById(R.id.fecha_medicamento);
-						fecha.setText("FECHA: " + medicamento.getFecha());
-						TextView tipo = (TextView) findViewById(R.id.tipo_medicamento);
-						tipo.setText("TIPO: " + medicamento.getTipo());
-						TextView descripcion = (TextView) findViewById(R.id.descripcion);
-						descripcion.setText("DESCRIPCION: "
-								+ medicamento.getDescripcion());
-					}
-				});
-			}
-		};
-		hilo.start();
+		TextView idMedicamento = (TextView) findViewById(R.id.id_medicamento);
+		idMedicamento.setText("ID MEDICAMENTO: "
+				+ medicamento.getId_medicamento());
+		TextView fecha = (TextView) findViewById(R.id.fecha_medicamento);
+		fecha.setText("FECHA: " + medicamento.getFecha());
+		TextView tipo = (TextView) findViewById(R.id.tipo_medicamento);
+		tipo.setText("TIPO: " + medicamento.getTipo());
+		TextView descripcion = (TextView) findViewById(R.id.descripcion);
+		descripcion.setText("DESCRIPCION: " + medicamento.getDescripcion());
+
 	}
 
 	/**
