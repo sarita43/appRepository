@@ -1,10 +1,7 @@
 package com.example.misvacasapp;
 
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
-import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;

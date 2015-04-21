@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class MedicamentoDatosBbdd {
 
-	public static String tablaMedicamentos = "create table if not exists medicamento (id_medicamento varchar(20),"
+	public static String tablaMedicamentos = "create table if not exists medicamento (id_medicamento integer,"
 			+ "fecha date,tipo varchar(40),descripcion varchar(250),id_vaca varchar(20),primary key (id_medicamento,id_vaca))";
 
 	public static String medicamento;

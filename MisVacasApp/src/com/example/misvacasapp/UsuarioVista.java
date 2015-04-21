@@ -40,40 +40,52 @@ public class UsuarioVista extends ActionBarActivity {
 	private ListView listaVista;
 	/** Adaptador de la lista */
 	private AdapterVaca adapter;
-	
+	/** Lista de animales de un usuario */
 	private ArrayList<Vaca> listaVacas;
+	/** Base de datos interna de los animales de un usuario */
 	private VacaDatosBbdd vdatos;
 	
+	private int version_vaca;
+
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
 
 	// Métodos
 	/**
-	 * Añade la vista usuario Recoge el usuario y la contraseña de la vista
-	 * login Inicializa parametros
-	 * */
+	 * Añade la vista usuario. Recoge el usuario y la contraseña de la vista
+	 * login. Inicializa parámetros y la vista de la lista de animales.
+	 * 
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_usuario_vista);
+
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
+		version_vaca = bundle.getInt("version_vaca");
+
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-		
 		listaVacas = new ArrayList<Vaca>();
 		mostrarListado();
 	}
-	
-	public void getListaVacas(){
-		vdatos = new VacaDatosBbdd(getApplicationContext());
-		listaVacas =  vdatos.getListaVacas(id_usuario);
+
+	/**
+	 * Trae la lista de animales que tiene un usuario de la base de datos
+	 * interna y la guarda en un arrayList de vacas
+	 */
+	public void getListaVacas() {
+		
+		vdatos = new VacaDatosBbdd(getApplicationContext(),version_vaca);
+		System.out.println("VErsion en usuario vista   "+vdatos.getVersion());
+		listaVacas = vdatos.getListaVacas(id_usuario);
 	}
 
-	
 	/**
-	 * Método que utiliza el botón añadir Lanza la vista para añadir una vaca
-	 * pasandole el parametro del id de usuario
+	 * Método que utiliza el botón añadir. Lanza la vista para añadir una vaca
+	 * pasandole el parámetro del id de usuario
 	 * 
 	 * @param v
 	 *            Vista
@@ -83,8 +95,8 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que utiliza el botón eliminar Busca las vacas que estan
-	 * seleccionadas utilizando la tabla hash, para eliminarlas
+	 * Método que utiliza el botón eliminar. Busca los animales que están
+	 * seleccionadas en la vista de la lista,utiliza la tabla hash para eliminarlas
 	 * 
 	 * @param v
 	 *            Vista
@@ -258,7 +270,6 @@ public class UsuarioVista extends ActionBarActivity {
 
 	}
 
-
 	/**
 	 * Crea el adaptador de la lista de la vista del usuario y se la añade
 	 * 
@@ -323,7 +334,6 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		});
 	}
-	//TODO añadir clase activar y desactivar boton 
 
 	/**
 	 * Cambia a la vista de la vaca
@@ -339,7 +349,9 @@ public class UsuarioVista extends ActionBarActivity {
 	/**
 	 * Método que devuelve un true si el boton tiene que estar activado o no
 	 * 
-	 * TODO Posiblemente cambiar metodo en el que si tiene que estar activado lo active y si no lo desactive
+	 * TODO Posiblemente cambiar metodo en el que si tiene que estar activado lo
+	 * active y si no lo desactive
+	 * 
 	 * @see clickLargoLista
 	 * */
 	private boolean activarBoton() {
@@ -394,7 +406,7 @@ public class UsuarioVista extends ActionBarActivity {
 			new LanzarVista(this).lanzarLogin();
 			finish();
 		} else if (id == R.id.mis_vacas) {
-			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña,vdatos.getVersion());
 			finish();
 			return true;
 		} else if (id == R.id.seleccionar_todo) {

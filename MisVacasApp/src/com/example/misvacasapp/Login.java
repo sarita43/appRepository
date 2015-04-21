@@ -46,7 +46,7 @@ import android.widget.Toast;
 public class Login extends ActionBarActivity {
 	// Atributos
 	/**
-	 * Id usuario que introduce a traves de la pantalla login
+	 * Id usuario que introduce a través de la pantalla login
 	 */
 	private String usuario;
 	/**
@@ -65,12 +65,16 @@ public class Login extends ActionBarActivity {
 
 	/** Lista de las vacas que tiene el usuario */
 	private ArrayList<Vaca> listaVacas;
+
+	/** Lista de medicamentos de todas las vacas */
 	private ArrayList<Medicamento> listaMedicamentos;
 
+	/** Base de datos interna de las vacas */
 	private VacaDatosBbdd vdbbdd;
+	/** Base de datos interna de el medicamento */
 	private MedicamentoDatosBbdd mbbdd;
 
-	// Metodos
+	// Métodos
 	/**
 	 * Recoge el usuario y contraseña introducidos por el usuario y comprueba si
 	 * existen y son correctos
@@ -121,6 +125,20 @@ public class Login extends ActionBarActivity {
 			editor.commit();
 		}
 	}
+	
+	private void comprobarAutoLogin(){
+		SharedPreferences prefs = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		String id_usuarioGuardado = prefs.getString("id_usuario", "");
+		String contraseñaGuardado = prefs.getString("id_usuario", "");
+		if (id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")) {
+			getListaUsuarios();
+		} else {
+			usuario = id_usuarioGuardado;
+			contraseña = contraseñaGuardado;
+			rol();
+		}
+	}
 
 	/**
 	 * Comprueba el rol del usuario Si es administrador o no
@@ -147,20 +165,23 @@ public class Login extends ActionBarActivity {
 	}
 
 	/**
-	 * Cambia a la vista del usuario
+	 * Cambia a la vista del usuario Crea la base de datos de las vacas y de los
+	 * medicamentos si no esta creada ya y la rellena con los datos que se
+	 * encuentran en la base de datos cloud
 	 * */
 	private void lanzarUsuario() {
 		vdbbdd = new VacaDatosBbdd(getApplicationContext());
 		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
 
+		System.out.println("Version    "+vdbbdd.getVersion());
 		if (vdbbdd.getRegistros() == 0) {
 			vdbbdd = new VacaDatosBbdd(getApplicationContext(), getListaVacas());
 			getListaMedicamentos();
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
 					listaMedicamentos);
 		}
-
-		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
+		System.out.println("Version    "+vdbbdd.getVersion());
+		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña,vdbbdd.getVersion());
 		finish();
 	}
 
@@ -238,6 +259,24 @@ public class Login extends ActionBarActivity {
 		});
 		dialogo.show();
 	}
+	
+	/**
+	 * Comprueba que en la lista de usuarios de la aplicación exista el correo.
+	 * @param correo
+	 * @return boolean True si el correo existe, false si el correo no existe
+	 */
+	private boolean correoExistente(String correo) {
+		boolean resultado = false;
+		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
+				resultado = true;
+			i.next();
+		}
+		return resultado;
+	}
 
 	/**
 	 * Métodos que envia un correo electronico al usuario recordandole el
@@ -284,6 +323,10 @@ public class Login extends ActionBarActivity {
 		System.out.println("Correo enviado");
 	}
 
+	/**
+	 * Trae la lista de usuarios que hay en la base de datos cloud
+	 * Para ello hay que tener conexión a internet.
+	 */
 	private void getListaUsuarios() {
 		listaUsuarios = new ArrayList<Usuario>();
 		Thread hilo = new Thread() {
@@ -302,6 +345,11 @@ public class Login extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Recoge la lista de animale que tiene un usuario en la base de datos cloud.
+	 * Para ello hay que tener coneción a internet.
+	 * @return ArrayList<Vaca> Lista de animales del usuario.
+	 */
 	public ArrayList<Vaca> getListaVacas() {
 		String res = "";
 		Gson json = new GsonBuilder().setPrettyPrinting()
@@ -315,6 +363,10 @@ public class Login extends ActionBarActivity {
 		return listaVacas;
 	}
 
+	/**
+	 * Recoge la lista de medicamentos o vacunas que tienen los animales de un usuario.
+	 * Para ello hay que tener conexión a internet
+	 */
 	public void getListaMedicamentos() {
 		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
 		IteratorListaVaca i = new IteratorListaVaca(agregado);
@@ -341,19 +393,11 @@ public class Login extends ActionBarActivity {
 		}
 	}
 
-	private boolean correoExistente(String correo) {
-		boolean resultado = false;
-		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado
-				.createIterator();
-		while (i.hasNext()) {
-			if (i.actualElement().getCorreo().equals(correo))
-				resultado = true;
-			i.next();
-		}
-		return resultado;
-	}
-
+	/**
+	 * Devuelve el usuario con un correo electronico pasado por parámetro
+	 * @param correo String. Correo de un usuario
+	 * @return Usuario. Usuario de la lista de usuarios.
+	 */
 	private Usuario getUsuario(String correo) {
 		Usuario u = new Usuario();
 		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
@@ -380,19 +424,8 @@ public class Login extends ActionBarActivity {
 		listaVacas = new ArrayList<Vaca>();
 		listaMedicamentos = new ArrayList<Medicamento>();
 
-		// TODO crear clase
 		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
-		SharedPreferences prefs = getSharedPreferences("MisDatos",
-				Context.MODE_PRIVATE);
-		String id_usuarioGuardado = prefs.getString("id_usuario", "");
-		String contraseñaGuardado = prefs.getString("id_usuario", "");
-		if (id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")) {
-			getListaUsuarios();
-		} else {
-			usuario = id_usuarioGuardado;
-			contraseña = contraseñaGuardado;
-			rol();
-		}
+		comprobarAutoLogin();
 	}
 
 	/**

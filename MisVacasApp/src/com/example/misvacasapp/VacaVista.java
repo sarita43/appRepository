@@ -161,8 +161,9 @@ public class VacaVista extends ActionBarActivity {
 			new LanzarVista(this).lanzarLogin();
 			finish();
 		} else if (id == R.id.mis_vacas) {
+			//TODO poner version de la vaca
 			new LanzarVista(this).lanzarUsuarioVista(id_usuario,
-					getUsuario(id_usuario).getContraseña());
+					getUsuario(id_usuario).getContraseña(),6);
 			finish();
 			return true;
 		} else if (id == R.id.administrar_cuenta) {

@@ -1,6 +1,5 @@
 package com.example.misvacasapp.aniadir;
 
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
@@ -47,18 +47,21 @@ public class AniadirVacaVista extends ActionBarActivity {
 	/** Id del usuario */
 	private String id_usuario;
 	/** Lista de vacas del usuario */
-	private ArrayList<Vaca> lista;
+	private ArrayList<Vaca> listaVacas;
 	/** Tipo que serializa o deserializa para enviar a traves del servicio web */
 	private Gson json;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
-	
-	private static final Logger logger = Logger.getLogger(AniadirVacaVista.class);
+
+	/** Base de datos interna de los animales de un usuario */
+	private VacaDatosBbdd vdatos;
 
 	// Métodos
 	/**
-	 * Añade la vista de añadir vaca. Recoge el usuario de la vista del usuario.
-	 * Inicializa parametros
+	 * Añade la vista de añadir animal. Recoge el usuario de la vista del
+	 * usuario. Inicializa parámetros
+	 * 
+	 * @param savedInstanceState
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +71,18 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.setDateFormat("dd-MM-yyyy").create();
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		lista = new ArrayList<Vaca>();
+		listaVacas = new ArrayList<Vaca>();
+		getListaVacas();
 		rellenarSpinner();
-		listaVacas();
-		
-		  BasicConfigurator.configure();
-	       logger.debug("Hola esto es una traza");
+	}
+
+	/**
+	 * Trae la lista de animales que tiene un usuario de la base de datos
+	 * interna y la guarda en un arrayList de vacas
+	 */
+	public void getListaVacas() {
+		vdatos = new VacaDatosBbdd(getApplicationContext());
+		listaVacas = vdatos.getListaVacas(id_usuario);
 	}
 
 	/**
@@ -103,40 +112,17 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Recoge la lista de vacas del usuario y lo guarda en el arrayList de lista
-	 * Para ello se llama al servicio web de vacas
-	 * 
-	 * @see onCreate
-	 * */
-	private void listaVacas() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				res = llamada.LlamadaListaVacas();
-				lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
-				}.getType());
-			}
-		};
-		hilo.start();
-	}
-
-	/**
-	 * Comprueba que el id de la vaca nueva introducido sea correcto Para ello
+	 * Comprueba que el id de la vaca nueva introducido sea correcto. Para ello
 	 * comprueba que no sea vacio y que no exista ya ese animal
 	 * 
-	 * @see nuevaVaca
 	 * @return boolean si es true el id es correcto si es false no
 	 * */
 	private boolean comprobarIdVaca() {
 		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
-		for (int i = 0; lista.size() > i; i++) {
-			if (id_vaca.equals(lista.get(i).getId_vaca())) {
+		for (int i = 0; listaVacas.size() > i; i++) {
+			if (id_vaca.equals(listaVacas.get(i).getId_vaca())) {
 				id_correcto = false;
 				runOnUiThread(new Runnable() {
 					@Override
@@ -183,45 +169,48 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
-		String bitmapdata =crearImagen();
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,bitmapdata);
+		String bitmapdata = crearImagen();
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
+				bitmapdata);
 
 		return vaca;
 	}
-	
-	private String crearImagen(){
-		Button imagen = (Button)findViewById(R.id.foto_boton);
-		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
+
+	/**
+	 * Recoge la imagen del animal de la vista lo redimensiona y lo devuelve
+	 * como String
+	 * 
+	 * @return String encodedImage. Imagen como String
+	 */
+	private String crearImagen() {
+		Button imagen = (Button) findViewById(R.id.foto_boton);
+		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
 		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
 		byte[] bitmapdata = stream.toByteArray();
-		System.out.println(" TAMAÑO  :"+bitmapdata.length);
 		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
-		System.out.println("TAMAÑO STRING  "+encodedImage.length());
 		return encodedImage;
 	}
-	
+
 	/**
-	 * Redimensionar un Bitmap. By TutorialAndroid.com
-	* @param Bitmap mBitmap
-	* @param float newHeight
-	* @param float newHeight
-	 * @param float newHeight
-	 * @return Bitmap
+	 * Método que redimensiona un Bitmap.
+	 * 
+	 * @param Bitmap
+	 *            mBitmap. Foto del animal
+	 * @param float newWidth. Nuevo ancho
+	 * @param float newHeight. Nuevo altura
+	 * @return Bitmap. Imagen redimensionada
 	 */
-	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
-	   //Redimensionamos
-	   int width = mBitmap.getWidth();
-	   int height = mBitmap.getHeight();
-	   float scaleWidth = ((float) newWidth) / width;
-	   float scaleHeight = ((float) newHeigth) / height;
-	   // create a matrix for the manipulation
-	   Matrix matrix = new Matrix();
-	   // resize the bit map
-	   matrix.postScale(scaleWidth, scaleHeight);
-	   // recreate the new Bitmap
-	   return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
+			float newHeigth) {
+		int width = mBitmap.getWidth();
+		int height = mBitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeigth) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
 	/**
@@ -320,6 +309,10 @@ public class AniadirVacaVista extends ActionBarActivity {
 		return fechaOk;
 	}
 
+	/**
+	 * Comprueba que el id de la madre del animal no sea vacio.
+	 * @return boolean. True si el id no es vacio, false si es vacio
+	 */
 	private boolean comprobarIdMadre() {
 
 		boolean id_correcto = true;
@@ -339,7 +332,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
+	 * Método que se ejecuta cuando se presiona el botón aceptar. En el se llama
 	 * a las comprobaciones que se pueden hacer para añadir el animal
 	 * correctamente y añade el animal si todo es correcto
 	 * 
@@ -351,7 +344,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 			LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 			public void run() {
-				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
+				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()
+						&& comprobarIdMadre()) {
 					final Vaca v = crearVaca();
 
 					String vaca = json.toJson(v);
@@ -374,14 +368,25 @@ public class AniadirVacaVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
+
+	/**
 	
-	public void cargarFoto(View v){
+	 * @param v. Vista
+	 */
+	public void cargarFoto(View v) {
 		String name = Environment.getExternalStorageDirectory() + "/test.jpg";
-		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		startActivityForResult(intent, 2);
-		
+
 	}
-	
+
+	/**
+	 * Busca la foto en la galeria para ponerla a un animaly la muestra en la vista
+	 * @param requestCode Int. Código de petición
+	 * @param resultCode Int. Código de respuesta
+	 * @param data Intent. Vista
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -393,11 +398,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 			Bitmap bitmap = BitmapFactory.decodeStream(bis);
 			Button imagen = (Button) findViewById(R.id.foto_boton);
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
-			
+
 		} catch (FileNotFoundException e) {
 		}
 	}
-	
+
 	/**
 	 * Añade el menu a la vista aniadirVaca
 	 * 
@@ -405,7 +410,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
@@ -417,9 +421,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

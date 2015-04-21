@@ -20,10 +20,11 @@ public class LanzarVista {
 		context.startActivity(i);
 	}
 	
-	public void lanzarUsuarioVista(String id_usuario, String contraseña) {
+	public void lanzarUsuarioVista(String id_usuario, String contraseña,int version) {
 		Intent i = new Intent(context, UsuarioVista.class);
 		i.putExtra("id_usuario", id_usuario);
 		i.putExtra("contraseña", contraseña);
+		i.putExtra("version_vacas", version);
 		context.startActivity(i);
 	}
 
