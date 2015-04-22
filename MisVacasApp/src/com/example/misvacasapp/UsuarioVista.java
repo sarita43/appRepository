@@ -3,9 +3,8 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
-import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
-import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -145,25 +144,12 @@ public class UsuarioVista extends ActionBarActivity {
 	 * */
 	public void eliminar(final String id_vaca) {
 		eliminarMedicamentosVaca(id_vaca);
-		Thread hilo = new Thread() {
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				llamada.LLamadaEliminarVaca(id_vaca, id_usuario);
-			}
-		};
-		hilo.start();
+		vdatos.eliminar(id_vaca);
 	}
 
 	private void eliminarMedicamentosVaca(final String id_vaca) {
-		Thread hilo = new Thread() {
-			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
-
-			public void run() {
-				llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
-			}
-		};
-		hilo.start();
+		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+		mdatos.eliminarMedicamentos(id_vaca);
 	}
 
 	/**
@@ -254,6 +240,10 @@ public class UsuarioVista extends ActionBarActivity {
 		if (listaVacas.size() == 0) {
 		} else {
 			setAdapter(listaVacas);
+			Button botonEliminar = (Button) findViewById(R.id.eliminar);
+			botonEliminar
+					.setBackgroundResource(R.drawable.boton_eliminar_5);
+			botonEliminar.setEnabled(false);
 		}
 
 	}

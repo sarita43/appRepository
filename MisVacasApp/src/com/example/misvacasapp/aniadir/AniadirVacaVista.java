@@ -30,11 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
-import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * Clase de la actividad de añadir vaca. En ella se implementan los métodos que
@@ -47,11 +46,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 	/** Id del usuario */
 	private String id_usuario;
 	/** Lista de vacas del usuario */
-	private ArrayList<Vaca> lista;
+	private ArrayList<Vaca> listaVacas;
 	/** Tipo que serializa o deserializa para enviar a traves del servicio web */
 	private Gson json;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
+	
+	private VacaDatosBbdd vdatos;
 	
 	private static final Logger logger = Logger.getLogger(AniadirVacaVista.class);
 
@@ -68,8 +69,9 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.setDateFormat("dd-MM-yyyy").create();
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
-		lista = new ArrayList<Vaca>();
+		listaVacas = new ArrayList<Vaca>();
 		rellenarSpinner();
+		
 		listaVacas();
 		
 		  BasicConfigurator.configure();
@@ -109,19 +111,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * @see onCreate
 	 * */
 	private void listaVacas() {
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				res = llamada.LlamadaListaVacas();
-				lista = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
-				}.getType());
-			}
-		};
-		hilo.start();
+		vdatos = new VacaDatosBbdd(getApplicationContext());
+		listaVacas = vdatos.getListaVacas(id_usuario);
 	}
 
 	/**
@@ -135,8 +126,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
-		for (int i = 0; lista.size() > i; i++) {
-			if (id_vaca.equals(lista.get(i).getId_vaca())) {
+		for (int i = 0; listaVacas.size() > i; i++) {
+			if (id_vaca.equals(listaVacas.get(i).getId_vaca())) {
 				id_correcto = false;
 				runOnUiThread(new Runnable() {
 					@Override
@@ -196,9 +187,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
 		byte[] bitmapdata = stream.toByteArray();
-		System.out.println(" TAMAÑO  :"+bitmapdata.length);
 		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
-		System.out.println("TAMAÑO STRING  "+encodedImage.length());
 		return encodedImage;
 	}
 	
@@ -211,16 +200,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * @return Bitmap
 	 */
 	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
-	   //Redimensionamos
+
 	   int width = mBitmap.getWidth();
 	   int height = mBitmap.getHeight();
 	   float scaleWidth = ((float) newWidth) / width;
 	   float scaleHeight = ((float) newHeigth) / height;
-	   // create a matrix for the manipulation
 	   Matrix matrix = new Matrix();
-	   // resize the bit map
 	   matrix.postScale(scaleWidth, scaleHeight);
-	   // recreate the new Bitmap
 	   return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
@@ -347,32 +333,49 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void nuevaVaca(View view) {
-		Thread hilo = new Thread() {
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
-					final Vaca v = crearVaca();
-
-					String vaca = json.toJson(v);
-					llamada.LLamadaAñadirVaca(vaca);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(AniadirVacaVista.this,
-									"Añadido correctamente", Toast.LENGTH_SHORT)
-									.show();
-							Intent i = new Intent(getApplicationContext(),
-									UsuarioVista.class);
-							i.putExtra("id_usuario", id_usuario);
-							startActivity(i);
-							finish();
-						}
-					});
+		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
+			 Vaca v = crearVaca();
+			 vdatos.añadirVaca(v);
+				runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this,
+							"Añadido correctamente", Toast.LENGTH_SHORT)
+							.show();
+					Intent i = new Intent(getApplicationContext(),
+							UsuarioVista.class);
+					i.putExtra("id_usuario", id_usuario);
+					startActivity(i);
+					finish();
 				}
-			}
-		};
-		hilo.start();
+			});
+		}
+//		Thread hilo = new Thread() {
+//			LlamadaVacaWS llamada = new LlamadaVacaWS();
+//
+//			public void run() {
+//				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
+//					final Vaca v = crearVaca();
+//
+//					String vaca = json.toJson(v);
+//					llamada.LLamadaAñadirVaca(vaca);
+//					runOnUiThread(new Runnable() {
+//						@Override
+//						public void run() {
+//							Toast.makeText(AniadirVacaVista.this,
+//									"Añadido correctamente", Toast.LENGTH_SHORT)
+//									.show();
+//							Intent i = new Intent(getApplicationContext(),
+//									UsuarioVista.class);
+//							i.putExtra("id_usuario", id_usuario);
+//							startActivity(i);
+//							finish();
+//						}
+//					});
+//				}
+//			}
+//		};
+//		hilo.start();
 	}
 	
 	public void cargarFoto(View v){
@@ -417,9 +420,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
 			return true;

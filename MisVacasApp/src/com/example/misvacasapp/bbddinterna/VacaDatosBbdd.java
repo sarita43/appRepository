@@ -1,6 +1,8 @@
 package com.example.misvacasapp.bbddinterna;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import com.example.misvacasapp.modelo.Vaca;
 import android.content.Context;
@@ -39,23 +41,47 @@ public class VacaDatosBbdd {
 					+ lista.get(i).getFoto() + "','"
 					+ lista.get(i).getId_usuario() + "','"
 					+ lista.get(i).getSexo() + "');";
-			vbbdd.onUpgrade(database, i, i+1);
+			vbbdd.onUpgrade(database,1,1);
 		}
 	}
 	
 	public Vaca getVaca(String id_vaca){
 		Vaca v = new Vaca();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date parsed = null;
+	
 		Cursor c = database.rawQuery("select * from vaca where id_vaca='"+id_vaca+"'", null);
 		while(c.moveToNext()){
+			try {
+				parsed = sdf.parse(c.getString(2));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			v.setId_vaca(c.getString(0));
 			v.setRaza(c.getString(1));
-			v.setFecha_nacimiento(new Date(c.getLong(2)*1000));
+			v.setFecha_nacimiento(new Date(parsed.getTime()));
 			v.setId_madre(c.getString(3));
 			v.setFoto(c.getString(4));
 			v.setId_usuario(c.getString(5));
 			v.setSexo(c.getString(6));
 		}
 		return v;
+	}
+	
+	public void añadirVaca(Vaca vaca){
+		VacaDatosBbdd.vaca = "insert into vaca values('" + vaca.getId_vaca()
+					+ "','" + vaca.getRaza() + "','"
+					+ vaca.getFecha_nacimiento() + "','"
+					+ vaca.getId_madre() + "','"
+					+ vaca.getFoto() + "','"
+					+ vaca.getId_usuario() + "','"
+					+ vaca.getSexo() + "');";
+			vbbdd.onUpgrade(database,1,1);
+	}
+	
+	public void eliminar(String id_vaca){
+		vaca = "DELETE FROM vaca WHERE id_vaca='"+id_vaca+"';";
+		vbbdd.onUpgrade(database, 1, 1);
 	}
 
 	public ArrayList<Vaca> getListaVacas(String id_usuario) {

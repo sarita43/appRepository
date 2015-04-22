@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.google.gson.Gson;
@@ -33,7 +34,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	/** Id del animal */
 	private String id_vaca;
 	/** Lista de medicamentos que tiene el animal */
-	private ArrayList<Medicamento> lista;
+	private ArrayList<Medicamento> listaMedicamentos;
 	/** Tipo que serializa o deserializa para enviar a través del servicio web */
 	private Gson json;
 	/**
@@ -41,6 +42,8 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * puedes introducir
 	 */
 	private Spinner spinnerMedicamento;
+
+	private MedicamentoDatosBbdd mdatos;
 
 	// Métodos
 	/**
@@ -51,14 +54,16 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aniadir_medicamento);
-		json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
+		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+
 		Bundle bundle = getIntent().getExtras();
 		id_vaca = bundle.getString("id_vaca");
-		lista = json.fromJson(bundle.getString("listaMedicamentos"),
-				new TypeToken<ArrayList<Medicamento>>() {
-				}.getType());
+		listaMedicamentos = getMedicamentos(id_vaca);
 		rellenarSpinner();
+	}
+
+	private ArrayList<Medicamento> getMedicamentos(String id_vaca) {
+		return mdatos.getMedicamentos(id_vaca);
 	}
 
 	/**
@@ -87,8 +92,8 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * */
 	private int crearIdMedicamento() {
 		int id = idAleatorio();
-		for (int i = 0; lista.size() > i; i++) {
-			if (lista.get(i).getId_medicamento() == id) {
+		for (int i = 0; listaMedicamentos.size() > i; i++) {
+			if (listaMedicamentos.get(i).getId_medicamento() == id) {
 				id = idAleatorio();
 				i = 0;
 			}
@@ -172,15 +177,15 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			int añoActual = new java.util.Date().getYear();
 			int mesActual = new java.util.Date().getMonth();
 			int diaActual = new java.util.Date().getDate();
-			System.out.println("AÑO ACTUAL:  "+añoActual+"  año:"+año);
-			System.out.println("MES ACTUAL:  "+mesActual+"  mes:"+mes);
-			System.out.println("DIA ACTUAL:  "+diaActual+"  dia:"+dia);
+			System.out.println("AÑO ACTUAL:  " + añoActual + "  año:" + año);
+			System.out.println("MES ACTUAL:  " + mesActual + "  mes:" + mes);
+			System.out.println("DIA ACTUAL:  " + diaActual + "  dia:" + dia);
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
 			} else if (año == añoActual) {
 				if (dia <= diaActual && mes == mesActual) {
 					fechaOk = true;
-				}else if(mes<mesActual && dia<=31){
+				} else if (mes < mesActual && dia <= 31) {
 					fechaOk = true;
 				} else {
 					fechaOk = false;
@@ -215,33 +220,23 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 *            Vista
 	 */
 	public void nuevoMedicamento(View view) {
-		Thread hilo = new Thread() {
-			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
 
-			public void run() {
-				if (comprobarFecha()) {
-					String m = json.toJson(crearMedicamento());
-					System.out.println(m);
-					Medicamento medi = json.fromJson(m, Medicamento.class);
-					System.out.println(medi.getClass());
-					llamada.LLamadaAñadirMedicamento(m);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(AniadirMedicamentoVista.this,
-									"Añadido correctamente", Toast.LENGTH_SHORT)
-									.show();
-							Intent i = new Intent(getApplicationContext(),
-									MedicamentosVista.class);
-							i.putExtra("id_vaca", id_vaca);
-							startActivity(i);
-							finish();
-						}
-					});
+		if (comprobarFecha()) {
+			Medicamento m = crearMedicamento();
+			mdatos.añadirMedicamento(m);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirMedicamentoVista.this,
+							"Añadido correctamente", Toast.LENGTH_SHORT).show();
+					Intent i = new Intent(getApplicationContext(),
+							MedicamentosVista.class);
+					i.putExtra("id_vaca", id_vaca);
+					startActivity(i);
+					finish();
 				}
-			}
-		};
-		hilo.start();
+			});
+		}
 	}
 
 	/**

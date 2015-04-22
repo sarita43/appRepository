@@ -79,7 +79,6 @@ public class MedicamentosVista extends ActionBarActivity {
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
 		getListaMedicamentos();
-		System.out.println("MEdicamentos Lista Tamaño:   "+listaMedicamentos.size());
 		for (int i = 0; i < listaMedicamentos.size(); i++) {
 			seleccionado.getTable().put(i, false);
 		}
@@ -194,7 +193,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String lista = json.toJson(listaMedicamentos);
-		new LanzarVista(this).lanzarAñadirMedicamento(id_vaca, lista);
+		new LanzarVista(this).lanzarAñadirMedicamento(id_vaca);
 		finish();
 	}
 

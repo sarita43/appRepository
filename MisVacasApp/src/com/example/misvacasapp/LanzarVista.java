@@ -74,10 +74,9 @@ public class LanzarVista {
 		context.startActivity(i);
 	}
 	
-	public void lanzarAñadirMedicamento(String id_vaca,String listaMedicamentos){
+	public void lanzarAñadirMedicamento(String id_vaca){
 		Intent i = new Intent(context, AniadirMedicamentoVista.class);
 		i.putExtra("id_vaca", id_vaca);
-		i.putExtra("listaMedicamentos", listaMedicamentos);
 		context.startActivity(i);
 	}
 

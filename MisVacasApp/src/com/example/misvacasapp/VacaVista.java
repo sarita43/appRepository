@@ -6,7 +6,6 @@ import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Usuario;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
@@ -25,7 +24,6 @@ import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
