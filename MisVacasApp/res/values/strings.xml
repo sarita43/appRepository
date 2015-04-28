@@ -10,6 +10,7 @@
     <string name="botonAceptar">Aceptar</string>
     <string name="botonMedicamentos">Medicamentos</string>
     <string name="menu_ayuda">Ayuda</string>
+    <string name="menu_recordar_usuario">Recordar usuario</string>
     <string name="buscar_vaca">Buscar Vaca</string>
     <string name="menu_administrar_cuenta">Administrar cuenta</string>
     <string name="menu_cerrar_sesion">Cerrar sesión</string>
@@ -36,5 +37,6 @@
     <string name="sexo">Sexo</string>
     <string name="menu_mis_vacas">Mis Vacas</string>
     <string name="menu_seleccionar_todo">Seleccionar todo</string>
+    <string name="menu_sincronizar_cuenta">Sincronizar cuenta</string>
 
 </resources>

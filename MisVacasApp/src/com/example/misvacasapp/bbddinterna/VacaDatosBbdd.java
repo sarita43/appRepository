@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import com.example.misvacasapp.modelo.Vaca;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,7 +29,9 @@ public class VacaDatosBbdd {
 	public VacaDatosBbdd(Context context, ArrayList<Vaca> lista) {
 			vbbdd = new VacaBbdd(context);
 			database = vbbdd.getWritableDatabase();
+			database.execSQL("drop table if exists vaca");
 			vbbdd.onCreate(database);
+			
 			guardarVacas(lista);
 	}
 	
@@ -45,6 +48,7 @@ public class VacaDatosBbdd {
 		}
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	public Vaca getVaca(String id_vaca){
 		Vaca v = new Vaca();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -65,6 +69,7 @@ public class VacaDatosBbdd {
 			v.setId_usuario(c.getString(5));
 			v.setSexo(c.getString(6));
 		}
+		c.close();
 		return v;
 	}
 	
@@ -99,12 +104,16 @@ public class VacaDatosBbdd {
 			v.setSexo(c.getString(6));
 			listaVacas.add(v);
 		}
-		
+		c.close();
 		return listaVacas;
 	}
 	
 	public int getRegistros(){
 		return database.rawQuery("select * from vaca",null).getCount();
+	}
+	
+	public int getRegistros(String id_usuario){
+		return database.rawQuery("select * from vaca where id_usuario='"+id_usuario+"'",null).getCount();
 	}
 	
 }

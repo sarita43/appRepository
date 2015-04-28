@@ -5,7 +5,11 @@ import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +26,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Clase de la actividad del usuario En ella se implementan los métodos que se
@@ -39,17 +44,20 @@ public class UsuarioVista extends ActionBarActivity {
 	private ListView listaVista;
 	/** Adaptador de la lista */
 	private AdapterVaca adapter;
-	
+	/** Lista de animales de un usuario */
 	private ArrayList<Vaca> listaVacas;
+	/** Lista de medicamentos que tienes los animales de un usuario */
 	private VacaDatosBbdd vdatos;
-	
+
+	private Gson json;
+
 	/** Tabla hash que indica que vaca esta seleccionada */
 	private TableSeleccionado seleccionado;
 
 	// Métodos
 	/**
-	 * Añade la vista usuario Recoge el usuario y la contraseña de la vista
-	 * login Inicializa parametros
+	 * Añade la vista usuario. Recoge el usuario y la contraseña de la vista
+	 * login. Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +67,25 @@ public class UsuarioVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		contraseña = bundle.getString("contraseña");
 		listaVista = (ListView) findViewById(R.id.lista_usuario_vista);
-		
+
+		json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+
 		listaVacas = new ArrayList<Vaca>();
 		mostrarListado();
 	}
-	
-	public void getListaVacas(){
+
+	/**
+	 * Recoge los animales de un usuario de la base de datos interna y los
+	 * guarda en un arrayList
+	 */
+	public void getListaVacas() {
 		vdatos = new VacaDatosBbdd(getApplicationContext());
-		listaVacas =  vdatos.getListaVacas(id_usuario);
+		listaVacas = vdatos.getListaVacas(id_usuario);
 	}
 
-	
 	/**
-	 * Método que utiliza el botón añadir Lanza la vista para añadir una vaca
+	 * Método que utiliza el botón añadir. Lanza la vista para añadir un animal
 	 * pasandole el parametro del id de usuario
 	 * 
 	 * @param v
@@ -82,13 +96,13 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que utiliza el botón eliminar Busca las vacas que estan
+	 * Método que utiliza el botón eliminar. Busca los animales que estan
 	 * seleccionadas utilizando la tabla hash, para eliminarlas
 	 * 
 	 * @param v
 	 *            Vista
 	 * */
-	public void eliminarVaca(View v) {
+	public void botonEliminarVaca(View v) {
 		String eliminados = "";
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			if (seleccionado.getTable().get(i)) {
@@ -100,9 +114,9 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que lanza una alerta para advertir que se van a eliminar esas
-	 * vacas Si pulsas si eliminas la vaca(s) y si no se cierra la alerta y no
-	 * hace nada
+	 * Método que lanza una alerta para advertir que se van a eliminar esos
+	 * animales. Si pulsas "Si" elimina y si no se cierra la alerta y no hace
+	 * nada
 	 * 
 	 * @param eliminados
 	 *            String de los ids que se van a eliminar para mostrarlos por
@@ -117,6 +131,7 @@ public class UsuarioVista extends ActionBarActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				for (int i = 0; i < seleccionado.getTable().size(); i++) {
 					if (seleccionado.getTable().get(i)) {
+						System.out.println(listaVacas.get(i).getId_vaca());
 						eliminar(listaVacas.get(i).getId_vaca());
 					}
 				}
@@ -135,10 +150,9 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que llama al servicio web para eliminar a la vaca. Para eliminarla
-	 * utiliza el id de la vaca y el del usuario
+	 * Método que elimina al animal. Para eliminarlo utiliza el id del animal.
+	 * También elimina todos los medicamentos que tenga ese animal.
 	 * 
-	 * @see eliminarVaca
 	 * @param id_vaca
 	 *            Id de la vaca a eliminar
 	 * */
@@ -147,9 +161,17 @@ public class UsuarioVista extends ActionBarActivity {
 		vdatos.eliminar(id_vaca);
 	}
 
-	private void eliminarMedicamentosVaca(final String id_vaca) {
-		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+	/**
+	 * Elimina los medicamentos de un animal.
+	 * 
+	 * @param id_vaca
+	 *            String. Id de la vaca a eliminar los medicamentos
+	 */
+	private void eliminarMedicamentosVaca(String id_vaca) {
+		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+				getApplicationContext());
 		mdatos.eliminarMedicamentos(id_vaca);
+		System.out.println(mdatos.getMedicamentos(id_vaca).size());
 	}
 
 	/**
@@ -196,7 +218,9 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que selecciona un item de la lista
+	 * Método que selecciona un item de la lista. Si un item ya ha sido
+	 * seleccionado lo deselecciona y selecciona el item que se ha pasado por
+	 * parámetro
 	 * 
 	 * @param item
 	 *            Item a seleccionar
@@ -225,10 +249,8 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que rellena la lista con las vacas del usuario Llama al servicio
-	 * web para recibir los datos
+	 * Método que rellena la lista con los animales del usuario.
 	 * 
-	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
@@ -238,23 +260,19 @@ public class UsuarioVista extends ActionBarActivity {
 		}
 
 		if (listaVacas.size() == 0) {
+			setAdapter(new ArrayList<Vaca>());
 		} else {
 			setAdapter(listaVacas);
-			Button botonEliminar = (Button) findViewById(R.id.eliminar);
-			botonEliminar
-					.setBackgroundResource(R.drawable.boton_eliminar_5);
-			botonEliminar.setEnabled(false);
 		}
 
 	}
 
-
 	/**
-	 * Crea el adaptador de la lista de la vista del usuario y se la añade
+	 * Crea el adaptador de la lista de la vista del usuario
 	 * 
 	 * @see mostrarListado
 	 * @param lista
-	 *            ArrayList de vacas
+	 *            ArrayList de animales
 	 * */
 	private void setAdapter(ArrayList<Vaca> lista) {
 		adapter = new AdapterVaca(this, lista, seleccionado);
@@ -313,7 +331,6 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		});
 	}
-	//TODO añadir clase activar y desactivar boton 
 
 	/**
 	 * Cambia a la vista de la vaca
@@ -329,7 +346,6 @@ public class UsuarioVista extends ActionBarActivity {
 	/**
 	 * Método que devuelve un true si el boton tiene que estar activado o no
 	 * 
-	 * TODO Posiblemente cambiar metodo en el que si tiene que estar activado lo active y si no lo desactive
 	 * @see clickLargoLista
 	 * */
 	private boolean activarBoton() {
@@ -342,6 +358,9 @@ public class UsuarioVista extends ActionBarActivity {
 		return resultado;
 	}
 
+	/**
+	 * Metodo que se acciona cuando en el menu se selecciona toda la lista
+	 */
 	private void seleccionarTodo() {
 		for (int i = 0; i < seleccionado.getTable().size(); i++) {
 			seleccionado.getTable().put(i, true);
@@ -355,7 +374,7 @@ public class UsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Añade el menu a la vista login
+	 * Añade el menu a la vista usuario
 	 * 
 	 * @param menu
 	 * */
@@ -363,6 +382,38 @@ public class UsuarioVista extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_usuario, menu);
 		return true;
+	}
+
+	public void sincronizar(final String usuario) {
+		Thread hilo = new Thread() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								UsuarioVista.this,
+								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+				LlamadaVacaWS llamada = new LlamadaVacaWS();
+				llamada.LLamadaEliminarVacas(usuario);
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamada.LLamadaAñadirVaca(vaca);
+				}
+
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(UsuarioVista.this,
+								"La cuenta ha siendo sincronizada",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		};
+		hilo.start();
 	}
 
 	/**
@@ -383,6 +434,8 @@ public class UsuarioVista extends ActionBarActivity {
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
+		} else if (id == R.id.sincronizar_cuenta) {
+			sincronizar(id_usuario);
 		} else if (id == R.id.mis_vacas) {
 			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
 			finish();
@@ -392,6 +445,18 @@ public class UsuarioVista extends ActionBarActivity {
 		} else if (id == R.id.administrar_cuenta) {
 			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
 					contraseña);
+			return true;
+		} else if (id == R.id.ayuda) {
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Para añadir un nuevo animal pinchando sobre en botón de añadir (el verde)."
+					+ "\n"
+					+ "Para eliminar un animal hay que tener seleccionado un animal o varios, y despues pulsar sobre el botón eliminar (el rojo)."
+					+ "\n"
+					+ "Para buscar un animal en la lista, hay que pulsar sobre el boton buscar(el azul) y poner el id del animal a buscar"
+					+ "\n"
+					+ "Para ver la ficha del animal, pulsa sobre el animal en la lista");
+			alerta.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

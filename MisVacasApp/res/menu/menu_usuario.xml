@@ -12,6 +12,10 @@
         android:id="@+id/administrar_cuenta"
         android:title="@string/menu_administrar_cuenta">
     </item>
+     <item
+        android:id="@+id/sincronizar_cuenta"
+        android:title="@string/menu_sincronizar_cuenta">
+    </item>
     <item
         android:id="@+id/ayuda"
         android:title="@string/menu_ayuda">

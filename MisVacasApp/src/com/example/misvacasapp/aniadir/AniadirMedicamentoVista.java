@@ -4,15 +4,23 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -239,6 +247,46 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		}
 	}
 
+
+	public void sincronizar(final String usuario) {
+		Thread hilo = new Thread() {
+			public void run() {
+				VacaDatosBbdd vdatos = new VacaDatosBbdd(
+						getApplicationContext());
+				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
+				listaVacas = vdatos.getListaVacas(usuario);
+				Gson json = new GsonBuilder().setPrettyPrinting()
+						.setDateFormat("dd-MM-yyyy").create();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								AniadirMedicamentoVista.this,
+								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+				LlamadaVacaWS llamada = new LlamadaVacaWS();
+				llamada.LLamadaEliminarVacas(usuario);
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamada.LLamadaAñadirVaca(vaca);
+				}
+
+				// TODO falta medicamentos
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(AniadirMedicamentoVista.this,
+								"La cuenta ha siendo sincronizada",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+
 	/**
 	 * Añade el menu a la vista aniadirVaca
 	 * 
@@ -246,7 +294,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.menu_vaca, menu);
 		return true;
 	}
 
@@ -258,7 +306,35 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.ayuda) {
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		if (id == R.id.cerrar_sesion) {
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", "");
+			editor.putString("contraseña", "");
+			editor.commit();
+			new LanzarVista(this).lanzarLogin();
+			finish();
+		} else if (id == R.id.sincronizar_cuenta) {
+			sincronizar(settings.getString("id_usuario", ""));
+		} else if (id == R.id.mis_vacas) {
+			new LanzarVista(this).lanzarUsuarioVista(settings.getString("id_usuario", ""),
+					settings.getString("contraseña", ""));
+			finish();
+			return true;
+		} else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(settings.getString("id_usuario", ""),
+					settings.getString("contraseña", ""));
+			return true;
+		} else if (id == R.id.ayuda) {
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Para añadir un nuevo animal rellene los campos."
+					+ "\n"
+					+ "Pincha sobre la imagen del logo para añadir una foto al animal."
+					+ "\n"
+					+ "Cuando haya rellenado todos los campos pulse en aceptar par añadir el animal");
+			alerta.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

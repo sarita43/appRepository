@@ -32,7 +32,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,23 +56,25 @@ public class Login extends ActionBarActivity {
 	/** Lista de usuarios de la aplicación */
 	private ArrayList<Usuario> listaUsuarios;
 
-	/**
-	 * CheckBox que guarda el login para no volver a introducir los datos de
-	 * nuevo y entre directamente en la aplicacion
-	 */
-	private CheckBox autoLoginCheck;
-
-	/** Lista de las vacas que tiene el usuario */
+	/** Lista de animales que tiene el usuario */
 	private ArrayList<Vaca> listaVacas;
+	/** Lista de medicamentos que tienen los animales de un usuario */
 	private ArrayList<Medicamento> listaMedicamentos;
 
+	/** Base de datos interna de los animales de un usuario */
 	private VacaDatosBbdd vdbbdd;
+	/**
+	 * Base de datos interna de los medicamentos que tienen los animales de un
+	 * usuario
+	 */
 	private MedicamentoDatosBbdd mbbdd;
 
-	// Metodos
+	// Métodos
 	/**
-	 * Recoge el usuario y contraseña introducidos por el usuario y comprueba si
-	 * existen y son correctos
+	 * Método que se ejecuta cuando se acciona el botón entrar, para entrar en
+	 * la aplicación. Recoge el usuario y contraseña introducidos por el usuario
+	 * y comprueba si existen y son correctos. Nota: Para ejecutar este método
+	 * tiene que tener internet y estar activado el servidor.
 	 * 
 	 * @param v
 	 *            Vista que hace el click en el boton
@@ -111,15 +112,22 @@ public class Login extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Guarda el usuario y contraseña para que no se vuelva a introducir mas
+	 * veces.
+	 * 
+	 * @param id_usuario
+	 *            String. ID o DNI usuario.
+	 * @param contraseña
+	 *            String. Contraseña de usuario.
+	 */
 	private void guardarAutoLogin(String id_usuario, String contraseña) {
-		if (autoLoginCheck.isChecked()) {
-			SharedPreferences settings = getSharedPreferences("MisDatos",
-					Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putString("id_usuario", id_usuario);
-			editor.putString("contraseña", contraseña);
-			editor.commit();
-		}
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("id_usuario", id_usuario);
+		editor.putString("contraseña", contraseña);
+		editor.commit();
 	}
 
 	/**
@@ -147,13 +155,27 @@ public class Login extends ActionBarActivity {
 	}
 
 	/**
-	 * Cambia a la vista del usuario
+	 * Cambia a la vista del usuario. Crea la base de datos interna de los
+	 * animales y de sus medicamentos y las rellena con los datos recogidos de
+	 * la base de datos cloud.
 	 * */
 	private void lanzarUsuario() {
+
 		vdbbdd = new VacaDatosBbdd(getApplicationContext());
 		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
 
-		if (vdbbdd.getRegistros() == 0) {
+		if (vdbbdd.getRegistros() == 0
+				|| vdbbdd.getRegistros(usuario) < vdbbdd.getRegistros()) {
+
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(Login.this,
+							"Este proceso puede tardar unos minutos",
+							Toast.LENGTH_LONG).show();
+				}
+			});
+
 			vdbbdd = new VacaDatosBbdd(getApplicationContext(), getListaVacas());
 			getListaMedicamentos();
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
@@ -161,11 +183,12 @@ public class Login extends ActionBarActivity {
 		}
 
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
-		finish();
+		this.finish();
+
 	}
 
 	/**
-	 * Método que se acciona cuando pulsas sobre "Nuevo Ususario". Cambia a la
+	 * Método que se acciona cuando pulsas sobre "Nuevo Usuario". Cambia a la
 	 * vista para crear un nuevo usuario
 	 * 
 	 * @param v
@@ -208,7 +231,7 @@ public class Login extends ActionBarActivity {
 					enviar(texto.getText().toString(), "",
 							"misvacasapp@gmail.es", "Mis Vacas APP",
 							"Correo de autenticacion",
-							"Su usuario y contraseña son: ");
+							"Su usuario y contraseña son: " + u.getDni());
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -284,24 +307,34 @@ public class Login extends ActionBarActivity {
 		System.out.println("Correo enviado");
 	}
 
-	private void getListaUsuarios() {
-		listaUsuarios = new ArrayList<Usuario>();
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+	// /**
+	// * Recoge todos los usuario de la base de datos cloud y los guarda en un
+	// * arrayList
+	// */
+	// private void getListaUsuarios() {
+	// listaUsuarios = new ArrayList<Usuario>();
+	// Thread hilo = new Thread() {
+	// String res = "";
+	// Gson json = new GsonBuilder().setPrettyPrinting()
+	// .setDateFormat("dd-MM-yyyy").create();
+	// LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+	//
+	// public void run() {
+	// res = llamada.LlamadaListaUsuarios();
+	// listaUsuarios = json.fromJson(res,
+	// new TypeToken<ArrayList<Usuario>>() {
+	// }.getType());
+	// }
+	// };
+	// hilo.start();
+	// }
 
-			public void run() {
-				res = llamada.LlamadaListaUsuarios();
-				listaUsuarios = json.fromJson(res,
-						new TypeToken<ArrayList<Usuario>>() {
-						}.getType());
-			}
-		};
-		hilo.start();
-	}
-
+	/**
+	 * Recoge todos los animales de la base de datos cloud y los guarda en un
+	 * arrayList
+	 * 
+	 * @return ArrayList<Vaca> listaVacas. Lista de vacas de un usuario
+	 */
 	public ArrayList<Vaca> getListaVacas() {
 		String res = "";
 		Gson json = new GsonBuilder().setPrettyPrinting()
@@ -309,12 +342,17 @@ public class Login extends ActionBarActivity {
 		LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 		res = llamada.LlamadaListaVacas(usuario);
+		System.out.println(res);
 		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
 		}.getType());
 
 		return listaVacas;
 	}
 
+	/**
+	 * Recoge los medicamentos de todos los animales que tiene un usuario y los
+	 * guarda en un arrayList
+	 */
 	public void getListaMedicamentos() {
 		AgregadoVaca agregado = new AgregadoVaca(listaVacas);
 		IteratorListaVaca i = new IteratorListaVaca(agregado);
@@ -341,6 +379,14 @@ public class Login extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Recorre la lista de usuarios y mira si el correo pasado por parametro
+	 * existe y si existe devuelve un "true".
+	 * 
+	 * @param correo
+	 *            String. Correo del usuario
+	 * @return boolean. True si existe correo, falso si no existe.
+	 */
 	private boolean correoExistente(String correo) {
 		boolean resultado = false;
 		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
@@ -354,6 +400,13 @@ public class Login extends ActionBarActivity {
 		return resultado;
 	}
 
+	/**
+	 * Devuelve el usuario usuario si el correo pasado por parametro existe
+	 * 
+	 * @param correo
+	 *            String. Correo del usuario
+	 * @return Usuario u. Usuario
+	 */
 	private Usuario getUsuario(String correo) {
 		Usuario u = new Usuario();
 		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
@@ -368,26 +421,24 @@ public class Login extends ActionBarActivity {
 	}
 
 	/**
-	 * Añade la vista del login
+	 * Añade la vista del login. Inicializa los atributos.
 	 * 
 	 * @param savedInstanceState
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
 
 		listaVacas = new ArrayList<Vaca>();
 		listaMedicamentos = new ArrayList<Medicamento>();
 
-		// TODO crear clase
-		autoLoginCheck = (CheckBox) findViewById(R.id.checkBox);
 		SharedPreferences prefs = getSharedPreferences("MisDatos",
 				Context.MODE_PRIVATE);
 		String id_usuarioGuardado = prefs.getString("id_usuario", "");
-		String contraseñaGuardado = prefs.getString("id_usuario", "");
+		String contraseñaGuardado = prefs.getString("contraseña", "");
 		if (id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")) {
-			getListaUsuarios();
+			setContentView(R.layout.activity_login);
+			// getListaUsuarios();
 		} else {
 			usuario = id_usuarioGuardado;
 			contraseña = contraseñaGuardado;
@@ -415,7 +466,18 @@ public class Login extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
-			System.out.println("click menu ayuda");
+			AlertDialog.Builder alerta = new AlertDialog.Builder(
+					this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Introduce el usuario y contraseña para entrar en la aplicación."
+					+ "\n"
+					+ "Si no esta registrado pulse en botón Nuevo usuario."
+					+ "\n"
+					+ "Si no recuerda el usuario y contraseña pulse en recordar usuario");
+			alerta.show();
+			return true;
+		} else if (id == R.id.recordar_usuario) {
+			alertaCorreo();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

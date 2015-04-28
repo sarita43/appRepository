@@ -3,15 +3,12 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
-import com.example.misvacasapp.iterator.AgregadoUsuario;
-import com.example.misvacasapp.iterator.IteratorListaUsuario;
-import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.modelo.Usuario;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -26,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Clase de la actividad de la vista de la vaca En ella se implementan los
@@ -37,14 +35,10 @@ public class VacaVista extends ActionBarActivity {
 	// Atributos
 	/** Id de la vaca */
 	private String id_vaca;
-	/** Id delusuario */
-	private String id_usuario;
-	/** Usuario */
-	private Usuario usuario;
 
 	// Métodos
 	/**
-	 * Añade la vista de la vaca
+	 * Añade la vista de la vaca. Inicializa atributos
 	 * 
 	 * @param savedInstanceState
 	 */
@@ -54,7 +48,6 @@ public class VacaVista extends ActionBarActivity {
 		setContentView(R.layout.activity_vaca_vista);
 		Bundle bundle = getIntent().getExtras();
 		id_vaca = bundle.getString("id_vaca");
-		id_usuario = bundle.getString("id_usuario");
 		rellenarCamposVaca();
 	}
 
@@ -74,6 +67,7 @@ public class VacaVista extends ActionBarActivity {
 	 * 
 	 * @see onCreate
 	 * */
+	@SuppressWarnings("deprecation")
 	private void rellenarCamposVaca() {
 		VacaDatosBbdd vdatos = new VacaDatosBbdd(getApplicationContext());
 		Vaca vaca = vdatos.getVaca(id_vaca);
@@ -101,36 +95,47 @@ public class VacaVista extends ActionBarActivity {
 		imagen.setBackground(i);
 	}
 
-	private Usuario getUsuario(final String id_usuario) {
-
+	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				res = llamada.LlamadaListaUsuarios();
-				ArrayList<Usuario> listaUsuario = json.fromJson(res,
-						new TypeToken<ArrayList<Vaca>>() {
-						}.getType());
-				AgregadoUsuario agregado = new AgregadoUsuario(listaUsuario);
-				IteratorListaUsuario i = (IteratorListaUsuario) agregado
-						.createIterator();
-				while (i.hasNext()) {
-					if (i.actualElement().getDni().equals(id_usuario)) {
-						usuario = i.actualElement();
+				VacaDatosBbdd vdatos = new VacaDatosBbdd(
+						getApplicationContext());
+				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
+				listaVacas = vdatos.getListaVacas(usuario);
+				Gson json = new GsonBuilder().setPrettyPrinting()
+						.setDateFormat("dd-MM-yyyy").create();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								VacaVista.this,
+								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
+								Toast.LENGTH_LONG).show();
 					}
+				});
+				LlamadaVacaWS llamada = new LlamadaVacaWS();
+				llamada.LLamadaEliminarVacas(usuario);
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamada.LLamadaAñadirVaca(vaca);
 				}
+
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(VacaVista.this,
+								"La cuenta ha siendo sincronizada",
+								Toast.LENGTH_LONG).show();
+					}
+				});
 			}
 		};
 		hilo.start();
-		return usuario;
-
 	}
 
 	/**
-	 * Añade el menu a la vista login
+	 * Añade el menu a la vista vaca
 	 * 
 	 * @param menu
 	 * */
@@ -148,10 +153,10 @@ public class VacaVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
 		if (id == R.id.cerrar_sesion) {
-			SharedPreferences settings = getSharedPreferences("MisDatos",
-					Context.MODE_PRIVATE);
+
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", "");
 			editor.putString("contraseña", "");
@@ -159,15 +164,31 @@ public class VacaVista extends ActionBarActivity {
 			new LanzarVista(this).lanzarLogin();
 			finish();
 		} else if (id == R.id.mis_vacas) {
-			new LanzarVista(this).lanzarUsuarioVista(id_usuario,
-					getUsuario(id_usuario).getContraseña());
+
+			String id_usuarioGuardado = settings.getString("id_usuario", "");
+			String contraseñaGuardado = settings.getString("contraseña", "");
+			new LanzarVista(this).lanzarUsuarioVista(id_usuarioGuardado,
+					contraseñaGuardado);
 			finish();
 			return true;
 		} else if (id == R.id.administrar_cuenta) {
-			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
-					getUsuario(id_usuario).getContraseña());
+			String id_usuarioGuardado = settings.getString("id_usuario", "");
+			String contraseñaGuardado = settings.getString("contraseña", "");
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuarioGuardado,
+					contraseñaGuardado);
+			return true;
+		} else if (id == R.id.sincronizar_cuenta) {
+			sincronizar(settings.getString("id_usuario", ""));
+		} else if (id == R.id.ayuda) {
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Ficha del animal."
+					+ "\n"
+					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos.");
+			alerta.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+
 	}
 }

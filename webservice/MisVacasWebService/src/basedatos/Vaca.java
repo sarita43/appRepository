@@ -69,7 +69,7 @@ public class Vaca {
 		setId_usuario(id_usuario);
 		setSexo(sexo);
 	}
-
+	
 	/**
 	 * Devuelve el arrayList de los animales que tiene un usuario en la base de
 	 * datos. Crea la conexión a la base de datos, llama a la base de datos

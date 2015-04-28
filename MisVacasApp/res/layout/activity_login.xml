@@ -8,16 +8,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.misvacasapp.Login" >
 
-  	<TextView
-  	    android:id="@+id/usuarioTexto"
-  	    android:layout_width="wrap_content"
-  	    android:layout_height="wrap_content"
-  	    android:layout_above="@+id/usuario"
-  	    android:layout_alignParentLeft="true"
-  	    android:layout_marginBottom="15dp"
-  	    android:text="@string/usuarioTexto"
-  	    android:textAppearance="?android:attr/textAppearanceLarge"
-  	    android:textSize="15sp" />
+    <TextView
+        android:id="@+id/usuarioTexto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/usuario"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="15dp"
+        android:text="@string/usuarioTexto"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15sp" />
 
     <EditText
         android:id="@+id/usuario"
@@ -30,9 +30,8 @@
         android:ems="10"
         android:inputType="textCapCharacters"
         android:text="@string/usuario" >
+    </EditText>
 
-    </EditText>  
-    
     <TextView
         android:id="@+id/contrasenaTexto"
         android:layout_width="wrap_content"
@@ -43,12 +42,12 @@
         android:text="@string/contrasenaTexto"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="15sp" />
-    
+
     <EditText
         android:id="@+id/contrasena"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/checkBox"
+        android:layout_above="@+id/textView2"
         android:layout_alignLeft="@+id/usuarioTexto"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
@@ -73,28 +72,6 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/misvacasapp" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/botonAceptar"
-        android:layout_alignRight="@+id/contrasena"
-        android:layout_marginBottom="30dp"
-        android:text="@string/autologinTexto" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox"
-        android:layout_alignBottom="@+id/checkBox"
-        android:layout_alignLeft="@+id/contrasena"
-        android:onClick="onClickNuevoUsuario"
-        android:text="Nuevo Usuario"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#0080FF"
-        android:textSize="15sp" />
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -102,8 +79,8 @@
         android:layout_above="@+id/botonAceptar"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:text="¿Has olvidado la contraseña?"
         android:onClick="onClickPedirContraseña"
+        android:text="¿Has olvidado la contraseña?"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#0080FF"
         android:textSize="15sp" />
@@ -113,8 +90,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignRight="@+id/contrasena"
+        android:layout_marginBottom="16dp"
         android:onClick="onClick"
+        android:layout_marginRight="10dp"
         android:text="Entrar" />
-  
+
+    <Button
+        android:id="@+id/nuevo_usuario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_alignBaseline="@+id/botonAceptar"
+        android:layout_alignBottom="@+id/botonAceptar"
+        android:layout_alignLeft="@+id/contrasena"
+        android:onClick="onClickNuevoUsuario"
+        android:text="Nuevo Usuario" />
+
 </RelativeLayout>

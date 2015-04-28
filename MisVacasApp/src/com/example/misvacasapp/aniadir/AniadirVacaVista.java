@@ -1,6 +1,5 @@
 package com.example.misvacasapp.aniadir;
 
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
@@ -10,14 +9,17 @@ import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.view.Menu;
@@ -28,9 +30,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,10 +56,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 	private Gson json;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
-	
+
 	private VacaDatosBbdd vdatos;
-	
-	private static final Logger logger = Logger.getLogger(AniadirVacaVista.class);
+
+	private static final Logger logger = Logger
+			.getLogger(AniadirVacaVista.class);
 
 	// Métodos
 	/**
@@ -71,11 +77,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 		id_usuario = bundle.getString("id_usuario");
 		listaVacas = new ArrayList<Vaca>();
 		rellenarSpinner();
-		
+
 		listaVacas();
-		
-		  BasicConfigurator.configure();
-	       logger.debug("Hola esto es una traza");
+
+		BasicConfigurator.configure();
+		logger.debug("Hola esto es una traza");
 	}
 
 	/**
@@ -174,15 +180,17 @@ public class AniadirVacaVista extends ActionBarActivity {
 				.getText().toString();
 		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
 				.toString();
-		String bitmapdata =crearImagen();
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,bitmapdata);
+		String bitmapdata = crearImagen();
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
+				bitmapdata);
 
 		return vaca;
 	}
-	
-	private String crearImagen(){
-		Button imagen = (Button)findViewById(R.id.foto_boton);
-		Bitmap bitmap = ((BitmapDrawable)imagen.getBackground()).getBitmap();
+
+	private String crearImagen() {
+		Button imagen = (Button) findViewById(R.id.foto_boton);
+		imagen.setBackgroundResource(R.drawable.logo1);
+		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
 		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
@@ -190,24 +198,27 @@ public class AniadirVacaVista extends ActionBarActivity {
 		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
 		return encodedImage;
 	}
-	
+
 	/**
 	 * Redimensionar un Bitmap. By TutorialAndroid.com
-	* @param Bitmap mBitmap
-	* @param float newHeight
-	* @param float newHeight
+	 * 
+	 * @param Bitmap
+	 *            mBitmap
+	 * @param float newHeight
+	 * @param float newHeight
 	 * @param float newHeight
 	 * @return Bitmap
 	 */
-	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth, float newHeigth){
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
+			float newHeigth) {
 
-	   int width = mBitmap.getWidth();
-	   int height = mBitmap.getHeight();
-	   float scaleWidth = ((float) newWidth) / width;
-	   float scaleHeight = ((float) newHeigth) / height;
-	   Matrix matrix = new Matrix();
-	   matrix.postScale(scaleWidth, scaleHeight);
-	   return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+		int width = mBitmap.getWidth();
+		int height = mBitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeigth) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
 	/**
@@ -267,12 +278,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 			int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
 					.getText().toString());
 			int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
-					.getText().toString());
+					.getText().toString()) - 1;
 			int año = Integer
 					.parseInt(((TextView) findViewById(R.id.anio_vaca))
 							.getText().toString()) - 1900;
 			int añoActual = new java.util.Date().getYear();
 			int mesActual = new java.util.Date().getMonth();
+			System.out.println("MES ACTUAL  " + mesActual);
 			int diaActual = new java.util.Date().getDate();
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
@@ -333,15 +345,16 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 *            Vista
 	 * */
 	public void nuevaVaca(View view) {
-		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
-			 Vaca v = crearVaca();
-			 vdatos.añadirVaca(v);
-				runOnUiThread(new Runnable() {
+		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()
+				&& comprobarIdMadre()) {
+			final Vaca v = crearVaca();
+			vdatos.añadirVaca(v);
+			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+
 					Toast.makeText(AniadirVacaVista.this,
-							"Añadido correctamente", Toast.LENGTH_SHORT)
-							.show();
+							"Añadido correctamente", Toast.LENGTH_SHORT).show();
 					Intent i = new Intent(getApplicationContext(),
 							UsuarioVista.class);
 					i.putExtra("id_usuario", id_usuario);
@@ -349,42 +362,17 @@ public class AniadirVacaVista extends ActionBarActivity {
 					finish();
 				}
 			});
+
 		}
-//		Thread hilo = new Thread() {
-//			LlamadaVacaWS llamada = new LlamadaVacaWS();
-//
-//			public void run() {
-//				if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()&& comprobarIdMadre()) {
-//					final Vaca v = crearVaca();
-//
-//					String vaca = json.toJson(v);
-//					llamada.LLamadaAñadirVaca(vaca);
-//					runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							Toast.makeText(AniadirVacaVista.this,
-//									"Añadido correctamente", Toast.LENGTH_SHORT)
-//									.show();
-//							Intent i = new Intent(getApplicationContext(),
-//									UsuarioVista.class);
-//							i.putExtra("id_usuario", id_usuario);
-//							startActivity(i);
-//							finish();
-//						}
-//					});
-//				}
-//			}
-//		};
-//		hilo.start();
 	}
-	
-	public void cargarFoto(View v){
-		String name = Environment.getExternalStorageDirectory() + "/test.jpg";
-		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+
+	public void cargarFoto(View v) {
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 		startActivityForResult(intent, 2);
-		
+
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -396,11 +384,44 @@ public class AniadirVacaVista extends ActionBarActivity {
 			Bitmap bitmap = BitmapFactory.decodeStream(bis);
 			Button imagen = (Button) findViewById(R.id.foto_boton);
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
-			
+
 		} catch (FileNotFoundException e) {
 		}
 	}
-	
+
+	public void sincronizar(final String usuario) {
+		Thread hilo = new Thread() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								AniadirVacaVista.this,
+								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+				LlamadaVacaWS llamada = new LlamadaVacaWS();
+				llamada.LLamadaEliminarVacas(usuario);
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamada.LLamadaAñadirVaca(vaca);
+				}
+
+				// TODO falta medicamentos
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(AniadirVacaVista.this,
+								"La cuenta ha siendo sincronizada",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
+
 	/**
 	 * Añade el menu a la vista aniadirVaca
 	 * 
@@ -408,8 +429,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.menu_usuario, menu);
 		return true;
 	}
 
@@ -421,7 +441,35 @@ public class AniadirVacaVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.ayuda) {
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		if (id == R.id.cerrar_sesion) {
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", "");
+			editor.putString("contraseña", "");
+			editor.commit();
+			new LanzarVista(this).lanzarLogin();
+			finish();
+		} else if (id == R.id.sincronizar_cuenta) {
+			sincronizar(id_usuario);
+		} else if (id == R.id.mis_vacas) {
+			new LanzarVista(this).lanzarUsuarioVista(id_usuario,
+					settings.getString("contraseña", ""));
+			finish();
+			return true;
+		} else if (id == R.id.administrar_cuenta) {
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuario,
+					settings.getString("contraseña", ""));
+			return true;
+		} else if (id == R.id.ayuda) {
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Para añadir un nuevo animal rellene los campos."
+					+ "\n"
+					+ "Pincha sobre la imagen del logo para añadir una foto al animal."
+					+ "\n"
+					+ "Cuando haya rellenado todos los campos pulse en aceptar par añadir el animal");
+			alerta.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

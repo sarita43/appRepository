@@ -15,6 +15,7 @@ public class MedicamentoBbdd extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		//db.execSQL("drop table if exists medicamento");
 		db.execSQL(MedicamentoDatosBbdd.tablaMedicamentos);
 	}
 
