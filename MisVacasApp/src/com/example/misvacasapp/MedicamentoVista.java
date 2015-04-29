@@ -1,15 +1,25 @@
 package com.example.misvacasapp;
 
+import java.util.ArrayList;
+
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Clase de la actividad del medicamento En ella se implementan los métodos que
@@ -62,6 +72,45 @@ public class MedicamentoVista extends ActionBarActivity {
 		descripcion.setText("DESCRIPCION: " + medicamento.getDescripcion());
 
 	}
+	
+	public void sincronizar(final String usuario) {
+		Thread hilo = new Thread() {
+
+			public void run() {
+				VacaDatosBbdd vdatos = new VacaDatosBbdd(
+						getApplicationContext());
+				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
+				listaVacas = vdatos.getListaVacas(usuario);
+				Gson json = new GsonBuilder().setPrettyPrinting()
+						.setDateFormat("dd-MM-yyyy").create();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(
+								MedicamentoVista.this,
+								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+				LlamadaVacaWS llamada = new LlamadaVacaWS();
+				llamada.LLamadaEliminarVacas(usuario);
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamada.LLamadaAñadirVaca(vaca);
+				}
+
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(MedicamentoVista.this,
+								"La cuenta ha siendo sincronizada",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		};
+		hilo.start();
+	}
 
 	/**
 	 * Añade el menu a la vista login
@@ -70,7 +119,7 @@ public class MedicamentoVista extends ActionBarActivity {
 	 * */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.menu_vaca, menu);
 		return true;
 	}
 
@@ -82,7 +131,39 @@ public class MedicamentoVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.ayuda) {
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
+		if (id == R.id.cerrar_sesion) {
+
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("id_usuario", "");
+			editor.putString("contraseña", "");
+			editor.commit();
+			new LanzarVista(this).lanzarLogin();
+			finish();
+		} else if (id == R.id.mis_vacas) {
+
+			String id_usuarioGuardado = settings.getString("id_usuario", "");
+			String contraseñaGuardado = settings.getString("contraseña", "");
+			new LanzarVista(this).lanzarUsuarioVista(id_usuarioGuardado,
+					contraseñaGuardado);
+			finish();
+			return true;
+		} else if (id == R.id.administrar_cuenta) {
+			String id_usuarioGuardado = settings.getString("id_usuario", "");
+			String contraseñaGuardado = settings.getString("contraseña", "");
+			new LanzarVista(this).lanzarAdministrarCuenta(id_usuarioGuardado,
+					contraseñaGuardado);
+			return true;
+		} else if (id == R.id.sincronizar_cuenta) {
+			sincronizar(settings.getString("id_usuario", ""));
+		} else if (id == R.id.ayuda) {
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+			alerta.setTitle("Ayuda");
+			alerta.setMessage("Ficha del animal."
+					+ "\n"
+					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos.");
+			alerta.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
