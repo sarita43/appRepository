@@ -71,7 +71,6 @@ public class MedicamentoDatosBbdd {
 			m.setId_vaca(c.getString(4));
 			listaMedicamentos.add(m);
 		}
-		c.close();
 		return listaMedicamentos;
 	}
 
@@ -93,7 +92,6 @@ public class MedicamentoDatosBbdd {
 			m.setDescripcion(c.getString(3));
 			m.setId_vaca(c.getString(4));
 		}
-		c.close();
 		return m;
 	}
 

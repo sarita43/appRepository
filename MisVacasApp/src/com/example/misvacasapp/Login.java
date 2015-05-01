@@ -171,7 +171,7 @@ public class Login extends ActionBarActivity {
 				@Override
 				public void run() {
 					Toast.makeText(Login.this,
-							"Este proceso puede tardar unos minutos",
+							"Sinconizando. Este proceso puede tardar unos minutos",
 							Toast.LENGTH_LONG).show();
 				}
 			});

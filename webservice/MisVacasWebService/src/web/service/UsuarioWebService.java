@@ -48,9 +48,10 @@ public class UsuarioWebService {
 	 *            Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
-			String apellido2, String direccion, String poblacion, int telefono) {
+			String apellido2, String direccion, String poblacion, int telefono,
+			String correo, String codigo_explotacion) {
 		new Usuario().actualizarUsuario(dni, nombre, apellido1, apellido2,
-				direccion, poblacion, telefono);
+				direccion, poblacion, telefono, correo, codigo_explotacion);
 	}
 
 	/**
@@ -74,20 +75,23 @@ public class UsuarioWebService {
 	public void eliminarUsuario(String id_usuario) {
 		new Usuario().eliminarUsuario(id_usuario);
 	}
-	
+
 	/**
 	 * Método que devuelve la lista de usuarios como String
+	 * 
 	 * @return String Lista de usuarios
 	 */
-	public String listaUsuarios(){
+	public String listaUsuarios() {
 		return new Usuario().listaUsuariosString();
 	}
-	
+
 	/**
 	 * Método que añade un nuevo usuario
-	 * @param usuario Usuario como String
+	 * 
+	 * @param usuario
+	 *            Usuario como String
 	 */
-	public void añadirUsuario(String usuario){
+	public void añadirUsuario(String usuario) {
 		new Usuario().añadirUsuario(usuario);
 	}
 }

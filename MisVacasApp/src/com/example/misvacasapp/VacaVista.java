@@ -2,8 +2,11 @@ package com.example.misvacasapp;
 
 import java.util.ArrayList;
 
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -97,12 +100,16 @@ public class VacaVista extends ActionBarActivity {
 
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
-
 			public void run() {
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
+						
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
 				listaVacas = vdatos.getListaVacas(usuario);
+				
+				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -114,12 +121,31 @@ public class VacaVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamada = new LlamadaVacaWS();
-				llamada.LLamadaEliminarVacas(usuario);
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				for (int i = 0; i < listaVacas.size(); i++) {
+					//Eliminar medicamentos base de datos cloud
+					eliminarMedicamentos(listaVacas.get(i).getId_vaca());
+					//Eliminar vaca base de datos cloud
+					llamadaVaca.LLamadaEliminarVaca(listaVacas.get(i).getId_vaca(), listaVacas.get(i).getId_usuario());
+					
+					//Añadir vaca a base de datos cloud
 					String vaca = json.toJson(listaVacas.get(i));
-					llamada.LLamadaAñadirVaca(vaca);
+					llamadaVaca.LLamadaAñadirVaca(vaca);
+					//Guarda los medicamentos en una lista
+					ArrayList<Medicamento> listaAux = mdatos.getMedicamentos(listaVacas.get(i).getId_vaca());
+					for (int j = 0; j < listaAux.size(); j++) {
+						listaMedicamentosUsuario.add(listaAux.get(j));
+					}
+					
 				}
+				//Añadir medicamentos a base de datos cloud
+				for (int i = 0; i < listaMedicamentosUsuario.size(); i++) {
+					Medicamento m = listaMedicamentosUsuario.get(i);
+					String medicamento = json.toJson(m);
+					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
+				}
+				
 
 				runOnUiThread(new Runnable() {
 					@Override
@@ -133,7 +159,11 @@ public class VacaVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-
+	
+	private void eliminarMedicamentos(String id_vaca){
+		LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+		llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
+	}
 	/**
 	 * Añade el menu a la vista vaca
 	 * 

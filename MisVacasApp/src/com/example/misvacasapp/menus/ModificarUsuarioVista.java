@@ -38,8 +38,17 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	private TextView direccion;
 	/** TextView que aparece en la vista que es la población del usuario */
 	private TextView poblacion;
-	/** TextViwn que aparece en la vista que es el teléfono del usuario */
+	/** TextView que aparece en la vista que es el teléfono del usuario */
 	private TextView telefono;
+	/**
+	 * TextView que aparece en la vista que es el correo electronico del usuario
+	 **/
+	private TextView correo;
+	/**
+	 * TextView que aparece en la vista que es el codigo de explotación del
+	 * usuario
+	 */
+	private TextView codigo_explotación;
 
 	// Métodos
 	/**
@@ -59,6 +68,8 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 		direccion = (TextView) findViewById(R.id.direccion_texto);
 		poblacion = (TextView) findViewById(R.id.poblacion_texto);
 		telefono = (TextView) findViewById(R.id.telefono_texto);
+		correo = (TextView) findViewById(R.id.correo_texto);
+		codigo_explotación = (TextView) findViewById(R.id.codigo_explotacion_texto);
 		rellenarCamposTexto();
 	}
 
@@ -85,6 +96,9 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 						direccion.setText(usuario.getDireccion());
 						poblacion.setText(usuario.getPoblacion());
 						telefono.setText(Integer.toString(usuario.getTelefono()));
+						correo.setText(usuario.getCorreo());
+						codigo_explotación.setText(usuario
+								.getCodigo_explotacion());
 					}
 				});
 			}
@@ -113,8 +127,11 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 							apellido2.getText().toString(), direccion.getText()
 									.toString(),
 							poblacion.getText().toString(), Integer
-									.parseInt(telefono.getText().toString()));
+									.parseInt(telefono.getText().toString()),
+							correo.getText().toString(), codigo_explotación
+									.getText().toString());
 					modificarUsuarioOk();
+					finish();
 				}
 				runOnUiThread(new Runnable() {
 					@Override

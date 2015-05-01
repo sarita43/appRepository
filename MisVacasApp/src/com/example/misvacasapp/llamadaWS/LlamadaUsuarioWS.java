@@ -188,7 +188,7 @@ public class LlamadaUsuarioWS {
 	 *            Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
-			String apellido2, String direccion, String poblacion, int telefono) {
+			String apellido2, String direccion, String poblacion, int telefono,String correo,String codigo_explotacion) {
 		METHOD_NAME = "actualizarUsuario";
 		SOAP_ACTION = "urn:actualizarUsuario";
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
@@ -199,6 +199,8 @@ public class LlamadaUsuarioWS {
 		request.addProperty("direccion", direccion);
 		request.addProperty("poblacion", poblacion);
 		request.addProperty("telefono", telefono);
+		request.addProperty("correo",correo);
+		request.addProperty("codigo_explotacion",codigo_explotacion);
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
 		envelope.setOutputSoapObject(request);

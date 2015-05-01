@@ -9,13 +9,11 @@ import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
-import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -140,7 +138,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		Date fecha = new Date(año, mes, dia);
 		String tipo = spinnerMedicamento.getSelectedItem().toString();
 		String descripcion = ((TextView) findViewById(R.id.descripcion_medicamento_texto))
-				.getText().toString() + " ";
+				.getText().toString();
 		Medicamento medicamento = new Medicamento();
 		medicamento = new Medicamento(crearIdMedicamento(), fecha, tipo,
 				descripcion, id_vaca);
@@ -185,9 +183,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			int añoActual = new java.util.Date().getYear();
 			int mesActual = new java.util.Date().getMonth();
 			int diaActual = new java.util.Date().getDate();
-			System.out.println("AÑO ACTUAL:  " + añoActual + "  año:" + año);
-			System.out.println("MES ACTUAL:  " + mesActual + "  mes:" + mes);
-			System.out.println("DIA ACTUAL:  " + diaActual + "  dia:" + dia);
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
 			} else if (año == añoActual) {

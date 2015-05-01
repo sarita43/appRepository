@@ -38,5 +38,7 @@
     <string name="menu_mis_vacas">Mis Vacas</string>
     <string name="menu_seleccionar_todo">Seleccionar todo</string>
     <string name="menu_sincronizar_cuenta">Sincronizar cuenta</string>
+    <string name="correo">Correo electronico</string>
+    <string name="codigo_explotacion">Codigo Explotacion</string>
 
 </resources>

@@ -88,7 +88,6 @@ public class Medicamento {
 					}
 					lista.add(medicamento);
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -129,7 +128,6 @@ public class Medicamento {
 						e.printStackTrace();
 					}
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -216,7 +214,6 @@ public class Medicamento {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
 						+ id_vaca + "'");
-				select.close();
 			} catch (SQLException e) {
 			}
 		}

@@ -103,17 +103,15 @@ public class Usuario {
 						usuario = new Usuario(result.getString(1),
 								result.getString(2), result.getString(3),
 								result.getString(4), result.getString(5),
-								Integer.parseInt(result
-										.getString(6)), result.getString(7),
-								result.getString(8), Integer.parseInt(result
-										.getString(9)), result.getString(10),
-								result.getString(11));
+								Integer.parseInt(result.getString(6)),
+								result.getString(7), result.getString(8),
+								Integer.parseInt(result.getString(9)),
+								result.getString(10), result.getString(11));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
-					lista.add(usuario);	
+					lista.add(usuario);
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -146,16 +144,14 @@ public class Usuario {
 						usuario = new Usuario(result.getString(1),
 								result.getString(2), result.getString(3),
 								result.getString(4), result.getString(5),
-								Integer.parseInt(result
-										.getString(6)), result.getString(7),
-								result.getString(8), Integer.parseInt(result
-										.getString(9)), result.getString(10),
-								result.getString(11));
+								Integer.parseInt(result.getString(6)),
+								result.getString(7), result.getString(8),
+								Integer.parseInt(result.getString(9)),
+								result.getString(10), result.getString(11));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -213,7 +209,6 @@ public class Usuario {
 						e.printStackTrace();
 					}
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -241,7 +236,8 @@ public class Usuario {
 	 *            Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
-			String apellido2, String direccion, String poblacion, int telefono) {
+			String apellido2, String direccion, String poblacion, int telefono,
+			String correo, String codigo_explotacion) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		if (c.getConexion() != null) {
@@ -251,8 +247,10 @@ public class Usuario {
 						+ "',apellido1 ='" + apellido1 + "',apellido2 ='"
 						+ apellido2 + "',direccion ='" + direccion
 						+ "',poblacion ='" + poblacion + "',telefono ='"
-						+ telefono + "'where dni='" + dni + "'");
-				select.close();
+						+ telefono + "',correo ='" + correo
+						+ "',codigo_explotacion ='" + codigo_explotacion
+						+ "'where dni='" + dni + "'");
+				
 			} catch (SQLException e) {
 			}
 		}
@@ -275,7 +273,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("UPDATE usuario SET contraseña ='"
 						+ contraseña + "' where dni='" + dni + "'");
-				select.close();
+				
 			} catch (SQLException e) {
 			}
 		}
@@ -296,15 +294,16 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
 	}
-	
+
 	/**
 	 * Método que se conecta con la base de datos para añadir un nuevo usuario
-	 * @param usuario Usuario como String
+	 * 
+	 * @param usuario
+	 *            Usuario como String
 	 */
 	public void añadirUsuario(String usuario) {
 		Gson json = new GsonBuilder().setPrettyPrinting()

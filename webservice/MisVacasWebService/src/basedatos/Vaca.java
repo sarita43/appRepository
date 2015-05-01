@@ -106,7 +106,6 @@ public class Vaca {
 					}
 					lista.add(vaca);
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -137,7 +136,6 @@ public class Vaca {
 					}
 					lista.add(vaca);
 				}
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -180,7 +178,6 @@ public class Vaca {
 						e.printStackTrace();
 					}
 				}
-				ps.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -296,7 +293,6 @@ public class Vaca {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
 						+ id_vaca + "' AND id_usuario='" + id_usuario + "'");
-				select.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -312,7 +308,6 @@ public class Vaca {
 					Statement select = c.getConexion().createStatement();
 					select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
 							+ listaVacas().get(i).getId_vaca() + "' AND id_usuario='" + id_usuario + "'");
-					select.close();
 				} catch (SQLException e) {
 				}
 			}

@@ -10,7 +10,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:layout_toRightOf="@+id/textView3" />
+        android:layout_toRightOf="@+id/textView3"></Spinner>
 
     <TextView
         android:id="@+id/textView3"
@@ -20,6 +20,6 @@
         android:layout_alignTop="@+id/spinner1"
         android:layout_margin="10dp"
         android:text="Tipo: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

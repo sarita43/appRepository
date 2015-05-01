@@ -98,7 +98,6 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 		String dni = ((TextView) findViewById(R.id.dni_nuevo_usuario))
 				.getText().toString();
 		for (int i = 0; i < lista.size(); i++) {
-			System.out.println("DNI"+dni);
 			if (dni.compareTo(lista.get(i).getDni()) == 0) {
 				dniOk = false;
 				runOnUiThread(new Runnable() {
@@ -110,7 +109,6 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 				});
 			}
 		}
-		System.out.println("DNIOK   "+dniOk);
 		return dniOk;
 	}
 
