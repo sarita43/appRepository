@@ -409,8 +409,6 @@ public class UsuarioVista extends ActionBarActivity {
 				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
 				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				for (int i = 0; i < listaVacas.size(); i++) {
-					//Eliminar medicamentos base de datos cloud
-					eliminarMedicamentos(listaVacas.get(i).getId_vaca());	
 					//Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos.getMedicamentos(listaVacas.get(i).getId_vaca());
 					for (int j = 0; j < listaAux.size(); j++) {
@@ -446,11 +444,6 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
-	}
-	
-	private void eliminarMedicamentos(String id_vaca){
-		LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
-		llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
 	}
 
 	/**

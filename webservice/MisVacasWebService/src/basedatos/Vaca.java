@@ -291,6 +291,8 @@ public class Vaca {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
+						+ id_vaca + "'");
 				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
 						+ id_vaca + "' AND id_usuario='" + id_usuario + "'");
 			} catch (SQLException e) {
@@ -301,13 +303,15 @@ public class Vaca {
 	public void eliminarVacas(String id_usuario){
 		ArrayList<Vaca> listaVacas = listaVacas(id_usuario);
 		for (int i = 0; i < listaVacas.size(); i++) {
+			System.out.println(listaVacas.get(i).getId_vaca());
 			OracleConection c = new OracleConection();
 			c.Conectar();
 			if (c.getConexion() != null) {
 				try {
 					Statement select = c.getConexion().createStatement();
-					select.executeQuery("DELETE FROM vaca WHERE id_vaca='"
-							+ listaVacas().get(i).getId_vaca() + "' AND id_usuario='" + id_usuario + "'");
+					select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
+							+ listaVacas.get(i).getId_vaca() + "'");
+					select.executeQuery("DELETE FROM vaca WHERE id_usuario='" + id_usuario + "'");
 				} catch (SQLException e) {
 				}
 			}

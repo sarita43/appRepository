@@ -16,22 +16,24 @@ public class OracleConection {
 
 //	 Métodos
 	 public static void main(String[] args) {
-		 enviar("sara_c43@hotmail.com", "", "misvacasapp@gmail.com", "Mis Vacas APP", "Correo de autenticacion", "Correo enviado desde la aplicacion :)");
-		 }
-		 private static void enviar(String emailTo, String nameTo, String emailFrom, String nameFrom,
-		 String subject, String body){
-		 Mail m = new Mail("misvacasapp@gmail.com", "sara130490");
-		 String[] toArr = {emailTo};
-		 m.setTo(toArr);
-		 m.setFrom(emailFrom);
-		 m.setSubject(subject);
-		 m.setBody(body);
-		 try {
-		 m.send();
-		 } catch (Exception e) {
-		 e.printStackTrace();
-		 }
-		 System.out.println("Correo enviado");
+//		 enviar("sara_c43@hotmail.com", "", "misvacasapp@gmail.com", "Mis Vacas APP", "Correo de autenticacion", "Correo enviado desde la aplicacion :)");
+//		 }
+//		 private static void enviar(String emailTo, String nameTo, String emailFrom, String nameFrom,
+//		 String subject, String body){
+//		 Mail m = new Mail("misvacasapp@gmail.com", "sara130490");
+//		 String[] toArr = {emailTo};
+//		 m.setTo(toArr);
+//		 m.setFrom(emailFrom);
+//		 m.setSubject(subject);
+//		 m.setBody(body);
+//		 try {
+//		 m.send();
+//		 } catch (Exception e) {
+//		 e.printStackTrace();
+//		 }
+//		 System.out.println("Correo enviado");
+		 Vaca v = new Vaca();
+		 v.eliminarVacas("1111");
 		 }
 
 	
