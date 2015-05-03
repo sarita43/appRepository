@@ -142,13 +142,22 @@ public class Login extends ActionBarActivity {
 			public void run() {
 				res = llamada.LlamadaUsuario(usuario, contraseña);
 				Usuario usuario = json.fromJson(res, Usuario.class);
-
-				if (usuario.getRol() == 1) {
+				if (res.compareTo("") == 0) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(
+									Login.this,
+									"El servidor no funciona. Intentelo de nuevo mas tarde.",
+									Toast.LENGTH_LONG).show();
+							setContentView(R.layout.activity_login);
+						}
+					});
+				} else if (usuario.getRol() == 1) {
 					// Admin
 				} else if (usuario.getRol() == 0) {
 					lanzarUsuario();
 				}
-
 			}
 		};
 		hilo.start();
@@ -170,7 +179,8 @@ public class Login extends ActionBarActivity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(Login.this,
+					Toast.makeText(
+							Login.this,
 							"Sinconizando. Este proceso puede tardar unos minutos",
 							Toast.LENGTH_LONG).show();
 				}
@@ -342,7 +352,6 @@ public class Login extends ActionBarActivity {
 		LlamadaVacaWS llamada = new LlamadaVacaWS();
 
 		res = llamada.LlamadaListaVacas(usuario);
-		System.out.println(res);
 		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
 		}.getType());
 
@@ -466,8 +475,7 @@ public class Login extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.ayuda) {
-			AlertDialog.Builder alerta = new AlertDialog.Builder(
-					this);
+			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
 			alerta.setMessage("Introduce el usuario y contraseña para entrar en la aplicación."
 					+ "\n"

@@ -34,8 +34,11 @@ import android.widget.Toast;
 import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
+import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
+import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,8 +55,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	private String id_usuario;
 	/** Lista de vacas del usuario */
 	private ArrayList<Vaca> listaVacas;
-	/** Tipo que serializa o deserializa para enviar a traves del servicio web */
-	private Gson json;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
 
@@ -71,8 +72,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aniadir_vaca);
-		json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
 		Bundle bundle = getIntent().getExtras();
 		id_usuario = bundle.getString("id_usuario");
 		listaVacas = new ArrayList<Vaca>();
@@ -392,6 +391,15 @@ public class AniadirVacaVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				VacaDatosBbdd vdatos = new VacaDatosBbdd(getApplicationContext());
+				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
+				listaVacas = vdatos.getListaVacas(usuario);
+				
+				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
+				
+				Gson json = new GsonBuilder().setPrettyPrinting()
+						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -401,14 +409,33 @@ public class AniadirVacaVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamada = new LlamadaVacaWS();
-				llamada.LLamadaEliminarVacas(usuario);
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				for (int i = 0; i < listaVacas.size(); i++) {
+					//Guarda los medicamentos en una lista
+					ArrayList<Medicamento> listaAux = mdatos.getMedicamentos(listaVacas.get(i).getId_vaca());
+					for (int j = 0; j < listaAux.size(); j++) {
+						listaMedicamentosUsuario.add(listaAux.get(j));
+					}
+				}
+				
+				//Eliminar vaca base de datos cloud
+				llamadaVaca.LLamadaEliminarVacas(usuario);
+				
+				//Añadir vaca a base de datos cloud
 				for (int i = 0; i < listaVacas.size(); i++) {
 					String vaca = json.toJson(listaVacas.get(i));
-					llamada.LLamadaAñadirVaca(vaca);
+					llamadaVaca.LLamadaAñadirVaca(vaca);	
 				}
+				
+				//Añadir medicamentos a base de datos cloud
+				for (int i = 0; i < listaMedicamentosUsuario.size(); i++) {
+					Medicamento m = listaMedicamentosUsuario.get(i);
+					String medicamento = json.toJson(m);
+					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
+				}
+				
 
-				// TODO falta medicamentos
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {

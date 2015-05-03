@@ -9,6 +9,7 @@ import com.example.misvacasapp.MedicamentosVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
+import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
@@ -41,8 +42,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	private String id_vaca;
 	/** Lista de medicamentos que tiene el animal */
 	private ArrayList<Medicamento> listaMedicamentos;
-	/** Tipo que serializa o deserializa para enviar a través del servicio web */
-	private Gson json;
 	/**
 	 * Lista desplegable que muestra los tipos de medicamentos o vacunas que
 	 * puedes introducir
@@ -242,7 +241,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		}
 	}
 
-
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -250,6 +248,11 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
 				listaVacas = vdatos.getListaVacas(usuario);
+
+				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+						getApplicationContext());
+				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
+
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -261,14 +264,33 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamada = new LlamadaVacaWS();
-				llamada.LLamadaEliminarVacas(usuario);
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				for (int i = 0; i < listaVacas.size(); i++) {
-					String vaca = json.toJson(listaVacas.get(i));
-					llamada.LLamadaAñadirVaca(vaca);
+					// Guarda los medicamentos en una lista
+					ArrayList<Medicamento> listaAux = mdatos
+							.getMedicamentos(listaVacas.get(i).getId_vaca());
+					for (int j = 0; j < listaAux.size(); j++) {
+						listaMedicamentosUsuario.add(listaAux.get(j));
+					}
 				}
 
-				// TODO falta medicamentos
+				// Eliminar vaca base de datos cloud
+				llamadaVaca.LLamadaEliminarVacas(usuario);
+
+				// Añadir vaca a base de datos cloud
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamadaVaca.LLamadaAñadirVaca(vaca);
+				}
+
+				// Añadir medicamentos a base de datos cloud
+				for (int i = 0; i < listaMedicamentosUsuario.size(); i++) {
+					Medicamento m = listaMedicamentosUsuario.get(i);
+					String medicamento = json.toJson(m);
+					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
+				}
+
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -313,12 +335,14 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		} else if (id == R.id.sincronizar_cuenta) {
 			sincronizar(settings.getString("id_usuario", ""));
 		} else if (id == R.id.mis_vacas) {
-			new LanzarVista(this).lanzarUsuarioVista(settings.getString("id_usuario", ""),
+			new LanzarVista(this).lanzarUsuarioVista(
+					settings.getString("id_usuario", ""),
 					settings.getString("contraseña", ""));
 			finish();
 			return true;
 		} else if (id == R.id.administrar_cuenta) {
-			new LanzarVista(this).lanzarAdministrarCuenta(settings.getString("id_usuario", ""),
+			new LanzarVista(this).lanzarAdministrarCuenta(
+					settings.getString("id_usuario", ""),
 					settings.getString("contraseña", ""));
 			return true;
 		} else if (id == R.id.ayuda) {

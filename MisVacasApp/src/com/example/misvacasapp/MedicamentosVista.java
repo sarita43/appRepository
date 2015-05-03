@@ -52,7 +52,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	private TableSeleccionado seleccionado;
 	/** Lista de los medicamentos que tiene una vaca */
 	private ArrayList<Medicamento> listaMedicamentos;
-	
+
 	private MedicamentoDatosBbdd mdatos;
 
 	// Métodos
@@ -73,8 +73,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	private void getListaMedicamentos() {
-		mdatos = new MedicamentoDatosBbdd(
-				getApplicationContext());
+		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
 		listaMedicamentos = mdatos.getMedicamentos(id_vaca);
 	}
 
@@ -236,7 +235,8 @@ public class MedicamentosVista extends ActionBarActivity {
 	 */
 	public void alertaConfirmarEliminar(String eliminados) {
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-		dialogo.setMessage("¿Quiere eliminar los medicamentos?:   " + eliminados);
+		dialogo.setMessage("¿Quiere eliminar los medicamentos?:   "
+				+ eliminados);
 		dialogo.setPositiveButton("Si", new OnClickListener() {
 
 			@Override
@@ -422,7 +422,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		}
 		setAdapter(listaTipoFecha);
 	}
-	
+
 	/**
 	 * Metodo que se acciona cuando en el menu se selecciona toda la lista
 	 */
@@ -442,14 +442,14 @@ public class MedicamentosVista extends ActionBarActivity {
 		Thread hilo = new Thread() {
 			public void run() {
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
-						
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
 				listaVacas = vdatos.getListaVacas(usuario);
-				
-				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+
+				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
-				
+
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -464,28 +464,29 @@ public class MedicamentosVista extends ActionBarActivity {
 				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
 				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				for (int i = 0; i < listaVacas.size(); i++) {
-					//Eliminar medicamentos base de datos cloud
-					eliminarMedicamentos(listaVacas.get(i).getId_vaca());
-					//Eliminar vaca base de datos cloud
-					llamadaVaca.LLamadaEliminarVaca(listaVacas.get(i).getId_vaca(), listaVacas.get(i).getId_usuario());
-					
-					//Añadir vaca a base de datos cloud
-					String vaca = json.toJson(listaVacas.get(i));
-					llamadaVaca.LLamadaAñadirVaca(vaca);
-					//Guarda los medicamentos en una lista
-					ArrayList<Medicamento> listaAux = mdatos.getMedicamentos(listaVacas.get(i).getId_vaca());
+					// Guarda los medicamentos en una lista
+					ArrayList<Medicamento> listaAux = mdatos
+							.getMedicamentos(listaVacas.get(i).getId_vaca());
 					for (int j = 0; j < listaAux.size(); j++) {
 						listaMedicamentosUsuario.add(listaAux.get(j));
 					}
-					
 				}
-				//Añadir medicamentos a base de datos cloud
+
+				// Eliminar vaca base de datos cloud
+				llamadaVaca.LLamadaEliminarVacas(usuario);
+
+				// Añadir vaca a base de datos cloud
+				for (int i = 0; i < listaVacas.size(); i++) {
+					String vaca = json.toJson(listaVacas.get(i));
+					llamadaVaca.LLamadaAñadirVaca(vaca);
+				}
+
+				// Añadir medicamentos a base de datos cloud
 				for (int i = 0; i < listaMedicamentosUsuario.size(); i++) {
 					Medicamento m = listaMedicamentosUsuario.get(i);
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-				
 
 				runOnUiThread(new Runnable() {
 					@Override
@@ -498,11 +499,6 @@ public class MedicamentosVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
-	}
-	
-	private void eliminarMedicamentos(String id_vaca){
-		LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
-		llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
 	}
 
 	/**
@@ -524,10 +520,10 @@ public class MedicamentosVista extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-SharedPreferences settings = getSharedPreferences("MisDatos",
-					Context.MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
 		if (id == R.id.cerrar_sesion) {
-			
+
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", "");
 			editor.putString("contraseña", "");
@@ -537,13 +533,17 @@ SharedPreferences settings = getSharedPreferences("MisDatos",
 		} else if (id == R.id.sincronizar_cuenta) {
 			sincronizar(settings.getString("id_usuario", ""));
 		} else if (id == R.id.mis_vacas) {
-			new LanzarVista(this).lanzarUsuarioVista(settings.getString("id_usuario", ""), settings.getString("contraseña", ""));
+			new LanzarVista(this).lanzarUsuarioVista(
+					settings.getString("id_usuario", ""),
+					settings.getString("contraseña", ""));
 			finish();
 			return true;
 		} else if (id == R.id.seleccionar_todo) {
 			seleccionarTodo();
 		} else if (id == R.id.administrar_cuenta) {
-			new LanzarVista(this).lanzarAdministrarCuenta(settings.getString("id_usuario", ""), settings.getString("contraseña", ""));
+			new LanzarVista(this).lanzarAdministrarCuenta(
+					settings.getString("id_usuario", ""),
+					settings.getString("contraseña", ""));
 			return true;
 		} else if (id == R.id.ayuda) {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);

@@ -303,7 +303,6 @@ public class Vaca {
 	public void eliminarVacas(String id_usuario){
 		ArrayList<Vaca> listaVacas = listaVacas(id_usuario);
 		for (int i = 0; i < listaVacas.size(); i++) {
-			System.out.println(listaVacas.get(i).getId_vaca());
 			OracleConection c = new OracleConection();
 			c.Conectar();
 			if (c.getConexion() != null) {
