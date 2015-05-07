@@ -78,7 +78,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 		rellenarSpinner();
 
 		listaVacas();
-
+		
 		BasicConfigurator.configure();
 		logger.debug("Hola esto es una traza");
 	}
@@ -188,7 +188,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 	private String crearImagen() {
 		Button imagen = (Button) findViewById(R.id.foto_boton);
-		imagen.setBackgroundResource(R.drawable.logo1);
 		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
 		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();

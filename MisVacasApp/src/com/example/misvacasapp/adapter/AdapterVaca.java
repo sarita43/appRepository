@@ -2,7 +2,7 @@ package com.example.misvacasapp.adapter;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
-import com.example.misvacasapp.TableSeleccionado;
+import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.example.misvacasapp.modelo.Vaca;
 import android.app.Activity;
 import android.content.Context;

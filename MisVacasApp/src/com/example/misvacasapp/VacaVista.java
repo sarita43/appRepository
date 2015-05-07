@@ -1,5 +1,9 @@
 package com.example.misvacasapp;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
@@ -13,17 +17,21 @@ import com.google.gson.GsonBuilder;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +46,8 @@ public class VacaVista extends ActionBarActivity {
 	// Atributos
 	/** Id de la vaca */
 	private String id_vaca;
+	
+	private VacaDatosBbdd vdatos;
 
 	// Métodos
 	/**
@@ -51,6 +61,7 @@ public class VacaVista extends ActionBarActivity {
 		setContentView(R.layout.activity_vaca_vista);
 		Bundle bundle = getIntent().getExtras();
 		id_vaca = bundle.getString("id_vaca");
+		vdatos = new VacaDatosBbdd(getApplicationContext());
 		rellenarCamposVaca();
 	}
 
@@ -72,7 +83,7 @@ public class VacaVista extends ActionBarActivity {
 	 * */
 	@SuppressWarnings("deprecation")
 	private void rellenarCamposVaca() {
-		VacaDatosBbdd vdatos = new VacaDatosBbdd(getApplicationContext());
+		
 		Vaca vaca = vdatos.getVaca(id_vaca);
 
 		TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
@@ -90,13 +101,77 @@ public class VacaVista extends ActionBarActivity {
 				+ vaca.getFecha_nacimiento());
 		TextView idMadre = (TextView) findViewById(R.id.idMadre);
 		idMadre.setText("ID MADRE: " + vaca.getId_madre());
-		ImageView imagen = (ImageView) findViewById(R.id.imageView1);
+		Button imagen = (Button) findViewById(R.id.imageView1);
 		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
 		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
 				decodedString.length);
 		Drawable i = new BitmapDrawable(decodedByte);
 		imagen.setBackground(i);
 	}
+	
+	public void cargarFoto(View v) {
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		startActivityForResult(intent, 2);
+
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Uri selectedImage = data.getData();
+		InputStream is;
+		try {
+			is = getContentResolver().openInputStream(selectedImage);
+			BufferedInputStream bis = new BufferedInputStream(is);
+			Bitmap bitmap = BitmapFactory.decodeStream(bis);
+			Button imagen = (Button) findViewById(R.id.imageView1);
+			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
+			actualizarVaca();
+			//TODO Modificar vaca en la base de datos, Boton guardar cambios??
+		} catch (FileNotFoundException e) {
+		}
+	}
+	
+	public void actualizarVaca(){
+		String bitmapdata = crearImagen();
+		Vaca vaca = vdatos.getVaca(id_vaca);
+		vaca.setFoto(bitmapdata);
+		vdatos.actualizarFoto(vaca);
+	}
+	private String crearImagen() {
+		Button imagen = (Button) findViewById(R.id.imageView1);
+		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
+		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+		byte[] bitmapdata = stream.toByteArray();
+		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+		return encodedImage;
+	}
+
+	/**
+	 * Redimensionar un Bitmap. By TutorialAndroid.com
+	 * 
+	 * @param Bitmap
+	 *            mBitmap
+	 * @param float newHeight
+	 * @param float newHeight
+	 * @param float newHeight
+	 * @return Bitmap
+	 */
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
+			float newHeigth) {
+
+		int width = mBitmap.getWidth();
+		int height = mBitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeigth) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+	}
+
 
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {

@@ -9,6 +9,7 @@ import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Vaca;
+import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
