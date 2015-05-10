@@ -157,7 +157,7 @@ public class MedicamentosVista extends ActionBarActivity {
 					seleccionado.getTable().put(position, true);
 					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 					botonEliminar
-							.setBackgroundResource(R.drawable.boton_borrar2);
+							.setBackgroundResource(R.anim.boton_eliminar_animacion);
 					botonEliminar.setEnabled(true);
 				}
 				adapter.setSeleccionado(seleccionado);
@@ -436,7 +436,7 @@ public class MedicamentosVista extends ActionBarActivity {
 
 		Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
 		botonEliminar.setEnabled(true);
-		botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
+		botonEliminar.setBackgroundResource(R.anim.boton_eliminar_animacion);
 	}
 
 	public void sincronizar(final String usuario) {

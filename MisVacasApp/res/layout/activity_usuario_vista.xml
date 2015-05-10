@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/boton_nuevo3"
+            android:background="@anim/boton_aniadir_animacion"
             android:onClick="añadirVaca" />
 
         <Button
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/boton_buscar_2"
+            android:background="@anim/boton_buscar_animacion"
             android:onClick="buscarVaca" />
     </LinearLayout>
 

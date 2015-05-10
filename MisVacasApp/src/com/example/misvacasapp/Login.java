@@ -191,7 +191,7 @@ public class Login extends ActionBarActivity {
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
 					listaMedicamentos);
 		}
-
+		//TODO Sincronizar
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
 		this.finish();
 

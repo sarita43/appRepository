@@ -18,9 +18,9 @@ public class LlamadaUsuarioWS {
 	/** Nombre del espacio de nombres */
 	private static final String NAMESPACE = "http://service.web";
 	/** URL donde se encuentra el servicio web */
-//	 private static String URL =
-//	 "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
-	private static String URL = "http://81.172.100.105:8090/axis2/services/UsuarioWebService?wsdl";
+	 private static String URL =
+	 "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
+//	private static String URL = "http://81.172.100.105:8090/axis2/services/UsuarioWebService?wsdl";
 	/** Nombre del método */
 	private static String METHOD_NAME;
 	/** SOAP Action */

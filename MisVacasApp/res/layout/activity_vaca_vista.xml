@@ -51,11 +51,10 @@
             android:id="@+id/botonMedicamentos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/idMadre"
             android:layout_alignParentBottom="true"
             android:layout_alignRight="@+id/idMadre"
             android:layout_marginBottom="26dp"
-            android:background="@drawable/boton_jeringuilla"
+            android:background="@anim/boton_medicamento_animacion"
             android:onClick="onClickMedicamentos" />
 
 

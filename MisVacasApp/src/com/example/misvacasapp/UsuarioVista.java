@@ -238,7 +238,7 @@ public class UsuarioVista extends ActionBarActivity {
 				listaVacas.remove(i+1);
 				seleccionado.getTable().put(0, true);
 				botonEliminar.setEnabled(true);
-				botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
+				botonEliminar.setBackgroundResource(R.anim.boton_eliminar_animacion);
 				setAdapter(listaVacas);
 			}
 			i++;
@@ -325,7 +325,7 @@ public class UsuarioVista extends ActionBarActivity {
 					Button botonEliminar = (Button) findViewById(R.id.eliminar);
 					botonEliminar.setEnabled(true);
 					botonEliminar
-							.setBackgroundResource(R.drawable.boton_borrar2);
+							.setBackgroundResource(R.anim.boton_eliminar_animacion);
 				}
 				adapter.setSeleccionado(seleccionado);
 				setAdapter(listaVacas);
@@ -372,7 +372,7 @@ public class UsuarioVista extends ActionBarActivity {
 
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setEnabled(true);
-		botonEliminar.setBackgroundResource(R.drawable.boton_borrar2);
+		botonEliminar.setBackgroundResource(R.anim.boton_eliminar_animacion);
 	}
 
 	/**

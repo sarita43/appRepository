@@ -374,6 +374,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode==2){
 		Uri selectedImage = data.getData();
 		InputStream is;
 		try {
@@ -384,6 +385,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
 
 		} catch (FileNotFoundException e) {
+		}
 		}
 	}
 
