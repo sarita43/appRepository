@@ -21,7 +21,7 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class ModificarUsuarioVista extends ActionBarActivity {
-	// Atributos
+	// ---------------------------Atributos-----------------------------//
 	/** Id del usuario */
 	private String id_usuario;
 	/** Contraseña del usuario */
@@ -50,29 +50,7 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	 */
 	private TextView codigo_explotación;
 
-	// Métodos
-	/**
-	 * Añade la vista de modificar usuario Recoge el usuario y la contraseña de
-	 * administrar cuenta Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_modificar_usuario);
-		Bundle bundle = getIntent().getExtras();
-		id_usuario = bundle.getString("id_usuario");
-		contraseña = bundle.getString("contraseña");
-		nombre = (TextView) findViewById(R.id.nombre_texto);
-		apellido1 = (TextView) findViewById(R.id.apellido1_texto);
-		apellido2 = (TextView) findViewById(R.id.apellido2_texto);
-		direccion = (TextView) findViewById(R.id.direccion_texto);
-		poblacion = (TextView) findViewById(R.id.poblacion_texto);
-		telefono = (TextView) findViewById(R.id.telefono_texto);
-		correo = (TextView) findViewById(R.id.correo_texto);
-		codigo_explotación = (TextView) findViewById(R.id.codigo_explotacion_texto);
-		rellenarCamposTexto();
-	}
-
+	// --------------------------------Métodos---------------------------------//
 	/**
 	 * Rellena los campos de la vista recogiendolos llamando al servicio web del
 	 * usuario Recoge el usuario como String y despues lo convierte a tipo
@@ -160,4 +138,27 @@ public class ModificarUsuarioVista extends ActionBarActivity {
 	private void modificarUsuarioOk() {
 		new LanzarVista(this).lanzarAdministrarCuenta(id_usuario, contraseña);
 	}
+
+	/**
+	 * Añade la vista de modificar usuario Recoge el usuario y la contraseña de
+	 * administrar cuenta Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_modificar_usuario);
+		Bundle bundle = getIntent().getExtras();
+		id_usuario = bundle.getString("id_usuario");
+		contraseña = bundle.getString("contraseña");
+		nombre = (TextView) findViewById(R.id.nombre_texto);
+		apellido1 = (TextView) findViewById(R.id.apellido1_texto);
+		apellido2 = (TextView) findViewById(R.id.apellido2_texto);
+		direccion = (TextView) findViewById(R.id.direccion_texto);
+		poblacion = (TextView) findViewById(R.id.poblacion_texto);
+		telefono = (TextView) findViewById(R.id.telefono_texto);
+		correo = (TextView) findViewById(R.id.correo_texto);
+		codigo_explotación = (TextView) findViewById(R.id.codigo_explotacion_texto);
+		rellenarCamposTexto();
+	}
+
 }

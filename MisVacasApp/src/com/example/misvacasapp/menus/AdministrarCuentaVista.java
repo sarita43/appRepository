@@ -35,7 +35,7 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class AdministrarCuentaVista extends ActionBarActivity {
-	// Atributos
+	// ----------------------------Atributos----------------------------------//
 	/** Adapter de la lista de los menus */
 	private AdapterListaMenu adapter;
 	/** Id del usuario */
@@ -45,36 +45,7 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	/** Lista de vacas del usuario */
 	private ArrayList<Vaca> listaVacas;
 
-	// Métodos
-	/**
-	 * Añade la vista de administrar cuenta Recoge el usuario y la contraseña de
-	 * la vista login Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_administrar_cuenta);
-		Bundle bundle = getIntent().getExtras();
-		id_usuario = bundle.getString("id_usuario");
-		contraseña = bundle.getString("contraseña");
-		ListView lista = (ListView) findViewById(R.id.listaAdministracionCuenta);
-		ArrayList<String> items = new ArrayList<String>();
-		items.add("\n Modificar usuario\n");
-		items.add("\n Cambiar contraseña\n");
-		items.add("\n Eliminar cuenta\n");
-		adapter = new AdapterListaMenu(this, items);
-		lista.setAdapter(adapter);
-		/** Método que se utiliza para hacer click en la liste de menus */
-		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				String item = adapter.getItem(position);
-				elegirMenu(item);
-			}
-		});
-	}
-
+	// -----------------------------Métodos-----------------------------------//
 	/**
 	 * Método que según el menu seleccionado se hace una cosa u otra Se puede
 	 * modificar el usuario, cambiar la contraseña o eliminar la cuenta
@@ -99,15 +70,27 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que lanza una ventana segun la clase, pasandole el id de usuario y
-	 * la contraseña
+	 * Alerta que avisa si desea eliminar el usuario o no Si pulsa que si
+	 * elimina la cuenta, si no deja de mostrar el dialogo
 	 * 
-	 * @param ventanaNombre
-	 *            Clase de la ventana
+	 * @see elegirMenu
 	 * */
-	private void nuevaVentana(Class ventanaNombre) {
-		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña,
-				ventanaNombre);
+	private void alertaEliminarUsuario() {
+		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+		dialogo.setMessage("¿Quiere eliminar la cuenta?");
+		dialogo.setPositiveButton("Si", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				eliminarCuenta();
+			}
+		});
+		dialogo.setNegativeButton("No", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		dialogo.show();
 	}
 
 	/**
@@ -139,14 +122,63 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 		hilo.start();
 	}
 
-	private void lanzarLogin(){
-		SharedPreferences settings = getSharedPreferences("MisDatos", Context.MODE_PRIVATE);
+	/**
+	 * Método que lanza una ventana segun la clase, pasandole el id de usuario y
+	 * la contraseña
+	 * 
+	 * @param ventanaNombre
+	 *            Clase de la ventana
+	 * */
+	@SuppressWarnings("rawtypes")
+	private void nuevaVentana(Class ventanaNombre) {
+		new LanzarVista(this).lanzarItemMenu(id_usuario, contraseña,
+				ventanaNombre);
+	}
+
+	/**
+	 * Método que lanza la vista de login
+	 */
+	private void lanzarLogin() {
+		SharedPreferences settings = getSharedPreferences("MisDatos",
+				Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("id_usuario", "");
-		editor.putString("contraseña","");
+		editor.putString("contraseña", "");
 		editor.commit();
 		new LanzarVista(this).lanzarLogin();
 	}
+
+	/**
+	 * Añade la vista de administrar cuenta. Recoge el usuario y la contraseña
+	 * de la vista login. Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_administrar_cuenta);
+		Bundle bundle = getIntent().getExtras();
+		id_usuario = bundle.getString("id_usuario");
+		contraseña = bundle.getString("contraseña");
+		ListView lista = (ListView) findViewById(R.id.listaAdministracionCuenta);
+		ArrayList<String> items = new ArrayList<String>();
+		items.add("\n Modificar usuario\n");
+		items.add("\n Cambiar contraseña\n");
+		items.add("\n Eliminar cuenta\n");
+		adapter = new AdapterListaMenu(this, items);
+		lista.setAdapter(adapter);
+		/** Método que se utiliza para hacer click en la liste de menus */
+		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String item = adapter.getItem(position);
+				elegirMenu(item);
+			}
+		});
+	}
+
+	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
+	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
 	private void listaVacas(final String id_usuario) {
 		listaVacas = new ArrayList<Vaca>();
 
@@ -167,6 +199,8 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
+	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
 	private void eliminarVacas(final String id_usuario) {
 		listaVacas(id_usuario);
 		for (int i = 0; i < listaVacas.size(); i++) {
@@ -182,6 +216,8 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
+	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
 	private void eliminarMedicamentosVaca(final String id_vaca) {
 		Thread hilo = new Thread() {
 			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
@@ -191,29 +227,5 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
-	}
-
-	/**
-	 * Alerta que avisa si desea eliminar el usuario o no Si pulsa que si
-	 * elimina la cuenta, si no deja de mostrar el dialogo
-	 * 
-	 * @see elegirMenu
-	 * */
-	private void alertaEliminarUsuario() {
-		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-		dialogo.setMessage("¿Quiere eliminar la cuenta?");
-		dialogo.setPositiveButton("Si", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				eliminarCuenta();
-			}
-		});
-		dialogo.setNegativeButton("No", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		dialogo.show();
 	}
 }

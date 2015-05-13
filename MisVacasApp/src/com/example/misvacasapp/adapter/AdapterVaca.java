@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.example.misvacasapp.modelo.Vaca;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,7 +26,7 @@ import android.widget.TextView;
  * @author Sara Martinez Lopez
  * */
 public class AdapterVaca extends BaseAdapter {
-	// Atributos
+	//-----------------------------Atributos-------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
 	/** Lista para mostrar el menu */
@@ -36,7 +37,7 @@ public class AdapterVaca extends BaseAdapter {
 	 */
 	private TableSeleccionado seleccionado;
 
-	// Métodos
+	//------------------------------Métodos----------------------------------//
 	/**
 	 * Constructor
 	 * 
@@ -97,6 +98,8 @@ public class AdapterVaca extends BaseAdapter {
 	 * @param parent
 	 * @return View Vista del menu
 	 * */
+	@SuppressLint("InflateParams")
+	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;

@@ -8,7 +8,7 @@ import java.sql.Date;
  * @author Sara Martinez Lopez
  * */
 public class Vaca {
-	// Atributos
+	// --------------------------------Atributos--------------------------------//
 	/** Id del animal */
 	private String id_vaca;
 	/** Raza del animal */
@@ -24,7 +24,7 @@ public class Vaca {
 	/** Sexo del animal */
 	private String sexo;
 
-	// Métodos
+	// -------------------------------Métodos--------------------------------//
 	/**
 	 * Constructor del animal sin atributos
 	 * */

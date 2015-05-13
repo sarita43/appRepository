@@ -6,30 +6,31 @@ package com.example.misvacasapp.modelo;
  * @author Sara Martinez Lopez
  * */
 public class Usuario {
-	// Atributos
-		/** Nombre del usuario */
-		private String nombre;
-		/** Primer apellido */
-		private String apellido1;
-		/** Segundo apellido */
-		private String apellido2;
-		/** Dirección del usuario */
-		private String direccion;
-		/** Población del usuario */
-		private String poblacion;
-		/** Teléfono del usuario */
-		private int telefono;
-		/** Dni o id del usuario */
-		private String dni;
-		/** Contraseña del usuario */
-		private String contraseña;
-		/** Rol que tiene el usuario. Usuario o administrador */
-		private int rol;
-		/** Correo del usuario */
-		private String correo;
-		/** Codigo de la explotacion del usuario */
-		private String codigo_explotacion;
-	// Métodos
+	// --------------------------------Atributos-------------------------------//
+	/** Nombre del usuario */
+	private String nombre;
+	/** Primer apellido */
+	private String apellido1;
+	/** Segundo apellido */
+	private String apellido2;
+	/** Dirección del usuario */
+	private String direccion;
+	/** Población del usuario */
+	private String poblacion;
+	/** Teléfono del usuario */
+	private int telefono;
+	/** Dni o id del usuario */
+	private String dni;
+	/** Contraseña del usuario */
+	private String contraseña;
+	/** Rol que tiene el usuario. Usuario o administrador */
+	private int rol;
+	/** Correo del usuario */
+	private String correo;
+	/** Codigo de la explotacion del usuario */
+	private String codigo_explotacion;
+
+	// ---------------------------------Métodos--------------------------------//
 	/** Constructor del usuario sin atributos */
 	public Usuario() {
 	}
@@ -242,9 +243,10 @@ public class Usuario {
 	public void setRol(int rol) {
 		this.rol = rol;
 	}
-	
+
 	/**
 	 * Devuelve el correo del usuario
+	 * 
 	 * @return String Correo del usuario
 	 */
 	public String getCorreo() {
@@ -253,6 +255,7 @@ public class Usuario {
 
 	/**
 	 * Guarda el correo del usuario
+	 * 
 	 * @param correo
 	 */
 	public void setCorreo(String correo) {
@@ -261,6 +264,7 @@ public class Usuario {
 
 	/**
 	 * Devuelve el codigo de explotacion
+	 * 
 	 * @return String Codigo de explotacion
 	 */
 	public String getCodigo_explotacion() {
@@ -269,6 +273,7 @@ public class Usuario {
 
 	/**
 	 * Guarda el codigo de explotacion
+	 * 
 	 * @param codigo_explotacion
 	 */
 	public void setCodigo_explotacion(String codigo_explotacion) {

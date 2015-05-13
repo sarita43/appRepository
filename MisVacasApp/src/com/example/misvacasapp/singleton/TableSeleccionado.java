@@ -9,11 +9,12 @@ import java.util.Hashtable;
  * @author Sara Martinez Lopez
  * */
 public class TableSeleccionado {
-	// Atributos
+	// ---------------------------Atributos-----------------------------//
 	/** Tabla hash de seleccionados */
 	private Hashtable<Integer, Boolean> seleccionado;
 
 	// private static TableSeleccionado _uniqueInstance;
+	// ---------------------------Métodos-------------------------------//
 	/**
 	 * Constructor Crea una nueva tabla hash vacia que introduce en el primer
 	 * valor un entero (el indice en la lista) y el segundo valor un boolean, si

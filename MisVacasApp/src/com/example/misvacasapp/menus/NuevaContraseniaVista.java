@@ -19,7 +19,7 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class NuevaContraseniaVista extends ActionBarActivity {
-	// Atributos
+	//-------------------------------Atributos-------------------------//
 	/** Id usuario */
 	private String id_usuario;
 	/** Contraseña del usuario */
@@ -31,38 +31,22 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 	/** TextView de la repetición de la nueva contraseña del usuario */
 	private TextView contraseñaNuevaRepetida;
 
-	// Métodos
+	//-------------------------------Métodos------------------------------//
 	/**
-	 * Añade la vista de cambiar contraseña Recoge el usuario y la contraseña de
-	 * la vista login Inicializa parametros
+	 * Método que cambia la contraseña del usuario LLama al servicio web del
+	 * usuario
 	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_cambiar_contrasena);
-		Bundle bundle = getIntent().getExtras();
-		id_usuario = bundle.getString("id_usuario");
-		contraseña = bundle.getString("contraseña");
+	private void cambiarContraseña() {
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.actualizarContraseña(id_usuario, contraseñaNueva
+						.getText().toString());
+			}
+		};
+		hilo.start();
 	}
-
-	/**
-	 * Método que se ejecuta cuando se da al botón aceptar En el se recogen los
-	 * parámetros del los textView Se comprueba que la contraseña introducida y
-	 * la que tiene el usuario sean iguales
-	 * */
-	public void onClickCambioContraseña(View view) {
-		contraseñaActual = (TextView) findViewById(R.id.contrasena_actual_texto);
-		contraseñaNueva = (TextView) findViewById(R.id.nueva_contrasena_texto);
-		contraseñaNuevaRepetida = (TextView) findViewById(R.id.repita_nueva_contrasena_texto);
-
-		if (contraseña.equals(contraseñaActual.getText().toString())) {
-			comprobarContraseña();
-		} else {
-			Toast.makeText(NuevaContraseniaVista.this, "Contraseña incorrecta",
-					Toast.LENGTH_LONG).show();
-		}
-	}
-
 	/**
 	 * Método que comprueba que la contraseña nueva no sea vacia y que la
 	 * contraseña nueva coincidan las dos la nueva ya repetir contraseña nueva
@@ -90,18 +74,33 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que cambia la contraseña del usuario LLama al servicio web del
-	 * usuario
+	 * Método que se ejecuta cuando se da al botón aceptar En el se recogen los
+	 * parámetros del los textView Se comprueba que la contraseña introducida y
+	 * la que tiene el usuario sean iguales
 	 * */
-	private void cambiarContraseña() {
-		Thread hilo = new Thread() {
-			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+	public void onClickCambioContraseña(View view) {
+		contraseñaActual = (TextView) findViewById(R.id.contrasena_actual_texto);
+		contraseñaNueva = (TextView) findViewById(R.id.nueva_contrasena_texto);
+		contraseñaNuevaRepetida = (TextView) findViewById(R.id.repita_nueva_contrasena_texto);
 
-			public void run() {
-				llamada.actualizarContraseña(id_usuario, contraseñaNueva
-						.getText().toString());
-			}
-		};
-		hilo.start();
+		if (contraseña.equals(contraseñaActual.getText().toString())) {
+			comprobarContraseña();
+		} else {
+			Toast.makeText(NuevaContraseniaVista.this, "Contraseña incorrecta",
+					Toast.LENGTH_LONG).show();
+		}
+	}	
+	
+	/**
+	 * Añade la vista de cambiar contraseña Recoge el usuario y la contraseña de
+	 * la vista login Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_cambiar_contrasena);
+		Bundle bundle = getIntent().getExtras();
+		id_usuario = bundle.getString("id_usuario");
+		contraseña = bundle.getString("contraseña");
 	}
 }

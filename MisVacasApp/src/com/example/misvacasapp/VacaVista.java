@@ -32,58 +32,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Clase de la actividad de la vista de la vaca En ella se implementan los
+ * Clase de la actividad de la vista de la vaca. En ella se implementan los
  * métodos que se utilizan para la vista de la vaca
  * 
  * @author Sara Martinez Lopez
  * */
 public class VacaVista extends ActionBarActivity {
-	// Atributos
+	// ---------------------Atributos-------------------------------//
 	/** Id de la vaca */
 	private String id_vaca;
-	
+	/** Base de datos interna de los animales */
 	private VacaDatosBbdd vdatos;
 
-	// Métodos
+	// ----------------------Métodos--------------------------------//
 	/**
-	 * Añade la vista de la vaca. Inicializa atributos
-	 * 
-	 * @param savedInstanceState
-	 */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_vaca_vista);
-		Bundle bundle = getIntent().getExtras();
-		id_vaca = bundle.getString("id_vaca");
-		vdatos = new VacaDatosBbdd(getApplicationContext());
-		rellenarCamposVaca();
-	}
-
-	/**
-	 * Método que se ejecuta al hacer click en el botón de los medicamentos
-	 * Cambia a la vista de medicamentos de la vaca
-	 * 
-	 * @param v
-	 * */
-	public void onClickMedicamentos(View v) {
-		new LanzarVista(this).lanzarMedicamentos(id_vaca);
-	}
-
-	/**
-	 * Rellena los campos de la vaca que se ha seleccionado anteriormente Llama
-	 * al web service para recoger los datos
-	 * 
-	 * @see onCreate
+	 * Rellena los campos de la vaca que se ha seleccionado anteriormente.
+	 * Recoge los datos de la base de datos interna
 	 * */
 	@SuppressWarnings("deprecation")
 	private void rellenarCamposVaca() {
-		
+
 		Vaca vaca = vdatos.getVaca(id_vaca);
 
 		TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
@@ -108,7 +80,13 @@ public class VacaVista extends ActionBarActivity {
 		Drawable i = new BitmapDrawable(decodedByte);
 		imagen.setBackground(i);
 	}
-	
+
+	/**
+	 * Crea la vista para seleccionar una foto
+	 * 
+	 * @param v
+	 *            Vista
+	 */
 	public void cargarFoto(View v) {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -119,6 +97,7 @@ public class VacaVista extends ActionBarActivity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode!=0){
 		Uri selectedImage = data.getData();
 		InputStream is;
 		try {
@@ -128,17 +107,26 @@ public class VacaVista extends ActionBarActivity {
 			Button imagen = (Button) findViewById(R.id.imageView1);
 			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
 			actualizarVaca();
-			//TODO Modificar vaca en la base de datos, Boton guardar cambios??
+			// TODO onclick Boton guardar cambios??
 		} catch (FileNotFoundException e) {
 		}
+		}
 	}
-	
-	public void actualizarVaca(){
+
+	/**
+	 * Método que actualiza la imagen del animal en la base de datos interna
+	 */
+	public void actualizarVaca() {
 		String bitmapdata = crearImagen();
 		Vaca vaca = vdatos.getVaca(id_vaca);
 		vaca.setFoto(bitmapdata);
 		vdatos.actualizarFoto(vaca);
 	}
+
+	/**
+	 * Método que crea la foto que se va a guardar en la base de datos y la devuelve como String
+	 * @return String Foto del animal
+	 */
 	private String crearImagen() {
 		Button imagen = (Button) findViewById(R.id.imageView1);
 		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
@@ -151,7 +139,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Redimensionar un Bitmap. By TutorialAndroid.com
+	 * Redimensionar un Bitmap.
 	 * 
 	 * @param Bitmap
 	 *            mBitmap
@@ -172,7 +160,23 @@ public class VacaVista extends ActionBarActivity {
 		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
 	}
 
+	/**
+	 * Método que se ejecuta al hacer click en el botón de los medicamentos
+	 * Cambia a la vista de medicamentos de la vaca
+	 * 
+	 * @param v
+	 * */
+	public void onClickMedicamentos(View v) {
+		new LanzarVista(this).lanzarMedicamentos(id_vaca);
+	}
 
+	/**
+	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
+	 * datos cloud como la base de datos interna.
+	 * 
+	 * @param usuario
+	 *            String id_usuario
+	 */
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -234,6 +238,21 @@ public class VacaVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+
+	/**
+	 * Añade la vista de la vaca. Inicializa atributos
+	 * 
+	 * @param savedInstanceState
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_vaca_vista);
+		Bundle bundle = getIntent().getExtras();
+		id_vaca = bundle.getString("id_vaca");
+		vdatos = new VacaDatosBbdd(getApplicationContext());
+		rellenarCamposVaca();
 	}
 
 	/**

@@ -8,7 +8,7 @@ import java.sql.Date;
  * */
 public class Medicamento {
 
-	//Atributos
+	//----------------------------Atributos----------------------------//
 	/**Id medicamento*/
 	private int id_medicamento;
 	/**Fecha de medicamentos */
@@ -20,7 +20,7 @@ public class Medicamento {
 	/** Id de la vaca*/
 	private String id_vaca;
 
-	//Métodos
+	//-----------------------------Métodos------------------------------//
 	
 	/**Constructor del medicamento sin atributos*/
 	public Medicamento() {

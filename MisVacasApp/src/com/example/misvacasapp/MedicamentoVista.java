@@ -28,27 +28,13 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class MedicamentoVista extends ActionBarActivity {
-	// Atributos
+	//-------------------------------Atributos-----------------------------------//
 	/** Id del medicamento */
 	private String id_medicamento;
 	/** Id de la vaca */
 	private String id_vaca;
 
-	// Metodos
-	/**
-	 * Añade la vista del medicamento Recoge el id del medicamento y el id de la
-	 * vaca de la vista medicamento Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_medicamento);
-		Bundle bundle = getIntent().getExtras();
-		id_medicamento = Integer.toString(bundle.getInt("id_medicamento"));
-		id_vaca = bundle.getString("id_vaca");
-		rellenarCampos();
-	}
-
+	//--------------------------------Metodos-------------------------------------//
 	/**
 	 * Rellena los campos de la vista del medicamento Llama al servicio web para
 	 * recoger los campos
@@ -74,6 +60,13 @@ public class MedicamentoVista extends ActionBarActivity {
 
 	}
 
+	/**
+	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
+	 * datos cloud como la base de datos interna.
+	 * 
+	 * @param usuario
+	 *            String id_usuario
+	 */
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -135,6 +128,20 @@ public class MedicamentoVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+
+	/**
+	 * Añade la vista del medicamento Recoge el id del medicamento y el id de la
+	 * vaca de la vista medicamento Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_medicamento);
+		Bundle bundle = getIntent().getExtras();
+		id_medicamento = Integer.toString(bundle.getInt("id_medicamento"));
+		id_vaca = bundle.getString("id_vaca");
+		rellenarCampos();
 	}
 
 	/**

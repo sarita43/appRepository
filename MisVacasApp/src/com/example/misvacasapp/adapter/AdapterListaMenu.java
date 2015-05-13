@@ -2,6 +2,7 @@ package com.example.misvacasapp.adapter;
 
 import java.util.ArrayList;
 import com.example.misvacasapp.R;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,13 +18,13 @@ import android.widget.TextView;
  * @author Sara Martinez Lopez
  * */
 public class AdapterListaMenu extends BaseAdapter {
-	// Atributos
+	//------------------------Atributos--------------------------------//
 	/** Lista para mostrar el menu */
 	private ArrayList<String> lista = new ArrayList<String>();
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
 
-	// Método
+	//------------------------Métodos----------------------------------//
 	/**
 	 * Constructor
 	 * 
@@ -79,6 +80,7 @@ public class AdapterListaMenu extends BaseAdapter {
 	 * @param parent
 	 * @return View Vista del menu
 	 * */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;

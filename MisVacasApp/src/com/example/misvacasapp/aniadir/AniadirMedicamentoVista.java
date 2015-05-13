@@ -37,7 +37,7 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
-	// Atributos
+	//----------------------------Atributos--------------------------------//
 	/** Id del animal */
 	private String id_vaca;
 	/** Lista de medicamentos que tiene el animal */
@@ -47,34 +47,12 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * puedes introducir
 	 */
 	private Spinner spinnerMedicamento;
-
+	/** Base de datos interna de los medicamentos del animal*/
 	private MedicamentoDatosBbdd mdatos;
 
-	// Métodos
-	/**
-	 * Añade la vista de añadir medicamento. Recoge el id de la vaca de la vista
-	 * de la vaca. Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_aniadir_medicamento);
-		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
-
-		Bundle bundle = getIntent().getExtras();
-		id_vaca = bundle.getString("id_vaca");
-		listaMedicamentos = getMedicamentos(id_vaca);
-		rellenarSpinner();
-	}
-
-	private ArrayList<Medicamento> getMedicamentos(String id_vaca) {
-		return mdatos.getMedicamentos(id_vaca);
-	}
-
+	//-----------------------------Métodos-----------------------------------//
 	/**
 	 * Rellena la lista de desplegable de los tipos medicamentos o vacunas
-	 * 
-	 * @see onCreate
 	 * */
 	private void rellenarSpinner() {
 		spinnerMedicamento = (Spinner) findViewById(R.id.tipo_medicamento_texto);
@@ -90,32 +68,39 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 				listaMedicamentos);
 		spinnerMedicamento.setAdapter(adapter);
 	}
-
-	/**
-	 * LLama a crear el id aleatorio y comprueba que ese id no exista Si existe
-	 * vuelve a crear otro id aleatorio
-	 * */
-	private int crearIdMedicamento() {
-		int id = idAleatorio();
-		for (int i = 0; listaMedicamentos.size() > i; i++) {
-			if (listaMedicamentos.get(i).getId_medicamento() == id) {
-				id = idAleatorio();
-				i = 0;
-			}
-		}
-		return id;
+	
+	private ArrayList<Medicamento> getMedicamentos(String id_vaca) {
+		return mdatos.getMedicamentos(id_vaca);
 	}
+	
 
 	/**
-	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un
-	 * entero
+	 * Método que añade el medicamento a la lista de medicamentos de un animal
+	 * Si las comprobaciones que hace son correctas añade el medicamento
 	 * 
-	 * @see Integer.MAX_VALUE
-	 * @return int Id aleatorio
-	 * */
-	private int idAleatorio() {
-		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
+	 * @param view
+	 *            Vista
+	 */
+	public void nuevoMedicamento(View view) {
+
+		if (comprobarFecha()) {
+			Medicamento m = crearMedicamento();
+			mdatos.añadirMedicamento(m);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirMedicamentoVista.this,
+							"Añadido correctamente", Toast.LENGTH_SHORT).show();
+					Intent i = new Intent(getApplicationContext(),
+							MedicamentosVista.class);
+					i.putExtra("id_vaca", id_vaca);
+					startActivity(i);
+					finish();
+				}
+			});
+		}
 	}
+	
 
 	/**
 	 * Método que crea el medicamento con los valores introducidos por el
@@ -144,6 +129,33 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		return medicamento;
 	}
 
+
+	/**
+	 * LLama a crear el id aleatorio y comprueba que ese id no exista Si existe
+	 * vuelve a crear otro id aleatorio
+	 * */
+	private int crearIdMedicamento() {
+		int id = idAleatorio();
+		for (int i = 0; listaMedicamentos.size() > i; i++) {
+			if (listaMedicamentos.get(i).getId_medicamento() == id) {
+				id = idAleatorio();
+				i = 0;
+			}
+		}
+		return id;
+	}
+
+	/**
+	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un
+	 * entero
+	 * 
+	 * @see Integer.MAX_VALUE
+	 * @return int Id aleatorio
+	 * */
+	private int idAleatorio() {
+		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
+	}
+	
 	/**
 	 * Método que comprueba si la fecha introducida por el usuario es correcta.
 	 * Comprueba que este entre los valores de los dias posibles, los meses
@@ -215,32 +227,12 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que añade el medicamento a la lista de medicamentos de un animal
-	 * Si las comprobaciones que hace son correctas añade el medicamento
+	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
+	 * datos cloud como la base de datos interna.
 	 * 
-	 * @param view
-	 *            Vista
+	 * @param usuario
+	 *            String id_usuario
 	 */
-	public void nuevoMedicamento(View view) {
-
-		if (comprobarFecha()) {
-			Medicamento m = crearMedicamento();
-			mdatos.añadirMedicamento(m);
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					Toast.makeText(AniadirMedicamentoVista.this,
-							"Añadido correctamente", Toast.LENGTH_SHORT).show();
-					Intent i = new Intent(getApplicationContext(),
-							MedicamentosVista.class);
-					i.putExtra("id_vaca", id_vaca);
-					startActivity(i);
-					finish();
-				}
-			});
-		}
-	}
-
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -302,6 +294,22 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+
+	/**
+	 * Añade la vista de añadir medicamento. Recoge el id de la vaca de la vista
+	 * de la vaca. Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_aniadir_medicamento);
+		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+
+		Bundle bundle = getIntent().getExtras();
+		id_vaca = bundle.getString("id_vaca");
+		listaMedicamentos = getMedicamentos(id_vaca);
+		rellenarSpinner();
 	}
 
 	/**

@@ -37,13 +37,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Clase de la actividad Login En ella se implementan los métodos que se
+ * Clase de la actividad Login. En ella se implementan los métodos que se
  * utilizan para hacer el login
  * 
  * @author Sara Martinez Lopez
  * */
 public class Login extends ActionBarActivity {
-	// Atributos
+	// ---------------------- Atributos--------------------------------//
 	/**
 	 * Id usuario que introduce a traves de la pantalla login
 	 */
@@ -69,12 +69,19 @@ public class Login extends ActionBarActivity {
 	 */
 	private MedicamentoDatosBbdd mbbdd;
 
-	// Métodos
+	// ----------------------Métodos----------------------------------------//
 	/**
-	 * Método que se ejecuta cuando se acciona el botón entrar, para entrar en
+	 * <p>
+	 * Método que se ejecuta cuando se acciona el botón Entrar, para entrar en
 	 * la aplicación. Recoge el usuario y contraseña introducidos por el usuario
-	 * y comprueba si existen y son correctos. Nota: Para ejecutar este método
-	 * tiene que tener internet y estar activado el servidor.
+	 * y comprueba si existen y son correctos. Hace una llamada al servicio web
+	 * para ver si existe ese usuario.
+	 * </p>
+	 * <p>
+	 * Guarda el usuario y contraseña para que no vuelva a pedirlo mas
+	 * </p>
+	 * Nota: Para ejecutar este método tiene que tener internet y estar activado
+	 * el servidor.
 	 * 
 	 * @param v
 	 *            Vista que hace el click en el boton
@@ -191,7 +198,7 @@ public class Login extends ActionBarActivity {
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
 					listaMedicamentos);
 		}
-		//TODO Sincronizar
+		// TODO Sincronizar
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
 		this.finish();
 
@@ -316,29 +323,70 @@ public class Login extends ActionBarActivity {
 
 		System.out.println("Correo enviado");
 	}
-
+	
+	/**
+	 * Recorre la lista de usuarios y mira si el correo pasado por parametro
+	 * existe y si existe devuelve un "true".
+	 * 
+	 * @param correo
+	 *            String. Correo del usuario
+	 * @return boolean. True si existe correo, falso si no existe.
+	 */
+	private boolean correoExistente(String correo) {
+		boolean resultado = false;
+		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
+				resultado = true;
+			i.next();
+		}
+		return resultado;
+	}
+	
 	// /**
-	// * Recoge todos los usuario de la base de datos cloud y los guarda en un
-	// * arrayList
-	// */
-	// private void getListaUsuarios() {
-	// listaUsuarios = new ArrayList<Usuario>();
-	// Thread hilo = new Thread() {
-	// String res = "";
-	// Gson json = new GsonBuilder().setPrettyPrinting()
-	// .setDateFormat("dd-MM-yyyy").create();
-	// LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-	//
-	// public void run() {
-	// res = llamada.LlamadaListaUsuarios();
-	// listaUsuarios = json.fromJson(res,
-	// new TypeToken<ArrayList<Usuario>>() {
-	// }.getType());
-	// }
-	// };
-	// hilo.start();
-	// }
+		// * Recoge todos los usuario de la base de datos cloud y los guarda en un
+		// * arrayList
+		// */
+		// private void getListaUsuarios() {
+		// listaUsuarios = new ArrayList<Usuario>();
+		// Thread hilo = new Thread() {
+		// String res = "";
+		// Gson json = new GsonBuilder().setPrettyPrinting()
+		// .setDateFormat("dd-MM-yyyy").create();
+		// LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+		//
+		// public void run() {
+		// res = llamada.LlamadaListaUsuarios();
+		// listaUsuarios = json.fromJson(res,
+		// new TypeToken<ArrayList<Usuario>>() {
+		// }.getType());
+		// }
+		// };
+		// hilo.start();
+		// }
 
+	/**
+	 * Devuelve el usuario usuario si el correo pasado por parametro existe
+	 * 
+	 * @param correo
+	 *            String. Correo del usuario
+	 * @return Usuario u. Usuario
+	 */
+	private Usuario getUsuario(String correo) {
+		Usuario u = new Usuario();
+		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
+		IteratorListaUsuario i = (IteratorListaUsuario) agregado
+				.createIterator();
+		while (i.hasNext()) {
+			if (i.actualElement().getCorreo().equals(correo))
+				u = i.actualElement();
+			i.next();
+		}
+		return u;
+	}
+	
 	/**
 	 * Recoge todos los animales de la base de datos cloud y los guarda en un
 	 * arrayList
@@ -388,46 +436,6 @@ public class Login extends ActionBarActivity {
 		}
 	}
 
-	/**
-	 * Recorre la lista de usuarios y mira si el correo pasado por parametro
-	 * existe y si existe devuelve un "true".
-	 * 
-	 * @param correo
-	 *            String. Correo del usuario
-	 * @return boolean. True si existe correo, falso si no existe.
-	 */
-	private boolean correoExistente(String correo) {
-		boolean resultado = false;
-		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado
-				.createIterator();
-		while (i.hasNext()) {
-			if (i.actualElement().getCorreo().equals(correo))
-				resultado = true;
-			i.next();
-		}
-		return resultado;
-	}
-
-	/**
-	 * Devuelve el usuario usuario si el correo pasado por parametro existe
-	 * 
-	 * @param correo
-	 *            String. Correo del usuario
-	 * @return Usuario u. Usuario
-	 */
-	private Usuario getUsuario(String correo) {
-		Usuario u = new Usuario();
-		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado
-				.createIterator();
-		while (i.hasNext()) {
-			if (i.actualElement().getCorreo().equals(correo))
-				u = i.actualElement();
-			i.next();
-		}
-		return u;
-	}
 
 	/**
 	 * Añade la vista del login. Inicializa los atributos.

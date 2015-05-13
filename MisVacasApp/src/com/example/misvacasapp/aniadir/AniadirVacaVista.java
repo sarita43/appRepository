@@ -1,7 +1,5 @@
 package com.example.misvacasapp.aniadir;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -50,43 +48,20 @@ import com.google.gson.GsonBuilder;
  * @author Sara Martinez Lopez
  * */
 public class AniadirVacaVista extends ActionBarActivity {
-	// Atributos
+	//-----------------------------Atributos------------------------------------//
 	/** Id del usuario */
 	private String id_usuario;
 	/** Lista de vacas del usuario */
 	private ArrayList<Vaca> listaVacas;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
-
+	/**Base de datos interna de los animales*/
 	private VacaDatosBbdd vdatos;
 
-	private static final Logger logger = Logger
-			.getLogger(AniadirVacaVista.class);
-
-	// Métodos
-	/**
-	 * Añade la vista de añadir vaca. Recoge el usuario de la vista del usuario.
-	 * Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_aniadir_vaca);
-		Bundle bundle = getIntent().getExtras();
-		id_usuario = bundle.getString("id_usuario");
-		listaVacas = new ArrayList<Vaca>();
-		rellenarSpinner();
-
-		listaVacas();
-		
-		BasicConfigurator.configure();
-		logger.debug("Hola esto es una traza");
-	}
-
+	//------------------------------Métodos--------------------------------------//
 	/**
 	 * Rellena la lista de desplegable de los tipos de vacas
 	 * 
-	 * @see onCreate
 	 * */
 	private void rellenarSpinner() {
 		spinnerRaza = (Spinner) findViewById(R.id.raza_nuevo_texto);
@@ -113,11 +88,72 @@ public class AniadirVacaVista extends ActionBarActivity {
 	 * Recoge la lista de vacas del usuario y lo guarda en el arrayList de lista
 	 * Para ello se llama al servicio web de vacas
 	 * 
-	 * @see onCreate
 	 * */
 	private void listaVacas() {
 		vdatos = new VacaDatosBbdd(getApplicationContext());
 		listaVacas = vdatos.getListaVacas(id_usuario);
+	}
+	
+
+	/**
+	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
+	 * a las comprobaciones que se pueden hacer para añadir el animal
+	 * correctamente y añade el animal si todo es correcto
+	 * 
+	 * @param view
+	 *            Vista
+	 * */
+	public void nuevaVaca(View view) {
+		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()
+				&& comprobarIdMadre()) {
+			final Vaca v = crearVaca();
+			vdatos.añadirVaca(v);
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+
+					Toast.makeText(AniadirVacaVista.this,
+							"Añadido correctamente", Toast.LENGTH_SHORT).show();
+					Intent i = new Intent(getApplicationContext(),
+							UsuarioVista.class);
+					i.putExtra("id_usuario", id_usuario);
+					startActivity(i);
+					finish();
+				}
+			});
+
+		}
+	}
+
+	/**
+	 * Recoge los campos de la vista que se han introducido para crear el animal
+	 * Comprueba que la fecha sea correcta
+	 * 
+	 * @return Vaca Vaca creada con los parametros introducidos
+	 * */
+	private Vaca crearVaca() {
+		Vaca vaca = new Vaca();
+
+		int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
+				.getText().toString());
+		int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
+				.getText().toString()) - 1;
+		int año = Integer.parseInt(((TextView) findViewById(R.id.anio_vaca))
+				.getText().toString()) - 1900;
+		@SuppressWarnings("deprecation")
+		Date fecha = new Date(año, mes, dia);
+		String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
+				.getText().toString());
+		String raza = spinnerRaza.getSelectedItem().toString();
+		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
+				.getText().toString();
+		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
+				.toString();
+		String bitmapdata = crearImagen();
+		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
+				bitmapdata);
+
+		return vaca;
 	}
 
 	/**
@@ -154,71 +190,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 		}
 		return id_correcto;
 	}
-
-	/**
-	 * Recoge los campos de la vista que se han introducido para crear el animal
-	 * Comprueba que la fecha sea correcta
-	 * 
-	 * @return Vaca Vaca creada con los parametros introducidos
-	 * */
-	private Vaca crearVaca() {
-		Vaca vaca = new Vaca();
-
-		int dia = Integer.parseInt(((TextView) findViewById(R.id.dia_vaca))
-				.getText().toString());
-		int mes = Integer.parseInt(((TextView) findViewById(R.id.mes_vaca))
-				.getText().toString()) - 1;
-		int año = Integer.parseInt(((TextView) findViewById(R.id.anio_vaca))
-				.getText().toString()) - 1900;
-		@SuppressWarnings("deprecation")
-		Date fecha = new Date(año, mes, dia);
-		String id_vaca = (((TextView) findViewById(R.id.id_vaca_nuevo_texto))
-				.getText().toString());
-		String raza = spinnerRaza.getSelectedItem().toString();
-		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
-				.getText().toString();
-		String sexo = ((TextView) findViewById(R.id.sexo_nuevo_vaca)).getText()
-				.toString();
-		String bitmapdata = crearImagen();
-		vaca = new Vaca(id_vaca, raza, fecha, id_madre, id_usuario, sexo,
-				bitmapdata);
-
-		return vaca;
-	}
-
-	private String crearImagen() {
-		Button imagen = (Button) findViewById(R.id.foto_boton);
-		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
-		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
-		byte[] bitmapdata = stream.toByteArray();
-		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
-		return encodedImage;
-	}
-
-	/**
-	 * Redimensionar un Bitmap. By TutorialAndroid.com
-	 * 
-	 * @param Bitmap
-	 *            mBitmap
-	 * @param float newHeight
-	 * @param float newHeight
-	 * @param float newHeight
-	 * @return Bitmap
-	 */
-	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
-			float newHeigth) {
-
-		int width = mBitmap.getWidth();
-		int height = mBitmap.getHeight();
-		float scaleWidth = ((float) newWidth) / width;
-		float scaleHeight = ((float) newHeigth) / height;
-		Matrix matrix = new Matrix();
-		matrix.postScale(scaleWidth, scaleHeight);
-		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
-	}
-
+	
 	/**
 	 * Comprueba que el sexo introducido por el usuario sea el correcto. El sexo
 	 * tiene que se M (Macho) o H (Hembra), si no es asi devuelve un false
@@ -282,7 +254,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 							.getText().toString()) - 1900;
 			int añoActual = new java.util.Date().getYear();
 			int mesActual = new java.util.Date().getMonth();
-			System.out.println("MES ACTUAL  " + mesActual);
 			int diaActual = new java.util.Date().getDate();
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
@@ -316,8 +287,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 		return fechaOk;
 	}
 
+	/**
+	 * Método que comprueba que el id de la madre no sea vacio
+	 * @return boolean True si el id es correcto False si es vacio
+	 */
 	private boolean comprobarIdMadre() {
-
 		boolean id_correcto = true;
 		String id_madre = ((TextView) findViewById(R.id.id_madre_nuevo_vaca))
 				.getText().toString();
@@ -333,37 +307,50 @@ public class AniadirVacaVista extends ActionBarActivity {
 		}
 		return id_correcto;
 	}
-
+	
 	/**
-	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
-	 * a las comprobaciones que se pueden hacer para añadir el animal
-	 * correctamente y añade el animal si todo es correcto
-	 * 
-	 * @param view
-	 *            Vista
-	 * */
-	public void nuevaVaca(View view) {
-		if (comprobarIdVaca() && comprobarFecha() && comprobarSexo()
-				&& comprobarIdMadre()) {
-			final Vaca v = crearVaca();
-			vdatos.añadirVaca(v);
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-
-					Toast.makeText(AniadirVacaVista.this,
-							"Añadido correctamente", Toast.LENGTH_SHORT).show();
-					Intent i = new Intent(getApplicationContext(),
-							UsuarioVista.class);
-					i.putExtra("id_usuario", id_usuario);
-					startActivity(i);
-					finish();
-				}
-			});
-
-		}
+	 * Método que crea la foto que se va a guardar en la base de datos y la devuelve como String
+	 * @return String Foto del animal
+	 */
+	private String crearImagen() {
+		Button imagen = (Button) findViewById(R.id.foto_boton);
+		Bitmap bitmap = ((BitmapDrawable) imagen.getBackground()).getBitmap();
+		bitmap = redimensionarImagenMaximo(bitmap, 500, 300);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+		byte[] bitmapdata = stream.toByteArray();
+		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
+		return encodedImage;
 	}
 
+	/**
+	 * Redimensionar un Bitmap.
+	 * 
+	 * @param Bitmap
+	 *            mBitmap
+	 * @param float newHeight
+	 * @param float newHeight
+	 * @param float newHeight
+	 * @return Bitmap
+	 */
+	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
+			float newHeigth) {
+
+		int width = mBitmap.getWidth();
+		int height = mBitmap.getHeight();
+		float scaleWidth = ((float) newWidth) / width;
+		float scaleHeight = ((float) newHeigth) / height;
+		Matrix matrix = new Matrix();
+		matrix.postScale(scaleWidth, scaleHeight);
+		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+	}
+
+	/**
+	 * Crea la vista para seleccionar una foto
+	 * 
+	 * @param v
+	 *            Vista
+	 */
 	public void cargarFoto(View v) {
 		Intent intent = new Intent(Intent.ACTION_PICK,
 				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -374,7 +361,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode==2){
+		if(resultCode!=0){
 		Uri selectedImage = data.getData();
 		InputStream is;
 		try {
@@ -389,6 +376,13 @@ public class AniadirVacaVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
+	 * datos cloud como la base de datos interna.
+	 * 
+	 * @param usuario
+	 *            String id_usuario
+	 */
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -448,6 +442,22 @@ public class AniadirVacaVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+
+	/**
+	 * Añade la vista de añadir vaca. Recoge el usuario de la vista del usuario.
+	 * Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_aniadir_vaca);
+		Bundle bundle = getIntent().getExtras();
+		id_usuario = bundle.getString("id_usuario");
+		listaVacas = new ArrayList<Vaca>();
+		rellenarSpinner();
+
+		listaVacas();
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.example.misvacasapp.modelo.Medicamento;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ import android.widget.TextView;
  * @author Sara Martinez Lopez
  * */
 public class AdapterMedicamento extends BaseAdapter {
-	// Atributos
+	//-----------------------------Atributos-----------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
 	/** Lista para mostrar el listado de medicamentos */
@@ -30,7 +31,7 @@ public class AdapterMedicamento extends BaseAdapter {
 	 */
 	private TableSeleccionado seleccionado;
 	
-	//Métodos
+	//-----------------------------Métodos--------------------------------------//
 	/**
 	 * Constructor
 	 * 
@@ -89,6 +90,7 @@ public class AdapterMedicamento extends BaseAdapter {
 	 * @param parent
 	 * @return View Vista de la lista de medicamentos
 	 * */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;

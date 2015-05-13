@@ -39,7 +39,7 @@ import android.widget.Spinner;
  * @author Sara Martinez Lopez
  * */
 public class MedicamentosVista extends ActionBarActivity {
-	// Atributos
+	//--------------------------Atributos----------------------------------//
 	/** Id vaca */
 	private String id_vaca;
 	/**
@@ -54,30 +54,10 @@ public class MedicamentosVista extends ActionBarActivity {
 	/** Lista de los medicamentos que tiene una vaca */
 	private ArrayList<Medicamento> listaMedicamentos;
 
+	/** Base de datos interna de los medicamentos del animale*/
 	private MedicamentoDatosBbdd mdatos;
 
-	// Métodos
-	/**
-	 * Añade la vista de los medicamentos Recoge el id de la vaca de la vista de
-	 * la vista Inicializa parametros
-	 * */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lista_medicamentos_vista);
-		Bundle bundle = getIntent().getExtras();
-		id_vaca = bundle.getString("id_vaca");
-		listaVista = (ListView) findViewById(R.id.lista_medicamentos_vista);
-		listaMedicamentos = new ArrayList<Medicamento>();
-
-		mostrarListado();
-	}
-
-	private void getListaMedicamentos() {
-		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
-		listaMedicamentos = mdatos.getMedicamentos(id_vaca);
-	}
-
+	//------------------------------Métodos--------------------------------------//
 	/**
 	 * Método que rellena la lista con los medicamentos de la vaca Llama al
 	 * servicio web para recibir los datos
@@ -114,63 +94,11 @@ public class MedicamentosVista extends ActionBarActivity {
 		clickLista();
 		clickLargoLista();
 	}
-
+	
 	/**
-	 * Método que utiliza la lista para hacer el click en un item de la lista
+	 * Método que devuelve un "true" si el boton tiene que estar activado o un
+	 * "false" si no
 	 * 
-	 * @see setAdapter
-	 * */
-	private void clickLista() {
-		listaVista
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						int id_medicamento = adapter.getItem(position)
-								.getId_medicamento();
-						lanzarMedicamento(id_medicamento);
-					}
-				});
-	}
-
-	/**
-	 * Método que se utiliza para la selección larga en la lista
-	 * 
-	 * @see setAdapter
-	 * */
-	private void clickLargoLista() {
-		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				seleccionado = adapter.getSeleccionado();
-				if (seleccionado.getTable().get(position)) {
-					seleccionado.getTable().put(position, false);
-
-					if (!activarBoton()) {
-						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-						botonEliminar
-								.setBackgroundResource(R.drawable.boton_eliminar_5);
-						botonEliminar.setEnabled(false);
-					}
-				} else {
-					seleccionado.getTable().put(position, true);
-					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
-					botonEliminar
-							.setBackgroundResource(R.anim.boton_eliminar_animacion);
-					botonEliminar.setEnabled(true);
-				}
-				adapter.setSeleccionado(seleccionado);
-				setAdapter(listaMedicamentos);
-				return true;
-			}
-		});
-	}
-
-	/**
-	 * Método que activa o desactiva el botón eliminar
-	 * 
-	 * @see clickLargoLista
 	 * */
 	private boolean activarBoton() {
 		boolean resultado = false;
@@ -183,14 +111,12 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Cambia a la vista de la vaca
-	 * 
-	 * @param id_vaca
-	 *            id de la vaca
-	 * @see clickLista
+	* Recoge los medicamentos de un animal de la base de datos interna y los
+	 * guarda en un arrayList
 	 * */
-	private void lanzarMedicamento(int id_medicamento) {
-		new LanzarVista(this).lanzarMedicamento(id_medicamento, id_vaca);
+	private void getListaMedicamentos() {
+		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+		listaMedicamentos = mdatos.getMedicamentos(id_vaca);
 	}
 
 	/**
@@ -306,7 +232,7 @@ public class MedicamentosVista extends ActionBarActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				Spinner tipoSpinner = (Spinner) layout
 						.findViewById(R.id.spinner1);
-				mostrarTipoFecha(tipoSpinner);
+				mostrarPorTipo(tipoSpinner);
 			}
 		});
 
@@ -323,12 +249,8 @@ public class MedicamentosVista extends ActionBarActivity {
 	/**
 	 * Método que rellena los spinner de la alerta buscar
 	 * 
-	 * @param tipoSpinner
-	 * @param diaSpinner
-	 * @param mesSpinner
-	 * @param anioSpinner
+	 * @param tipoSpinner Spinner
 	 */
-
 	private void rellenarSpinnerBuscar(Spinner tipoSpinner) {
 		ArrayList<String> listaMedicamentos = new ArrayList<String>(
 				Arrays.asList("-", "Brucelosis", "Leptospirosis",
@@ -403,13 +325,13 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * 
 	 * @param tipoSpinner
 	 */
-	private void mostrarTipoFecha(Spinner tipoSpinner) {
+	private void mostrarPorTipo(Spinner tipoSpinner) {
 
-		ArrayList<Medicamento> listaTipoFecha = new ArrayList<Medicamento>();
+		ArrayList<Medicamento> listaPorFecha = new ArrayList<Medicamento>();
 
 		if (tipoSpinner.getSelectedItem().toString().equals("-")) {
 			for (int i = 0; i < listaMedicamentos.size(); i++) {
-				listaTipoFecha = listaMedicamentos;
+				listaPorFecha = listaMedicamentos;
 				seleccionado.getTable().put(i, false);
 			}
 
@@ -417,11 +339,11 @@ public class MedicamentosVista extends ActionBarActivity {
 			for (int i = 0; i < listaMedicamentos.size(); i++) {
 				if (listaMedicamentos.get(i).getTipo()
 						.equals(tipoSpinner.getSelectedItem().toString())) {
-					listaTipoFecha.add(listaMedicamentos.get(i));
+					listaPorFecha.add(listaMedicamentos.get(i));
 				}
 			}
 		}
-		setAdapter(listaTipoFecha);
+		setAdapter(listaPorFecha);
 	}
 
 	/**
@@ -439,6 +361,76 @@ public class MedicamentosVista extends ActionBarActivity {
 		botonEliminar.setBackgroundResource(R.anim.boton_eliminar_animacion);
 	}
 
+	/**
+	 * Método que utiliza la lista para hacer el click en un item de la lista
+	 * 
+	 * @see setAdapter
+	 * */
+	private void clickLista() {
+		listaVista
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						int id_medicamento = adapter.getItem(position)
+								.getId_medicamento();
+						lanzarMedicamento(id_medicamento);
+					}
+				});
+	}
+
+	/**
+	 * Método que se utiliza para la selección larga en la lista
+	 * 
+	 * @see setAdapter
+	 * */
+	private void clickLargoLista() {
+		listaVista.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				seleccionado = adapter.getSeleccionado();
+				if (seleccionado.getTable().get(position)) {
+					seleccionado.getTable().put(position, false);
+
+					if (!activarBoton()) {
+						Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+						botonEliminar
+								.setBackgroundResource(R.drawable.boton_eliminar_5);
+						botonEliminar.setEnabled(false);
+					}
+				} else {
+					seleccionado.getTable().put(position, true);
+					Button botonEliminar = (Button) findViewById(R.id.eliminar_medicamento);
+					botonEliminar
+							.setBackgroundResource(R.anim.boton_eliminar_animacion);
+					botonEliminar.setEnabled(true);
+				}
+				adapter.setSeleccionado(seleccionado);
+				setAdapter(listaMedicamentos);
+				return true;
+			}
+		});
+	}
+
+	/**
+	 * Cambia a la vista de la vaca
+	 * 
+	 * @param id_vaca
+	 *            id de la vaca
+	 * @see clickLista
+	 * */
+	private void lanzarMedicamento(int id_medicamento) {
+		new LanzarVista(this).lanzarMedicamento(id_medicamento, id_vaca);
+	}
+
+	/**
+	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
+	 * datos cloud como la base de datos interna.
+	 * 
+	 * @param usuario
+	 *            String id_usuario
+	 */
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
@@ -500,6 +492,22 @@ public class MedicamentosVista extends ActionBarActivity {
 			}
 		};
 		hilo.start();
+	}
+
+	/**
+	 * Añade la vista de los medicamentos Recoge el id de la vaca de la vista de
+	 * la vista Inicializa parametros
+	 * */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_lista_medicamentos_vista);
+		Bundle bundle = getIntent().getExtras();
+		id_vaca = bundle.getString("id_vaca");
+		listaVista = (ListView) findViewById(R.id.lista_medicamentos_vista);
+		listaMedicamentos = new ArrayList<Medicamento>();
+
+		mostrarListado();
 	}
 
 	/**
