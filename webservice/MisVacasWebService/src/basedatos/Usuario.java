@@ -157,6 +157,45 @@ public class Usuario {
 		}
 		return usuario;
 	}
+	
+	/**
+	 * Devuelve un usuario la base de datos. Crea la conexión a la base de
+	 * datos, llama a la base de datos recogiendo el usuario que se quiere y lo
+	 * guarda en un nuevo usuario
+	 * 
+	 * @param dni
+	 *            DNI del usuario o id del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
+	 * @return Usuario Usuario encontrado en la base de datos
+	 * */
+	public Usuario getUsuario(String correo) {
+		OracleConection c = new OracleConection();
+		c.Conectar();
+		Usuario usuario = new Usuario();
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				ResultSet result = select
+						.executeQuery("SELECT * from usuario where correo='" + correo+ "'");
+				while (result.next()) {
+					try {
+						usuario = new Usuario(result.getString(1),
+								result.getString(2), result.getString(3),
+								result.getString(4), result.getString(5),
+								Integer.parseInt(result.getString(6)),
+								result.getString(7), result.getString(8),
+								Integer.parseInt(result.getString(9)),
+								result.getString(10), result.getString(11));
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (SQLException e) {
+			}
+		}
+		return usuario;
+	}
 
 	public String listaUsuariosString() {
 		ArrayList<Usuario> lista = listaUsuarios();
@@ -250,7 +289,7 @@ public class Usuario {
 						+ telefono + "',correo ='" + correo
 						+ "',codigo_explotacion ='" + codigo_explotacion
 						+ "'where dni='" + dni + "'");
-				
+
 			} catch (SQLException e) {
 			}
 		}
@@ -273,7 +312,7 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				select.executeQuery("UPDATE usuario SET contraseña ='"
 						+ contraseña + "' where dni='" + dni + "'");
-				
+
 			} catch (SQLException e) {
 			}
 		}
@@ -292,6 +331,7 @@ public class Usuario {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
+				new Vaca().eliminarVacas(id_usuario);
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
 			} catch (SQLException e) {
@@ -332,6 +372,26 @@ public class Usuario {
 				pstmt.close();
 			} catch (SQLException e) {
 			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param u
+	 */
+	public void recordarContraseña(String correo) {
+		Usuario u = getUsuario(correo);
+		Mail m = new Mail("misvacasapp@gmail.com", "sara130490");
+		String[] toArr = { u.getCorreo(), "misvacasapp@gmail.com" };
+		m.setTo(toArr);
+		m.setFrom("misvacasapp@gmail.com");
+		m.setSubject("Correo de autenticacion");
+		m.setBody("Su usuario y contraseña son:\n  Usuario: " + u.getDni()
+				+ "\n  Contraseña: " + u.getContraseña());
+		try {
+			m.send();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

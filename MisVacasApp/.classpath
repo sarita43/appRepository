@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="lib" path="C:/Users/sara/Desktop/gson-1.7.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sara/Desktop/ksoap2-android-assembly-3.3.0-jar-with-dependencies.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sara/Desktop/ojdbc7.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sara/Desktop/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="C:/Users/sara/Desktop/javax.mail-1.5.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sara/Desktop/activation.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sara/Desktop/additionnal.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sara/Desktop/gson-1.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sara/Desktop/ksoap2-android-assembly-3.3.0-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sara/Desktop/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sara/Desktop/ojdbc7.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

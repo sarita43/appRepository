@@ -55,8 +55,7 @@ public class MedicamentoVista extends ActionBarActivity {
 		TextView tipo = (TextView) findViewById(R.id.tipo_medicamento);
 		tipo.setText("TIPO: " + medicamento.getTipo());
 		TextView descripcion = (TextView) findViewById(R.id.descripcion);
-		descripcion.setText("DESCRIPCION: " + "\n "
-				+ medicamento.getDescripcion());
+		descripcion.setText(medicamento.getDescripcion());
 
 	}
 

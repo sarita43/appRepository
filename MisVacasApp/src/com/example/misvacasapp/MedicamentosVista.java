@@ -1,7 +1,6 @@
 package com.example.misvacasapp;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.example.misvacasapp.adapter.AdapterMedicamento;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
@@ -252,17 +251,9 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * @param tipoSpinner Spinner
 	 */
 	private void rellenarSpinnerBuscar(Spinner tipoSpinner) {
-		ArrayList<String> listaMedicamentos = new ArrayList<String>(
-				Arrays.asList("-", "Brucelosis", "Leptospirosis",
-						"Rinotraqueitis", "Parainfluenza 3 (PI 3)",
-						"Diarrea viral bovina (DVB)", "Analgésico",
-						"Antibiótico", " Desparasitante", " Diurético",
-						"Expectorante", "Anabólicos y Hormonales",
-						" Misceláneos", " Vitaminas", "Otros"));
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(
-				getApplicationContext(),
-				android.R.layout.simple_spinner_dropdown_item,
-				listaMedicamentos);
+		ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
+				R.array.lista_medicamentos,
+				android.R.layout.simple_spinner_dropdown_item);
 		tipoSpinner.setAdapter(adapter);
 		//
 		// ArrayList<String> listaDias = new

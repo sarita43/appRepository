@@ -94,4 +94,8 @@ public class UsuarioWebService {
 	public void añadirUsuario(String usuario) {
 		new Usuario().añadirUsuario(usuario);
 	}
+	
+	public void recordarUsuario(String correo){
+		new Usuario().recordarContraseña(correo);
+	}
 }

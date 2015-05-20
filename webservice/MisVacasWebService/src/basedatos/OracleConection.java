@@ -14,29 +14,29 @@ public class OracleConection {
 	/** Conexión */
 	private Connection conexion;
 
-//	 Métodos
-	 public static void main(String[] args) {
-//		 enviar("sara_c43@hotmail.com", "", "misvacasapp@gmail.com", "Mis Vacas APP", "Correo de autenticacion", "Correo enviado desde la aplicacion :)");
-//		 }
-//		 private static void enviar(String emailTo, String nameTo, String emailFrom, String nameFrom,
-//		 String subject, String body){
-//		 Mail m = new Mail("misvacasapp@gmail.com", "sara130490");
-//		 String[] toArr = {emailTo};
-//		 m.setTo(toArr);
-//		 m.setFrom(emailFrom);
-//		 m.setSubject(subject);
-//		 m.setBody(body);
-//		 try {
-//		 m.send();
-//		 } catch (Exception e) {
-//		 e.printStackTrace();
-//		 }
-//		 System.out.println("Correo enviado");
-		 Vaca v = new Vaca();
-		 v.eliminarVacas("1111");
-		 }
+	// Métodos
+//	public static void main(String[] args) {
+//		Usuario u = new Usuario("nombre", "apellido1", "apellido2", "direccion", "poblacion", 0000, "dni", "contraseña", 1, "sara_c43@hotmail.com", "codigo_explotacion");
+//		u.recordarContraseña(u);
+//	}
+//
+//	private static void enviar(String emailTo, String nameTo, String emailFrom,
+//			String nameFrom, String subject, String body) {
+//		Mail m = new Mail("misvacasapp@gmail.com", "sara130490");
+//		String[] toArr = { emailTo };
+//		m.setTo(toArr);
+//		m.setFrom(emailFrom);
+//		m.setSubject(subject);
+//		m.setBody(body);
+//		try {
+//			m.send();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println("Correo enviado");
+//
+//	}
 
-	
 	/**
 	 * Método que devuelve la conexión
 	 * 

@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -233,22 +232,18 @@ public class Login extends ActionBarActivity {
 	private void alertaCorreo() {
 
 		LayoutInflater inflater = LayoutInflater.from(this);
-		View layout = inflater.inflate(R.layout.buscar_layout, null);
+		View layout = inflater.inflate(R.layout.buscar_usuario_layout, null);
 		AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
 		dialogo.setView(layout);
 		dialogo.setMessage("Introduzca el correo electronico");
-		final EditText texto = (EditText) layout.findViewById(R.id.busca);
+		final EditText texto = (EditText) layout.findViewById(R.id.editText1);
 		/** Método del botón aceptar del dialogo */
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-
+				
 				if (correoExistente(texto.getText().toString())) {
-					Usuario u = getUsuario(texto.getText().toString());
-					enviar(texto.getText().toString(), "",
-							"misvacasapp@gmail.es", "Mis Vacas APP",
-							"Correo de autenticacion",
-							"Su usuario y contraseña son: " + u.getDni());
+					getUsuarioContraseña(texto.getText().toString());
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -280,51 +275,6 @@ public class Login extends ActionBarActivity {
 	}
 
 	/**
-	 * Métodos que envia un correo electronico al usuario recordandole el
-	 * usuario y contraseña que ha olvidado
-	 * 
-	 * @param emailTo
-	 * @param nameTo
-	 * @param emailFrom
-	 * @param nameFrom
-	 * @param subject
-	 * @param body
-	 */
-	private void enviar(final String emailTo, String nameTo,
-			final String emailFrom, String nameFrom, final String subject,
-			final String body) {
-		new AsyncTask<Void, Void, Void>() {
-
-			@Override
-			protected void onPreExecute() {
-			}
-
-			@Override
-			protected Void doInBackground(Void... params) {
-				Mail m = new Mail("misvacasapp@gmail.es", "sara130490");
-				String[] toArr = { emailTo, "misvacasapp@gmail.es" };
-				m.setTo(toArr);
-				m.setFrom(emailFrom);
-				m.setSubject(subject);
-				m.setBody(body);
-				try {
-					m.send();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void res) {
-
-			}
-		}.execute();
-
-		System.out.println("Correo enviado");
-	}
-	
-	/**
 	 * Recorre la lista de usuarios y mira si el correo pasado por parametro
 	 * existe y si existe devuelve un "true".
 	 * 
@@ -345,48 +295,39 @@ public class Login extends ActionBarActivity {
 		return resultado;
 	}
 	
-	// /**
-		// * Recoge todos los usuario de la base de datos cloud y los guarda en un
-		// * arrayList
-		// */
-		// private void getListaUsuarios() {
-		// listaUsuarios = new ArrayList<Usuario>();
-		// Thread hilo = new Thread() {
-		// String res = "";
-		// Gson json = new GsonBuilder().setPrettyPrinting()
-		// .setDateFormat("dd-MM-yyyy").create();
-		// LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
-		//
-		// public void run() {
-		// res = llamada.LlamadaListaUsuarios();
-		// listaUsuarios = json.fromJson(res,
-		// new TypeToken<ArrayList<Usuario>>() {
-		// }.getType());
-		// }
-		// };
-		// hilo.start();
-		// }
+	public void getUsuarioContraseña(final String correo){
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.getUsuarioContraseña(correo);
+			}
+		};
+		hilo.start();
+	}
 
 	/**
-	 * Devuelve el usuario usuario si el correo pasado por parametro existe
-	 * 
-	 * @param correo
-	 *            String. Correo del usuario
-	 * @return Usuario u. Usuario
+	 * Recoge todos los usuario de la base de datos cloud y los guarda en un
+	 * arrayList
 	 */
-	private Usuario getUsuario(String correo) {
-		Usuario u = new Usuario();
-		AgregadoUsuario agregado = new AgregadoUsuario(listaUsuarios);
-		IteratorListaUsuario i = (IteratorListaUsuario) agregado
-				.createIterator();
-		while (i.hasNext()) {
-			if (i.actualElement().getCorreo().equals(correo))
-				u = i.actualElement();
-			i.next();
-		}
-		return u;
+	private void getListaUsuarios() {
+		listaUsuarios = new ArrayList<Usuario>();
+		Thread hilo = new Thread() {
+			String res = "";
+			Gson json = new GsonBuilder().setPrettyPrinting()
+					.setDateFormat("dd-MM-yyyy").create();
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				res = llamada.LlamadaListaUsuarios();
+				listaUsuarios = json.fromJson(res,
+						new TypeToken<ArrayList<Usuario>>() {
+						}.getType());
+			}
+		};
+		hilo.start();
 	}
-	
+
 	/**
 	 * Recoge todos los animales de la base de datos cloud y los guarda en un
 	 * arrayList
@@ -402,7 +343,9 @@ public class Login extends ActionBarActivity {
 		res = llamada.LlamadaListaVacas(usuario);
 		listaVacas = json.fromJson(res, new TypeToken<ArrayList<Vaca>>() {
 		}.getType());
-
+		if (listaVacas.get(0).getId_vaca().compareTo("0") == 0) {
+			listaVacas = new ArrayList<Vaca>();
+		}
 		return listaVacas;
 	}
 
@@ -415,27 +358,29 @@ public class Login extends ActionBarActivity {
 		IteratorListaVaca i = new IteratorListaVaca(agregado);
 		while (i.hasNext()) {
 			String res = "";
-			ArrayList<Medicamento> listaAux = new ArrayList<Medicamento>();
+			ArrayList<Medicamento> listaAuxMedicamentos = new ArrayList<Medicamento>();
 			Gson json = new GsonBuilder().setPrettyPrinting()
 					.setDateFormat("dd-MM-yyyy").create();
 			LlamadaMedicamentoWS llamada = new LlamadaMedicamentoWS();
 			res = llamada.LlamadaListaMedicamentos(i.actualElement()
 					.getId_vaca());
-			listaAux = json.fromJson(res,
+			listaAuxMedicamentos = json.fromJson(res,
 					new TypeToken<ArrayList<Medicamento>>() {
 					}.getType());
-			AgregadoMedicamento agregadoMedicamento = new AgregadoMedicamento(
-					listaAux);
-			IteratorListaMedicamento iMedicamento = new IteratorListaMedicamento(
-					agregadoMedicamento);
-			while (iMedicamento.hasNext()) {
-				listaMedicamentos.add(iMedicamento.actualElement());
-				iMedicamento.next();
+			if (listaAuxMedicamentos.get(0).getId_medicamento() != 0) {
+				AgregadoMedicamento agregadoMedicamento = new AgregadoMedicamento(
+						listaAuxMedicamentos);
+				IteratorListaMedicamento iMedicamento = new IteratorListaMedicamento(
+						agregadoMedicamento);
+				while (iMedicamento.hasNext()) {
+					listaMedicamentos.add(iMedicamento.actualElement());
+					iMedicamento.next();
+				}
 			}
 			i.next();
+
 		}
 	}
-
 
 	/**
 	 * Añade la vista del login. Inicializa los atributos.
@@ -455,7 +400,7 @@ public class Login extends ActionBarActivity {
 		String contraseñaGuardado = prefs.getString("contraseña", "");
 		if (id_usuarioGuardado.equals("") && contraseñaGuardado.equals("")) {
 			setContentView(R.layout.activity_login);
-			// getListaUsuarios();
+			getListaUsuarios();
 		} else {
 			usuario = id_usuarioGuardado;
 			contraseña = contraseñaGuardado;

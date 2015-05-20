@@ -45,6 +45,12 @@ public class LanzarVista {
 		i.putExtra("id_usuario", id_usuario);
 		context.startActivity(i);
 	}
+	
+	public void lanzarCambiarFoto(String id_vaca){
+		Intent i = new Intent(context, CambiarFotoVista.class);
+		i.putExtra("id_vaca", id_vaca);
+		context.startActivity(i);
+	}
 
 	public void lanzarAñadirVaca(String id_usuario) {
 		Intent i = new Intent(context, AniadirVacaVista.class);

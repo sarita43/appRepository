@@ -23,8 +23,9 @@ public class MedicamentoDatosBbdd {
 
 	// ------------------------------------Atributos----------------------------//
 	/** Sentencia sql para crear la tabla de medicamentos */
-	public static String tablaMedicamentos = "create table if not exists medicamento (id_medicamento varchar(20),"
-			+ "fecha date,tipo varchar(40),descripcion varchar(250),id_vaca varchar(20),primary key (id_medicamento,id_vaca))";
+	public static String tablaMedicamentos = "create table if not exists medicamento " +
+			"(id_medicamento varchar(30) not null,fecha date,tipo varchar(40)," +
+			"descripcion varchar(250),id_vaca varchar(20) not null,constraint pk_medicamento primary key (id_medicamento,id_vaca));";
 	/** Sentencia sql para crear un medicamento */
 	public static String medicamento;
 	/** Ejecuta las sentencias sql */

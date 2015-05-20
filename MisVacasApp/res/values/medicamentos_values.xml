@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lista_medicamentos">
+        <item>-</item>
+        <item>Brucelosis</item>
+        <item>Leptospirosis</item>
+        <item>Rinotraqueitis</item>
+        <item>Parainfluenza 3 (PI 3)</item>
+        <item>Diarrea viral bovina (DVB)</item>
+        <item>Analgésico</item>
+        <item>Antibiótico</item>
+        <item>Desparasitante</item>
+        <item>Diurético</item>
+        <item>Expectorante</item>
+        <item>Anabólicos y Hormonales</item>
+        <item>Reproducción</item>
+        <item>Misceláneos</item>
+        <item>Vitaminas</item>
+        <item>Otros</item>
+    </string-array>
+    
+</resources>

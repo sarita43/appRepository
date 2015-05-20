@@ -3,212 +3,193 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/preidVaca"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/aniadir_vaca_id_vaca"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
+        android:layout_alignParentRight="true" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/id_vaca_nuevo_texto"
-        android:layout_below="@+id/id_vaca_nuevo_texto"
-        android:layout_marginTop="20dp"
-        android:text="@string/aniadir_vaca_rara"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_below="@+id/raza_nuevo_texto"
-        android:layout_marginTop="20dp"
-        android:text="@string/aniadir_vaca_fecha_nacimiento"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <EditText
-        android:id="@+id/dia_vaca"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/textView3"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="dd"
-        android:inputType="number"
-        android:nextFocusDown="@+id/mes_vaca"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/dia_vaca"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/dia_vaca"
-        android:text="@string/barra"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <EditText
-        android:id="@+id/mes_vaca"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/dia_vaca"
-        android:layout_alignBottom="@+id/dia_vaca"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/textView4"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="mm"
-        android:inputType="number"
-        android:nextFocusDown="@+id/anio_vaca"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/mes_vaca"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/mes_vaca"
-        android:text="@string/barra"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_below="@+id/dia_vaca"
-        android:layout_marginTop="20dp"
-        android:text="@string/aniadir_vaca_id_madre"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <EditText
-        android:id="@+id/id_madre_nuevo_vaca"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignRight="@+id/anio_vaca"
-        android:layout_below="@+id/textView6"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Ej: ES111111111111"
-        android:inputType="textCapCharacters"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <Spinner
-        android:id="@+id/raza_nuevo_texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_below="@+id/id_vaca_nuevo_texto"
-        android:layout_toLeftOf="@+id/textView7"
-        android:layout_toRightOf="@+id/textView2"
-        android:ems="10"
-        android:inputType="text"
-        android:nextFocusDown="@+id/sexo_nuevo_vaca" />
-
-    <EditText
-        android:id="@+id/sexo_nuevo_vaca"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView3"
-        android:layout_alignRight="@+id/anio_vaca"
-        android:layout_below="@+id/id_vaca_nuevo_texto"
-        android:layout_toRightOf="@+id/textView7"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="M/H"
-        android:inputType="textCapWords"
-        android:nextFocusDown="@+id/dia_vaca"
-        android:singleLine="true" />
-
-    <EditText
-        android:id="@+id/id_vaca_nuevo_texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/preidVaca"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/preidVaca"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Ej: ES111111111111"
-        android:inputType="textCapCharacters"
-        android:nextFocusDown="@+id/raza_nuevo_texto"
-        android:textSize="@dimen/abc_text_size_body_1_material" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/anio_vaca"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView6"
-        android:layout_alignRight="@+id/id_vaca_nuevo_texto"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/textView5"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="aaaa"
-        android:inputType="number"
-        android:nextFocusDown="@+id/id_madre_nuevo_vaca"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/id_madre_nuevo_vaca"
-        android:layout_margin="15dp" >
-
-        <Button
-            android:id="@+id/foto_boton"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:background="@drawable/agregar_foto"
-            android:onClick="cargarFoto" />
-
-        <Button
-            android:id="@+id/botonNuevaVaca"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="nuevaVaca"
-            android:layout_marginTop="45dp"
-            android:layout_marginLeft="15dp"
-            android:text="@string/botonAceptar" />
-    </LinearLayout>
+            android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/sexo_nuevo_vaca"
-        android:layout_toLeftOf="@+id/anio_vaca"
-        android:text="@string/sexo"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
+            <TextView
+                android:id="@+id/preidVaca"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/aniadir_vaca_id_vaca"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/abc_text_size_body_1_material" />
+
+            <EditText
+                android:id="@+id/id_vaca_nuevo_texto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:ems="10"
+                android:hint="Ej: ES111111111111"
+                android:inputType="textCapCharacters"
+                android:nextFocusDown="@+id/raza_nuevo_texto"
+                android:textSize="@dimen/abc_text_size_body_1_material" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:baselineAligned="true" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aniadir_vaca_rara"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <Spinner
+                    android:id="@+id/raza_nuevo_texto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:nextFocusDown="@+id/sexo_nuevo_vaca" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sexo"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <EditText
+                    android:id="@+id/sexo_nuevo_vaca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="M/H"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/dia_vaca"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/aniadir_vaca_fecha_nacimiento"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/abc_text_size_body_1_material" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
+
+                <EditText
+                    android:id="@+id/dia_vaca"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="dd"
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/mes_vaca"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/barra"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <EditText
+                    android:id="@+id/mes_vaca"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="mm"
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/anio_vaca"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/barra"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                <EditText
+                    android:id="@+id/anio_vaca"
+                    android:layout_width="94dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="aaaa"
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/id_madre_nuevo_vaca"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/aniadir_vaca_id_madre"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="@dimen/abc_text_size_body_1_material" />
+
+            <EditText
+                android:id="@+id/id_madre_nuevo_vaca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:ems="10"
+                android:hint="Ej: ES111111111111"
+                android:inputType="textCapCharacters"
+                android:textSize="@dimen/abc_text_size_body_1_material" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp" >
+
+                <Button
+                    android:id="@+id/foto_boton"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/agregar_foto"
+                    android:onClick="cargarFoto" />
+
+                <Button
+                    android:id="@+id/botonNuevaVaca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="45dp"
+                    android:onClick="nuevaVaca"
+                    android:text="@string/botonAceptar" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

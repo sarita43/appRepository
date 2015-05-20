@@ -231,4 +231,21 @@ public class LlamadaUsuarioWS {
 		}
 		return res;
 	}
+	
+	public void getUsuarioContraseña(String correo){
+		METHOD_NAME = "recordarUsuario";
+		SOAP_ACTION = "urn:recordarUsuario";
+		request = new SoapObject(NAMESPACE, METHOD_NAME);
+		request.addProperty("correo",correo);
+		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+		HttpTransportSE transporte = new HttpTransportSE(URL);
+		try {
+			transporte.call(SOAP_ACTION, envelope);
+			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
+	}
 }

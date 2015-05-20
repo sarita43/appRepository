@@ -2,7 +2,6 @@ package com.example.misvacasapp.aniadir;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.MedicamentosVista;
@@ -37,7 +36,7 @@ import android.widget.Toast;
  * @author Sara Martinez Lopez
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
-	//----------------------------Atributos--------------------------------//
+	// ----------------------------Atributos--------------------------------//
 	/** Id del animal */
 	private String id_vaca;
 	/** Lista de medicamentos que tiene el animal */
@@ -47,32 +46,24 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * puedes introducir
 	 */
 	private Spinner spinnerMedicamento;
-	/** Base de datos interna de los medicamentos del animal*/
+	/** Base de datos interna de los medicamentos del animal */
 	private MedicamentoDatosBbdd mdatos;
 
-	//-----------------------------Métodos-----------------------------------//
+	// -----------------------------Métodos-----------------------------------//
 	/**
 	 * Rellena la lista de desplegable de los tipos medicamentos o vacunas
 	 * */
 	private void rellenarSpinner() {
 		spinnerMedicamento = (Spinner) findViewById(R.id.tipo_medicamento_texto);
-		ArrayList<String> listaMedicamentos = new ArrayList<String>(
-				Arrays.asList("Brucelosis", "Leptospirosis", "Rinotraqueitis",
-						"Parainfluenza 3 (PI 3)", "Diarrea viral bovina (DVB)",
-						"Analgésico", "Antibiótico", " Desparasitante",
-						" Diurético", "Expectorante",
-						"Anabólicos y Hormonales", " Misceláneos",
-						" Vitaminas", "Otros"));
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-				android.R.layout.simple_spinner_dropdown_item,
-				listaMedicamentos);
+		ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
+				R.array.lista_medicamentos,
+				android.R.layout.simple_spinner_dropdown_item);
 		spinnerMedicamento.setAdapter(adapter);
 	}
-	
+
 	private ArrayList<Medicamento> getMedicamentos(String id_vaca) {
 		return mdatos.getMedicamentos(id_vaca);
 	}
-	
 
 	/**
 	 * Método que añade el medicamento a la lista de medicamentos de un animal
@@ -100,7 +91,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 			});
 		}
 	}
-	
 
 	/**
 	 * Método que crea el medicamento con los valores introducidos por el
@@ -129,7 +119,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		return medicamento;
 	}
 
-
 	/**
 	 * LLama a crear el id aleatorio y comprueba que ese id no exista Si existe
 	 * vuelve a crear otro id aleatorio
@@ -155,7 +144,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	private int idAleatorio() {
 		return (int) Math.round(Math.random() * Integer.MAX_VALUE);
 	}
-	
+
 	/**
 	 * Método que comprueba si la fecha introducida por el usuario es correcta.
 	 * Comprueba que este entre los valores de los dias posibles, los meses

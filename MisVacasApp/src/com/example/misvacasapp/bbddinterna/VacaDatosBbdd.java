@@ -21,9 +21,9 @@ public class VacaDatosBbdd {
 
 	//-----------------------------------Atributos------------------------------------------//
 	/**Sentecia sql crear la tabla de animales*/
-	public static String tablaVacas = "create table if not exists vaca (id_vaca varchar(15) primary key not null,"
-			+ " raza varchar(50),fecha_nacimiento date,id_madre varchar(15),foto blob,"
-			+ "id_usuario varchar(20),sexo char)";
+	public static String tablaVacas = "create table if not exists vaca " +
+			"(id_vaca varchar(15) primary key not null, raza varchar(50)," +
+			"fecha_nacimiento date,id_madre varchar(15),foto blob,id_usuario varchar(20),sexo char)";
 	/**Sentencia sql para crear un animal*/
 	public static String vaca;
 	/** Ejecuta las sentencias sql */

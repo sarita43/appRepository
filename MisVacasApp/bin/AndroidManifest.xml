@@ -62,6 +62,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".aniadir.NuevoUsuarioVista"></activity>
+        <activity android:name="CambiarFotoVista"></activity>
     </application>
 
 </manifest>

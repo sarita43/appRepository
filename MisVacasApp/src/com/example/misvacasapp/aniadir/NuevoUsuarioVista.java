@@ -38,8 +38,17 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 			public void run() {
 
 				usuario = json.toJson(nuevoUsuario);
-				System.out.println("USUARIO" + usuario);
 				llamada.añadirUsuario(usuario);
+				
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						getUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
+								.getText().toString());
+						Toast.makeText(NuevoUsuarioVista.this, "No funciona",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 		};
 		hilo.start();
@@ -83,6 +92,16 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 		}
 	}
 
+	public void getUsuarioContraseña(final String correo){
+		Thread hilo = new Thread() {
+			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
+
+			public void run() {
+				llamada.getUsuarioContraseña(correo);
+			}
+		};
+		hilo.start();
+	}
 	/**
 	 * Método que comprueba si el dni ya existe. Si existe quiere decir que el
 	 * usuario ya esta registrado

@@ -26,8 +26,8 @@
     <string name="direccion">Dirección</string>
     <string name="telefono">Teléfono</string>
     <string name="poblacion">Poblacion</string>
-    <string name="fecha">Fecha</string>
-    <string name="tipo">Tipo</string>
+    <string name="fecha">Fecha:</string>
+    <string name="tipo">Tipo:</string>
     <string name="descripcion">Descripción</string>
     <string name="barra">/</string>
     <string name="aniadir_vaca_id_vaca">Id Vaca</string>
