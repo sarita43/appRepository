@@ -69,7 +69,7 @@ public class Vaca {
 		setId_usuario(id_usuario);
 		setSexo(sexo);
 	}
-	
+
 	/**
 	 * Devuelve el arrayList de los animales que tiene un usuario en la base de
 	 * datos. Crea la conexión a la base de datos, llama a la base de datos
@@ -224,7 +224,7 @@ public class Vaca {
 			return listaVacas;
 		}
 	}
-	
+
 	public String listaVacasString() {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
@@ -299,8 +299,8 @@ public class Vaca {
 			}
 		}
 	}
-	
-	public void eliminarVacas(String id_usuario){
+
+	public void eliminarVacas(String id_usuario) {
 		ArrayList<Vaca> listaVacas = listaVacas(id_usuario);
 		for (int i = 0; i < listaVacas.size(); i++) {
 			OracleConection c = new OracleConection();
@@ -310,7 +310,8 @@ public class Vaca {
 					Statement select = c.getConexion().createStatement();
 					select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
 							+ listaVacas.get(i).getId_vaca() + "'");
-					select.executeQuery("DELETE FROM vaca WHERE id_usuario='" + id_usuario + "'");
+					select.executeQuery("DELETE FROM vaca WHERE id_usuario='"
+							+ id_usuario + "'");
 				} catch (SQLException e) {
 				}
 			}

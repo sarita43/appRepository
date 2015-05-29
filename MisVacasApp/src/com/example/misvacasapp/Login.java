@@ -3,6 +3,7 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.iterator.AgregadoMedicamento;
 import com.example.misvacasapp.iterator.AgregadoUsuario;
@@ -11,9 +12,11 @@ import com.example.misvacasapp.iterator.IteratorListaMedicamento;
 import com.example.misvacasapp.iterator.IteratorListaUsuario;
 import com.example.misvacasapp.iterator.IteratorListaVaca;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Produccion;
 import com.example.misvacasapp.modelo.Usuario;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
@@ -59,6 +62,8 @@ public class Login extends ActionBarActivity {
 	private ArrayList<Vaca> listaVacas;
 	/** Lista de medicamentos que tienen los animales de un usuario */
 	private ArrayList<Medicamento> listaMedicamentos;
+	/** Lista de producción de leche y carne*/
+	private ArrayList<Produccion> listaProduccion;
 
 	/** Base de datos interna de los animales de un usuario */
 	private VacaDatosBbdd vdbbdd;
@@ -67,6 +72,10 @@ public class Login extends ActionBarActivity {
 	 * usuario
 	 */
 	private MedicamentoDatosBbdd mbbdd;
+	/**
+	 * Base de datos interna de la producción de leche y carne
+	 */
+	private ProduccionDatosBbdd pbbdd;
 
 	// ----------------------Métodos----------------------------------------//
 	/**
@@ -178,6 +187,7 @@ public class Login extends ActionBarActivity {
 
 		vdbbdd = new VacaDatosBbdd(getApplicationContext());
 		mbbdd = new MedicamentoDatosBbdd(getApplicationContext());
+		pbbdd = new ProduccionDatosBbdd(getApplicationContext());
 
 		if (vdbbdd.getRegistros() == 0
 				|| vdbbdd.getRegistros(usuario) < vdbbdd.getRegistros()) {
@@ -196,8 +206,10 @@ public class Login extends ActionBarActivity {
 			getListaMedicamentos();
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
 					listaMedicamentos);
+			getListaProduccion();
+			pbbdd = new ProduccionDatosBbdd(getApplicationContext(), listaProduccion);
 		}
-		// TODO Sincronizar
+		// TODO Sincronizar??
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
 		this.finish();
 
@@ -381,6 +393,22 @@ public class Login extends ActionBarActivity {
 
 		}
 	}
+	
+	public void getListaProduccion(){
+		//TODO
+		String res = "";
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		LlamadaProduccionWS llamada = new LlamadaProduccionWS();
+
+		res = llamada.getProducciones(usuario);
+		listaProduccion = json.fromJson(res, new TypeToken<ArrayList<Produccion>>() {
+		}.getType());
+		System.out.println(res);
+		if (listaProduccion.get(0).getId_produccion()== 0) {
+			listaProduccion = new ArrayList<Produccion>();
+		}
+	}
 
 	/**
 	 * Añade la vista del login. Inicializa los atributos.
@@ -393,6 +421,7 @@ public class Login extends ActionBarActivity {
 
 		listaVacas = new ArrayList<Vaca>();
 		listaMedicamentos = new ArrayList<Medicamento>();
+		listaProduccion = new ArrayList<Produccion>();
 
 		SharedPreferences prefs = getSharedPreferences("MisDatos",
 				Context.MODE_PRIVATE);

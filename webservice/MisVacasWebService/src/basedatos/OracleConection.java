@@ -14,6 +14,7 @@ public class OracleConection {
 	/** Conexión */
 	private Connection conexion;
 
+	
 	// Métodos
 //	public static void main(String[] args) {
 //		Usuario u = new Usuario("nombre", "apellido1", "apellido2", "direccion", "poblacion", 0000, "dni", "contraseña", 1, "sara_c43@hotmail.com", "codigo_explotacion");

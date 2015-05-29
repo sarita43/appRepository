@@ -36,6 +36,7 @@
     <string name="aniadir_vaca_id_madre">Id madre</string>
     <string name="sexo">Sexo</string>
     <string name="menu_mis_vacas">Mis Vacas</string>
+    <string name="reproduccion">Calendario Reproducción</string>
     <string name="menu_seleccionar_todo">Seleccionar todo</string>
     <string name="menu_sincronizar_cuenta">Sincronizar cuenta</string>
     <string name="correo">Correo electronico</string>

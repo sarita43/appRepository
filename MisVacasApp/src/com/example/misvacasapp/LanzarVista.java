@@ -3,6 +3,8 @@ package com.example.misvacasapp;
 import com.example.misvacasapp.aniadir.AniadirMedicamentoVista;
 import com.example.misvacasapp.aniadir.AniadirVacaVista;
 import com.example.misvacasapp.aniadir.NuevoUsuarioVista;
+import com.example.misvacasapp.calendario.CalendarioReproducionesVista;
+import com.example.misvacasapp.graficos.ProducionVista;
 import com.example.misvacasapp.menus.AdministrarCuentaVista;
 
 import android.content.Context;
@@ -15,11 +17,11 @@ public class LanzarVista {
 		this.context = context;
 	}
 
-	public void lanzarLogin(){
+	public void lanzarLogin() {
 		Intent i = new Intent(context, Login.class);
 		context.startActivity(i);
 	}
-	
+
 	public void lanzarUsuarioVista(String id_usuario, String contraseña) {
 		Intent i = new Intent(context, UsuarioVista.class);
 		i.putExtra("id_usuario", id_usuario);
@@ -45,8 +47,8 @@ public class LanzarVista {
 		i.putExtra("id_usuario", id_usuario);
 		context.startActivity(i);
 	}
-	
-	public void lanzarCambiarFoto(String id_vaca){
+
+	public void lanzarCambiarFoto(String id_vaca) {
 		Intent i = new Intent(context, CambiarFotoVista.class);
 		i.putExtra("id_vaca", id_vaca);
 		context.startActivity(i);
@@ -67,6 +69,11 @@ public class LanzarVista {
 		context.startActivity(i);
 	}
 
+	public void lanzarCalendarioReproduccion() {
+		Intent i = new Intent(context,ProducionVista.class);
+		context.startActivity(i);
+	}
+
 	public void lanzarMedicamentos(String id_vaca) {
 		Intent i = new Intent(context, MedicamentosVista.class);
 		i.putExtra("id_vaca", id_vaca);
@@ -79,11 +86,10 @@ public class LanzarVista {
 		i.putExtra("id_vaca", id_vaca);
 		context.startActivity(i);
 	}
-	
-	public void lanzarAñadirMedicamento(String id_vaca){
+
+	public void lanzarAñadirMedicamento(String id_vaca) {
 		Intent i = new Intent(context, AniadirMedicamentoVista.class);
 		i.putExtra("id_vaca", id_vaca);
 		context.startActivity(i);
 	}
-
 }

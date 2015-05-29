@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterVaca;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Produccion;
 import com.example.misvacasapp.modelo.Vaca;
 import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.google.gson.Gson;
@@ -16,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -238,10 +242,13 @@ public class UsuarioVista extends ActionBarActivity {
 			}
 		});
 		/** Método del botón cancelar del dialogo */
-		dialogo.setNegativeButton("Cancelar", new OnClickListener() {
+		dialogo.setNegativeButton("Buscar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
+				//TODO no funciona
+				Intent captura = new Intent("com.example.misvacasapp.SCAN");
+				captura.putExtra("SCAN_MODE", "QR_CODE_MODE");//Solo capturará códigos QR
+				startActivityForResult(captura, 0);
 			}
 		});
 		dialogo.show();
@@ -368,6 +375,7 @@ public class UsuarioVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				//Base de datos interna
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
@@ -377,6 +385,10 @@ public class UsuarioVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
 
+				ProduccionDatosBbdd pdbbdd = new ProduccionDatosBbdd(getApplicationContext());
+				ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
+				
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -388,8 +400,7 @@ public class UsuarioVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
-				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				
 				for (int i = 0; i < listaVacas.size(); i++) {
 					// Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos
@@ -400,6 +411,8 @@ public class UsuarioVista extends ActionBarActivity {
 				}
 
 				// Eliminar vaca base de datos cloud
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				llamadaVaca.LLamadaEliminarVacas(usuario);
 
 				// Añadir vaca a base de datos cloud
@@ -414,7 +427,12 @@ public class UsuarioVista extends ActionBarActivity {
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-
+				
+				//TODO añadir sincroinizacion produccion
+				listaProduccion = pdbbdd.getProducciones();
+				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuario);
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -477,6 +495,10 @@ public class UsuarioVista extends ActionBarActivity {
 			sincronizar(id_usuario);
 		} else if (id == R.id.mis_vacas) {
 			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
+			finish();
+			return true;
+		} else if (id == R.id.reproduccion) {
+			new LanzarVista(this).lanzarCalendarioReproduccion();
 			finish();
 			return true;
 		} else if (id == R.id.seleccionar_todo) {
