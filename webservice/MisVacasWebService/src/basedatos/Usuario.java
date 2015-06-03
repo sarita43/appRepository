@@ -11,10 +11,10 @@ import com.google.gson.GsonBuilder;
 /**
  * Clase usuario
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Usuario {
-	// Atributos
+	// ------------------------------------Atributos---------------------------------//
 	/** Nombre del usuario */
 	private String nombre;
 	/** Primer apellido */
@@ -38,7 +38,7 @@ public class Usuario {
 	/** Codigo de la explotacion del usuario */
 	private String codigo_explotacion;
 
-	// Métodos
+	//-------------------------------------Métodos--------------------------------------//
 	/** Constructor del usuario sin atributos */
 	public Usuario() {
 	}
@@ -331,6 +331,7 @@ public class Usuario {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
+				//Elimina las vacas del usuario
 				new Vaca().eliminarVacas(id_usuario);
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");

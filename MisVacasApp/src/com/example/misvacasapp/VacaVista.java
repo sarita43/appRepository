@@ -32,7 +32,7 @@ import android.widget.Toast;
  * Clase de la actividad de la vista de la vaca. En ella se implementan los
  * métodos que se utilizan para la vista de la vaca
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class VacaVista extends ActionBarActivity {
 	// ---------------------Atributos-------------------------------//
@@ -51,6 +51,7 @@ public class VacaVista extends ActionBarActivity {
 
 		Vaca vaca = vdatos.getVaca(id_vaca);
 
+		// División del id del animal en 2 xxxxxxxxxx-xxxx
 		TextView preidVaca = (TextView) findViewById(R.id.preidVaca);
 		preidVaca.setText(vaca.getId_vaca().substring(0,
 				vaca.getId_vaca().length() - 4));
@@ -75,7 +76,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Crea la vista para seleccionar una foto
+	 * Crea la vista para seleccionar una foto y cambiar la foto del animal
 	 * 
 	 * @param v
 	 *            Vista
@@ -85,7 +86,7 @@ public class VacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que se ejecuta al hacer click en el botón de los medicamentos
+	 * Método que se ejecuta al hacer click en el botón de los medicamentos.
 	 * Cambia a la vista de medicamentos de la vaca
 	 * 
 	 * @param v

@@ -14,8 +14,7 @@ import android.widget.TextView;
 /**
  * Clase adaptador de la lista de los menus
  * 
- * @see BaseAdapter
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AdapterListaMenu extends BaseAdapter {
 	//------------------------Atributos--------------------------------//

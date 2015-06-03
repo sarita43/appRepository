@@ -18,7 +18,7 @@ import android.widget.Toast;
  * modificar usuario
  * </p>
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class ModificarUsuarioVista extends ActionBarActivity {
 	// ---------------------------Atributos-----------------------------//

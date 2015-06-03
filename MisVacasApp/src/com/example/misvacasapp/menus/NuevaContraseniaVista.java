@@ -16,10 +16,10 @@ import android.widget.Toast;
  * cambiar contraseña
  * </p>
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class NuevaContraseniaVista extends ActionBarActivity {
-	//-------------------------------Atributos-------------------------//
+	// -------------------------------Atributos-------------------------//
 	/** Id usuario */
 	private String id_usuario;
 	/** Contraseña del usuario */
@@ -31,7 +31,7 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 	/** TextView de la repetición de la nueva contraseña del usuario */
 	private TextView contraseñaNuevaRepetida;
 
-	//-------------------------------Métodos------------------------------//
+	// -------------------------------Métodos------------------------------//
 	/**
 	 * Método que cambia la contraseña del usuario LLama al servicio web del
 	 * usuario
@@ -47,6 +47,7 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
+
 	/**
 	 * Método que comprueba que la contraseña nueva no sea vacia y que la
 	 * contraseña nueva coincidan las dos la nueva ya repetir contraseña nueva
@@ -89,8 +90,8 @@ public class NuevaContraseniaVista extends ActionBarActivity {
 			Toast.makeText(NuevaContraseniaVista.this, "Contraseña incorrecta",
 					Toast.LENGTH_LONG).show();
 		}
-	}	
-	
+	}
+
 	/**
 	 * Añade la vista de cambiar contraseña Recoge el usuario y la contraseña de
 	 * la vista login Inicializa parametros

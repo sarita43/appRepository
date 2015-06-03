@@ -7,7 +7,7 @@ import com.example.misvacasapp.modelo.Vaca;
 /**
  * Clase del agregado de los animales
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class AgregadoVaca implements Agregado {

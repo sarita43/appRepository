@@ -4,6 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+  * Clase que se encarga de ejecutar las operaciores sobre la base de datos.
+ * Crearla o actualizarla
+ * @author Sara Martínez López
+ *
+ */
 public class ProduccionBbdd extends SQLiteOpenHelper {
 
 	// ------------------------------Atributos----------------------------//

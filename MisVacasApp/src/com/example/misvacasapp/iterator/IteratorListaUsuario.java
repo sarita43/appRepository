@@ -5,7 +5,7 @@ import com.example.misvacasapp.modelo.Usuario;
 /**
  * Clase iterador de usuarios
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class IteratorListaUsuario implements Iterator {

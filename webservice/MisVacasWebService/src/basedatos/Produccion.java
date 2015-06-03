@@ -19,11 +19,16 @@ import com.google.gson.reflect.TypeToken;
  */
 public class Produccion {
 
-	// --------------------------Atributos------------------------//
+	// -----------------------------Atributos---------------------------//
+	/** Id de la producción */
 	private int id_produccion;
+	/** Fecha de la producción */
 	private Date fecha;
+	/** Tipo de producción (Leche/Carne) */
 	private String tipo;
+	/** Cantida de producción (litros/Kg) */
 	private int cantidad;
+	/** Id del usuario */
 	private String id_usuario;
 
 	// ---------------------------Métodos------------------------//
@@ -35,7 +40,7 @@ public class Produccion {
 	}
 
 	/**
-	 * Constructor para guardar en la base de datos cloud
+	 * Constructor con argumentos
 	 * 
 	 * @param id_produccion
 	 * @param fecha
@@ -52,6 +57,13 @@ public class Produccion {
 		setId_usuario(id_usuario);
 	}
 
+	/**
+	 * Devuelve la lista de producción que hay en la base de datos cloud como
+	 * String
+	 * 
+	 * @param id_usuario
+	 * @return String Lista de produccion
+	 */
 	public String getProducciones(String id_usuario) {
 		OracleConection c = new OracleConection();
 		ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
@@ -67,7 +79,8 @@ public class Produccion {
 				while (result.next()) {
 					try {
 						p = new Produccion(result.getInt(1), result.getDate(2),
-								result.getString(3),id_usuario,result.getInt(5));
+								result.getString(3), id_usuario,
+								result.getInt(5));
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
@@ -84,14 +97,23 @@ public class Produccion {
 		return json.toJson(listaProduccion);
 	}
 
-	public void setProducciones(String listaProducciones,String id_usuario) {
+	/**
+	 * Guarda en la base de datos cloud la lista de producción que se pasa por
+	 * parámetro como String
+	 * 
+	 * @param listaProducciones
+	 *            String Lista de producción
+	 * @param id_usuario
+	 *            String id usuario
+	 */
+	public void setProducciones(String listaProducciones, String id_usuario) {
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO PRODUCCION(ID_PRODUCCION, FECHA, TIPO, ID_USUARIO,CANTIDAD) VALUES(?,?,?,?,?)";
 		ArrayList<Produccion> lista = json.fromJson(listaProducciones,
 				new TypeToken<ArrayList<Produccion>>() {
 				}.getType());
-		
+
 		for (int i = 0; i < lista.size(); i++) {
 			OracleConection c = new OracleConection();
 			c.Conectar();
@@ -188,10 +210,21 @@ public class Produccion {
 		this.cantidad = cantidad;
 	}
 
+	/**
+	 * Devuelve el id del usuario
+	 * 
+	 * @return String id usuario
+	 */
 	public String getId_usuario() {
 		return id_usuario;
 	}
 
+	/**
+	 * Guarda el id de usuario
+	 * 
+	 * @param id_usuario
+	 *            String
+	 */
 	public void setId_usuario(String id_usuario) {
 		this.id_usuario = id_usuario;
 	}

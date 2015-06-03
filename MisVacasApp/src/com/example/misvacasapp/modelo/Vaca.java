@@ -5,7 +5,7 @@ import java.sql.Date;
 /**
  * Clase vaca
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Vaca {
 	// --------------------------------Atributos--------------------------------//
@@ -31,12 +31,6 @@ public class Vaca {
 	public Vaca() {
 	}
 
-	/**
-	 * Constructor d
-	 * 
-	 * 
-	 * public Vaca(String id_usuario) { setId_usuario(id_usuario); }
-	 * */
 	/**
 	 * Constructor del animal con atributos
 	 * 

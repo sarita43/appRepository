@@ -23,24 +23,26 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * Clase de la vista que cambia la foto del animal
+ * 
+ * @author Sara Martínez López
+ * 
+ */
 public class CambiarFotoVista extends ActionBarActivity {
 
 	// -------------------------------Atributos-------------------------------//
+	/** Id del animal */
 	private String id_vaca;
 	/** Base de datos interna de los animales */
 	private VacaDatosBbdd vdatos;
 
 	// -------------------------------Métodos---------------------------------//
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_foto);
-		Bundle bundle = getIntent().getExtras();
-		id_vaca = bundle.getString("id_vaca");
 
-		cargarFoto();
-	}
-
+	/**
+	 * Método que carga la foto del animal que tiene guardada en la base de
+	 * datos
+	 */
 	@SuppressWarnings("deprecation")
 	private void cargarFoto() {
 		vdatos = new VacaDatosBbdd(this);
@@ -53,13 +55,23 @@ public class CambiarFotoVista extends ActionBarActivity {
 		Drawable i = new BitmapDrawable(decodedByte);
 		foto.setBackground(i);
 	}
-	
+
+	/**
+	 * Método que al pulsar en el botón de Cambiar foto, abre la vista de la
+	 * galeria para cambiar la foto del animal
+	 * 
+	 * @param view
+	 */
 	public void onClickCargarFoto(View view) {
-		 Intent intent = new Intent(Intent.ACTION_PICK,
-		 android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-		 startActivityForResult(intent, 2);
+		Intent intent = new Intent(Intent.ACTION_PICK,
+				android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+		startActivityForResult(intent, 2);
 	}
 
+	/**
+	 * Método que se utiliza para cargar la foto de la galeria y mostrarla en la
+	 * vista
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -77,6 +89,12 @@ public class CambiarFotoVista extends ActionBarActivity {
 		}
 	}
 
+	/**
+	 * Método que guarda la foto que ha sido cambiada por el usuario y que se
+	 * muestra en la vista
+	 * 
+	 * @param v
+	 */
 	public void onClickGuardarCambios(View v) {
 		String bitmapdata = crearImagen();
 		Vaca vaca = vdatos.getVaca(id_vaca);
@@ -88,10 +106,11 @@ public class CambiarFotoVista extends ActionBarActivity {
 		String id_usuario = settings.getString("id_usuario", "");
 		new LanzarVista(this).lanzarVaca(id_vaca, id_usuario);
 	}
-	
 
 	/**
-	 * Método que crea la foto que se va a guardar en la base de datos y la devuelve como String
+	 * Método que crea la foto que se va a guardar en la base de datos y la
+	 * devuelve como String
+	 * 
 	 * @return String Foto del animal
 	 */
 	private String crearImagen() {
@@ -104,17 +123,16 @@ public class CambiarFotoVista extends ActionBarActivity {
 		String encodedImage = Base64.encodeToString(bitmapdata, Base64.DEFAULT);
 		return encodedImage;
 	}
-	
 
 	/**
-	 * Redimensionar un Bitmap.
+	 * Redimensiona la foto para mostrar en un Bitmap.
 	 * 
 	 * @param Bitmap
 	 *            mBitmap
 	 * @param float newHeight
 	 * @param float newHeight
 	 * @param float newHeight
-	 * @return Bitmap
+	 * @return Bitmap Foto redimensionada
 	 */
 	public Bitmap redimensionarImagenMaximo(Bitmap mBitmap, float newWidth,
 			float newHeigth) {
@@ -125,5 +143,20 @@ public class CambiarFotoVista extends ActionBarActivity {
 		Matrix matrix = new Matrix();
 		matrix.postScale(scaleWidth, scaleHeight);
 		return Bitmap.createBitmap(mBitmap, 0, 0, width, height, matrix, false);
+	}
+
+	/**
+	 * Añade la vista de cambiar fotos. Inicializa los atributos.
+	 * 
+	 * @param savedInstanceState
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_foto);
+		Bundle bundle = getIntent().getExtras();
+		id_vaca = bundle.getString("id_vaca");
+
+		cargarFoto();
 	}
 }

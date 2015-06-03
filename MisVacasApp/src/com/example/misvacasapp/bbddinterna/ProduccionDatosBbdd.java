@@ -12,6 +12,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Clase que crea las sentencias sql para que sean ejecutadas por la base de
+ * datos
+ * 
+ * @author Sara Martínez López
+ */
 public class ProduccionDatosBbdd {
 	// -----------------------------------Atributos------------------------------------------//
 	/** Sentecia sql crear la tabla de la produccion de leche y carne */
@@ -28,7 +34,7 @@ public class ProduccionDatosBbdd {
 	/** Formato de la fecha */
 	@SuppressLint("SimpleDateFormat")
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	/** Fecha para hacer el cambio de fechas */
+	/** Fecha para hacer el cambio de fechas entre bases de datos */
 	java.util.Date parsed = null;
 
 	// ----------------------------------------Métodos----------------------------------//
@@ -44,7 +50,8 @@ public class ProduccionDatosBbdd {
 	}
 
 	/**
-	 * Constructor de la clase
+	 * Constructor de la clase. Se le pasa una lista para rellenar la base de
+	 * datos, se elimina antes para rellenarla con los nuevos datos
 	 * 
 	 * @param context
 	 *            Contexto
@@ -61,6 +68,13 @@ public class ProduccionDatosBbdd {
 		añadirProducciones(listaProduccion);
 	}
 
+	/**
+	 * Guarda en la base de datos la lista de producción de leche y carne que se
+	 * pasan por parámetro
+	 * 
+	 * @param listaProduccion
+	 *            ArrayList<Produccion> Lista de producción de leche y carne
+	 */
 	private void añadirProducciones(ArrayList<Produccion> listaProduccion) {
 		for (int i = 0; i < listaProduccion.size(); i++) {
 			produccion = "insert into produccion values('"
@@ -73,6 +87,13 @@ public class ProduccionDatosBbdd {
 
 	}
 
+	/**
+	 * Método que añade una producción a la base de datos, pasando por parámetro
+	 * la producción
+	 * 
+	 * @param prod
+	 *            Produccion
+	 */
 	public void añadirProduccion(Produccion prod) {
 		produccion = "insert into produccion (fecha,tipo,cantidad)values('"
 				+ prod.getFecha() + "','" + prod.getTipo() + "','"
@@ -80,10 +101,14 @@ public class ProduccionDatosBbdd {
 		pbbdd.onUpgrade(database, 1, 1);
 	}
 
-	public ArrayList<Produccion> getProducciones(){
+	/**
+	 * Método que devuelve la lista de producciones que hay en la base de datos
+	 * 
+	 * @return ArrayList<Produccion> Lista de produccion de leche y carne
+	 */
+	public ArrayList<Produccion> getProducciones() {
 		ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
-		Cursor c = database.rawQuery(
-				"select * from produccion", null);
+		Cursor c = database.rawQuery("select * from produccion", null);
 		while (c.moveToNext()) {
 			Produccion p = new Produccion();
 			p.setId_produccion(c.getInt(0));
@@ -95,11 +120,18 @@ public class ProduccionDatosBbdd {
 			p.setFecha(new Date(parsed.getTime()));
 			p.setTipo(c.getString(2));
 			p.setCantidad(c.getInt(3));
-			
+
 			listaProduccion.add(p);
 		}
 		return listaProduccion;
 	}
+
+	/**
+	 * Método que devuelve solo la lista de producción de carne que hay en la
+	 * base de datos
+	 * 
+	 * @return ArrayList<Produccion> Lista de producción de carne
+	 */
 	public ArrayList<Produccion> getListaCarne() {
 		ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
 		Cursor c = database.rawQuery(
@@ -119,9 +151,15 @@ public class ProduccionDatosBbdd {
 		return listaProduccion;
 	}
 
+	/**
+	 * Método que devuelve la lista de producción de leche que hay en la base de
+	 * datos
+	 * 
+	 * @return ArrayList<Producción> Lista de producción de leche
+	 */
 	public ArrayList<Produccion> getListaLeche() {
 		ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
-		
+
 		Cursor c = database.rawQuery(
 				"select * from produccion where tipo='Leche'", null);
 		while (c.moveToNext()) {

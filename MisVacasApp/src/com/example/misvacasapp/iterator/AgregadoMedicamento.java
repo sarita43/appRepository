@@ -7,7 +7,7 @@ import com.example.misvacasapp.modelo.Medicamento;
 /**
  * Clase del agregado de los medicamentos
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class AgregadoMedicamento implements Agregado {

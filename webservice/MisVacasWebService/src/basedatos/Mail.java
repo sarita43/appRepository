@@ -13,23 +13,43 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 /**
- * Clase para el envio email
+ * Clase para enviar emails
+ * 
+ * @author Sara Martínez López
  * 
  */
 public class Mail extends javax.mail.Authenticator {
+
+	// ----------------------------------Atributos--------------------------------//
+	/** Usuario que envia el email */
 	private String _user;
+	/** Contraseña del correo */
 	private String _pass;
+	/** Array de Strings de emails a los que enviar correo */
 	private String[] _to;
+	/** Desde donde se envia el email */
 	private String _from;
+	/** Puerto */
 	private String _port;
+	/** Puerto del shocket **/
 	private String _sport;
+	/** Servidor por defecto */
 	private String _host;
+	/** Asunto del correo */
 	private String _subject;
+	/** Cuerpo del correo */
 	private String _body;
+	/** Autenticación */
 	private boolean _auth;
+	/** Modo debug */
 	private boolean _debuggable;
+	/** Mustipart */
 	private Multipart _multipart;
 
+	// -----------------------------------Métodos------------------------------------//
+	/**
+	 * Constructor de la clase
+	 */
 	public Mail() {
 		_host = "smtp.googlemail.com"; // default smtp server
 		_port = "465"; // default smtp port
@@ -44,19 +64,31 @@ public class Mail extends javax.mail.Authenticator {
 		_multipart = new MimeMultipart();
 	}
 
+	/**
+	 * Construnctor de la clase
+	 * 
+	 * @param user
+	 *            String correo de la aplicación
+	 * @param pass
+	 *            String Contraseña del correo
+	 */
 	public Mail(String user, String pass) {
 		this();
 		_user = user;
 		_pass = pass;
 	}
 
+	/**
+	 * Método que envia el correo
+	 * 
+	 * @return boolean True si se envia el correo bien False no
+	 * @throws Exception
+	 */
 	public boolean send() throws Exception {
 		Properties props = _setProperties();
-		System.out.println("ENVIANDO....");
 		if (!_user.equals("") && !_pass.equals("") && _to.length > 0
 				&& !_from.equals("") && !_subject.equals("")
 				&& !_body.equals("")) {
-			System.out.println("Creando sesion....");
 			Session session = Session.getInstance(props, this);
 			MimeMessage msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress(_from));
@@ -77,17 +109,25 @@ public class Mail extends javax.mail.Authenticator {
 			Transport.send(msg);
 			return true;
 		} else {
-			System.out.println("NO ENVIADO....");
 			return false;
 		}
 	}
 
+	/**
+	 * Devuelve la autenticacion del usuario
+	 * 
+	 * @return PasswordAuthentication
+	 */
 	@Override
 	public PasswordAuthentication getPasswordAuthentication() {
-		System.out.println("AUTENTICACION");
 		return new PasswordAuthentication(_user, _pass);
 	}
 
+	/**
+	 * Inicializa las propiedades y las devuelve
+	 * 
+	 * @return Properties
+	 */
 	private Properties _setProperties() {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", _host);
@@ -105,59 +145,135 @@ public class Mail extends javax.mail.Authenticator {
 		return props;
 	}
 
-	// the getters and setters
+	/**
+	 * Devuelve el cuerpo del correo
+	 * 
+	 * @return String
+	 */
 	public String getBody() {
 		return _body;
 	}
 
+	/**
+	 * Guarda el cuerpo del correo
+	 * 
+	 * @param _body
+	 *            String
+	 */
 	public void setBody(String _body) {
 		this._body = _body;
 	}
 
+	/**
+	 * Devuelve de donde es enviado el correo
+	 * 
+	 * @return String
+	 */
 	public String getFrom() {
 		return _from;
 	}
 
+	/**
+	 * Guarda de donde se envia el correo
+	 * 
+	 * @param _from
+	 *            String
+	 */
 	public void setFrom(String _from) {
 		this._from = _from;
 	}
 
+	/**
+	 * Devuelve a donde se envia el correo
+	 * 
+	 * @return String[]
+	 */
 	public String[] getTo() {
 		return _to;
 	}
 
+	/**
+	 * Guarda a donde se envia el correo
+	 * 
+	 * @param _to
+	 *            String[]
+	 */
 	public void setTo(String[] _to) {
 		this._to = _to;
 	}
 
+	/**
+	 * Devuelve el servidor
+	 * 
+	 * @return String
+	 */
 	public String getHost() {
 		return _host;
 	}
 
+	/**
+	 * Guarda el servidor
+	 * 
+	 * @param _host
+	 *            String
+	 */
 	public void setHost(String _host) {
 		this._host = _host;
 	}
 
+	/**
+	 * Devuelve el puerto
+	 * 
+	 * @return String
+	 */
 	public String getPort() {
 		return _port;
 	}
 
+	/**
+	 * Guarda el puerto
+	 * 
+	 * @param _port
+	 *            String
+	 */
 	public void setPort(String _port) {
 		this._port = _port;
 	}
 
+	/**
+	 * Devuelve el puerto del servidor
+	 * 
+	 * @return String
+	 */
 	public String getSport() {
 		return _sport;
 	}
 
+	/**
+	 * Guarda el puerto del servidor
+	 * 
+	 * @param _sport
+	 *            String
+	 */
 	public void setSport(String _sport) {
 		this._sport = _sport;
 	}
 
+	/**
+	 * Devuelve el asunto del correo
+	 * 
+	 * @return String
+	 */
 	public String getSubject() {
 		return _body;
 	}
 
+	/**
+	 * Guarda el asunto del correo
+	 * 
+	 * @param _subject
+	 *            String
+	 */
 	public void setSubject(String _subject) {
 		this._subject = _subject;
 	}

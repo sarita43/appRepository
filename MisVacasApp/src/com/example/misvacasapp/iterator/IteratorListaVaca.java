@@ -5,7 +5,7 @@ import com.example.misvacasapp.modelo.Vaca;
 /**
  * Clase del iterador de vacas
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class IteratorListaVaca implements Iterator {

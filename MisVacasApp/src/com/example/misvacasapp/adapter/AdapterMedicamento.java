@@ -16,11 +16,10 @@ import android.widget.TextView;
 /**
  * Clase adaptador de la lista de los medicamentos
  * 
- * @see BaseAdapter
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AdapterMedicamento extends BaseAdapter {
-	//-----------------------------Atributos-----------------------------------//
+	// -----------------------------Atributos-----------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
 	/** Lista para mostrar el listado de medicamentos */
@@ -30,8 +29,8 @@ public class AdapterMedicamento extends BaseAdapter {
 	 * seleccionarlo o no
 	 */
 	private TableSeleccionado seleccionado;
-	
-	//-----------------------------Métodos--------------------------------------//
+
+	// -----------------------------Métodos--------------------------------------//
 	/**
 	 * Constructor
 	 * 
@@ -70,7 +69,7 @@ public class AdapterMedicamento extends BaseAdapter {
 	}
 
 	/**
-	 * Devuelve un id del item Método inutilizado
+	 * Devuelve un id del item. Método inutilizado
 	 * 
 	 * @param position
 	 *            Posición del item
@@ -104,10 +103,10 @@ public class AdapterMedicamento extends BaseAdapter {
 		tipo.setText("Tipo: " + medicamento.getTipo());
 		TextView fecha = (TextView) v.findViewById(R.id.fechaTexto);
 		fecha.setText("	Fecha: " + medicamento.getFecha());
-		
+
 		v.setBackgroundResource(!getSeleccionado().getTable().get(position) ? R.drawable.abc_item_background_holo_dark
 				: R.drawable.abc_list_selector_disabled_holo_dark);
-		
+
 		return v;
 	}
 

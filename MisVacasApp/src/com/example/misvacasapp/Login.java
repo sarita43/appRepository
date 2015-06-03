@@ -62,7 +62,7 @@ public class Login extends ActionBarActivity {
 	private ArrayList<Vaca> listaVacas;
 	/** Lista de medicamentos que tienen los animales de un usuario */
 	private ArrayList<Medicamento> listaMedicamentos;
-	/** Lista de producción de leche y carne*/
+	/** Lista de producción de leche y carne */
 	private ArrayList<Produccion> listaProduccion;
 
 	/** Base de datos interna de los animales de un usuario */
@@ -207,7 +207,8 @@ public class Login extends ActionBarActivity {
 			mbbdd = new MedicamentoDatosBbdd(getApplicationContext(),
 					listaMedicamentos);
 			getListaProduccion();
-			pbbdd = new ProduccionDatosBbdd(getApplicationContext(), listaProduccion);
+			pbbdd = new ProduccionDatosBbdd(getApplicationContext(),
+					listaProduccion);
 		}
 		// TODO Sincronizar??
 		new LanzarVista(this).lanzarUsuarioVista(usuario, contraseña);
@@ -253,13 +254,15 @@ public class Login extends ActionBarActivity {
 		dialogo.setPositiveButton("Aceptar", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
+
 				if (correoExistente(texto.getText().toString())) {
-					getUsuarioContraseña(texto.getText().toString());
+					recordarUsuarioContraseña(texto.getText().toString());
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							Toast.makeText(Login.this, "No funciona",
+							Toast.makeText(
+									Login.this,
+									"Mire en su correo para ver su usuario y contraseña",
 									Toast.LENGTH_SHORT).show();
 						}
 					});
@@ -306,13 +309,20 @@ public class Login extends ActionBarActivity {
 		}
 		return resultado;
 	}
-	
-	public void getUsuarioContraseña(final String correo){
+
+	/**
+	 * Método que recuerda el usuario y contraseña al usuario enviando al correo
+	 * pasado por parámetro el usuario y contraseña que estan asociados a ese
+	 * correo electrónico
+	 * 
+	 * @param correo String Correo electrónico de un usuario
+	 */
+	public void recordarUsuarioContraseña(final String correo) {
 		Thread hilo = new Thread() {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				llamada.getUsuarioContraseña(correo);
+				llamada.recordarUsuarioContraseña(correo);
 			}
 		};
 		hilo.start();
@@ -393,19 +403,22 @@ public class Login extends ActionBarActivity {
 
 		}
 	}
-	
-	public void getListaProduccion(){
-		//TODO
+
+	/**
+	 * Método que recoge la lista de la producción de leche y carne de un
+	 * usuario de la base de datos cloud
+	 */
+	public void getListaProduccion() {
 		String res = "";
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		LlamadaProduccionWS llamada = new LlamadaProduccionWS();
 
 		res = llamada.getProducciones(usuario);
-		listaProduccion = json.fromJson(res, new TypeToken<ArrayList<Produccion>>() {
-		}.getType());
-		System.out.println(res);
-		if (listaProduccion.get(0).getId_produccion()== 0) {
+		listaProduccion = json.fromJson(res,
+				new TypeToken<ArrayList<Produccion>>() {
+				}.getType());
+		if (listaProduccion.get(0).getId_produccion() == 0) {
 			listaProduccion = new ArrayList<Produccion>();
 		}
 	}

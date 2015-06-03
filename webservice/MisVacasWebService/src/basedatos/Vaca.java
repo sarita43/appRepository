@@ -14,10 +14,10 @@ import com.google.gson.GsonBuilder;
 /**
  * Clase vaca
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Vaca {
-	// Atributos
+	//---------------------------------Atributos---------------------------------//
 	/** Id del animal */
 	private String id_vaca;
 	/** Raza del animal */
@@ -33,7 +33,7 @@ public class Vaca {
 	/** Sexo del animal */
 	private String sexo;
 
-	// Métodos
+	//----------------------------------Métodos----------------------------------//
 	/**
 	 * Constructor del animal sin atributos Crea un animal conn id=0
 	 * */
@@ -302,20 +302,24 @@ public class Vaca {
 
 	public void eliminarVacas(String id_usuario) {
 		ArrayList<Vaca> listaVacas = listaVacas(id_usuario);
-		for (int i = 0; i < listaVacas.size(); i++) {
+		
 			OracleConection c = new OracleConection();
 			c.Conectar();
 			if (c.getConexion() != null) {
 				try {
 					Statement select = c.getConexion().createStatement();
+					//Elimina los medicamentos de ese animal
+					for (int i = 0; i < listaVacas.size(); i++) {
 					select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
 							+ listaVacas.get(i).getId_vaca() + "'");
+					}
+					//Elimina todos los animales
 					select.executeQuery("DELETE FROM vaca WHERE id_usuario='"
 							+ id_usuario + "'");
 				} catch (SQLException e) {
 				}
 			}
-		}
+		
 	}
 
 	/**

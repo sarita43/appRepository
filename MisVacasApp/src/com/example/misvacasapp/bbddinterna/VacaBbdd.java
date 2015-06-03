@@ -6,24 +6,27 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class VacaBbdd extends SQLiteOpenHelper {
 
-	//------------------------------Atributos----------------------------//
-	/**Nombre de la base de datos de los animales*/
+	// ------------------------------Atributos----------------------------//
+	/** Nombre de la base de datos de los animales */
 	private static final String DATABASE_NAME = "vacabbdd.db";
-	/**Versión de la base de datos*/
+	/** Versión de la base de datos */
 	private static final int DATABASE_VERSION = 1;
 
-	//-----------------------------Métodos------------------------------//
+	// -----------------------------Métodos------------------------------//
 	/**
 	 * Contructor de la clase
+	 * 
 	 * @param context
 	 */
 	public VacaBbdd(Context context) {
-		super(context,DATABASE_NAME,null,DATABASE_VERSION);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	/**
 	 * Método que ejecuta la sentencia sql para crear la base de datos
-	 * @param db SQLiteDatabase Base de datos
+	 * 
+	 * @param db
+	 *            SQLiteDatabase Base de datos
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -32,7 +35,9 @@ public class VacaBbdd extends SQLiteOpenHelper {
 
 	/**
 	 * Método que ejecuta la sentencia sql para actualizar la base de datos
-	 * @param db SQLiteDatabase Base de datos
+	 * 
+	 * @param db
+	 *            SQLiteDatabase Base de datos
 	 * @param oldVersion
 	 *            int Version de la base de datos
 	 * @param newVersion

@@ -26,6 +26,7 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import android.R.layout;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,60 +43,63 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProducionVista extends ActionBarActivity {
 
 	// ----------------------------------Atributos-----------------------------//
+	/** Base de datos de la producción */
 	private ProduccionDatosBbdd pdbbdd;
-
+	/** Lista de la producción de carne */
 	private ArrayList<Produccion> listaCarne;
-
+	/** Lista de la producción de leche */
 	private ArrayList<Produccion> listaLeche;
+	/** 30 días en segundos 86400000=1000s*3600m*24h */
+	private static final long DAYS = 86400000 * 30;
 
-	private static final long THREEDAYS = 86400000 * 30;
-	
+	/** Formato de la fecha */
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	// public interface Constants {
-	// String TAG = "com.example.graphactivity";
-	// }
-
+	// ---------------------------------Métodos------------------------------//
+	/**
+	 * Método que muestra el grafico de la carne. Se visualiza cuando se pulsa
+	 * en el botón de carne
+	 * 
+	 * @param v
+	 *            View
+	 */
 	public void mostrarGraficoCarne(View v) {
-
-		TimeSeries series = new TimeSeries("Carne(Kg)");
-
+		// Trae la lista de la producción de carne
 		getListaCarne();
 
+		// Rellena los valores de la gráfica con la lista de la producción de la
+		// carne
+		TimeSeries series = new TimeSeries("Carne(Kg)");
 		for (int i = 0; i < listaCarne.size(); i++) {
 			series.add(listaCarne.get(i).getFecha(), listaCarne.get(i)
 					.getCantidad());
 		}
-		// Now we create the renderer
+		// Crea el render de la gráfica
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
 		renderer.setLineWidth(2);
 		renderer.setColor(Color.RED);
-		// Include low and max value
 		renderer.setDisplayBoundingPoints(true);
-		// we add point markers
 		renderer.setPointStyle(PointStyle.CIRCLE);
 		renderer.setFillPoints(true);
 		renderer.setDisplayChartValues(true);
 
+		// Crea el multi render
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 		mRenderer.addSeriesRenderer(renderer);
-
-		// We want to avoid black border
 		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent
 
 		mRenderer.setZoomButtonsVisible(true);
 
-		mRenderer.setYAxisMax(series.getMaxY() + 10);
+		mRenderer.setYAxisMax(series.getMaxY());
 		mRenderer.setYAxisMin(0);
-
 		mRenderer.setXAxisMax(series.getMaxX());
-		mRenderer.setXAxisMin(series.getMaxX() + THREEDAYS);
-
+		mRenderer.setXAxisMin(series.getMaxX() + DAYS);
 		mRenderer.setShowGrid(true); // we show the grid
 
 		mRenderer.setYTitle("Kg");
@@ -106,18 +110,23 @@ public class ProducionVista extends ActionBarActivity {
 		mRenderer.setLabelsTextSize(16);
 
 		mRenderer.setPanEnabled(true, true);
-		mRenderer.setPanLimits(new double[] { series.getMinX() + THREEDAYS,
-				series.getMaxX() - THREEDAYS, 0, series.getMaxY() });
+		mRenderer.setPanLimits(new double[] { series.getMinX() + DAYS,
+				series.getMaxX() - DAYS, 0, series.getMaxY() });
 
 		mRenderer.setClickEnabled(true);
 
+		// Layout de la vista
 		LinearLayout chartLyt = (LinearLayout) findViewById(R.id.chart);
 
+		// Crea el multi datos
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 		dataset.addSeries(series);
+
+		// Crea la vista del gráfico
 		final GraphicalView chartView = ChartFactory.getTimeChartView(
 				getApplicationContext(), dataset, mRenderer, "d/M/yy");
 
+		// Click en el gráfico
 		chartView.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -130,51 +139,57 @@ public class ProducionVista extends ActionBarActivity {
 					int amount = (int) seriesSelection.getValue();
 
 					Toast.makeText(getBaseContext(),
-							dia+ " : " + amount + "Kg", Toast.LENGTH_SHORT)
+							dia + " : " + amount + "Kg", Toast.LENGTH_SHORT)
 							.show();
 				}
 			}
 		});
+
+		// Añadir la vista al layout
 		chartLyt.addView(chartView, 0);
 	}
 
+	/**
+	 * Método que muestra el grafico de la leche. Se visualiza cuendo se pulsa
+	 * en el botón de leche
+	 * 
+	 * @param v
+	 *            View
+	 */
 	public void mostrarGraficoLeche(View v) {
-		TimeSeries series = new TimeSeries("Leche(L)");
-
+		// Trae la lista de la leche
 		getListaLeche();
-
+		java.util.Date minDia = new java.util.Date();
+		// Rellena los valores de la gráfica con la lista de la producción de la
+		// leche
+		TimeSeries series = new TimeSeries("Leche(L)");
 		for (int i = 0; i < listaLeche.size(); i++) {
+			System.out.println(listaLeche.get(i).getFecha());
+			System.out.println(listaLeche.get(i).getCantidad());
 			series.add(listaLeche.get(i).getFecha(), listaLeche.get(i)
 					.getCantidad());
 		}
 
-		// Now we create the renderer
+		// Crea el render de la gráfica
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
 		renderer.setLineWidth(2);
 		renderer.setColor(Color.BLUE);
-		// Include low and max value
 		renderer.setDisplayBoundingPoints(true);
-		// we add point markers
 		renderer.setPointStyle(PointStyle.CIRCLE);
 		renderer.setFillPoints(true);
 		renderer.setDisplayChartValues(true);
 
+		// Crea el multi render
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 		mRenderer.addSeriesRenderer(renderer);
-
-		// We want to avoid black border
 		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent
-																		// margins
-
 		mRenderer.setZoomButtonsVisible(true);
 
-		mRenderer.setYAxisMax(series.getMaxY() + 10);
+		mRenderer.setYAxisMax(series.getMaxY());
 		mRenderer.setYAxisMin(0);
-
 		mRenderer.setXAxisMax(series.getMaxX());
-		mRenderer.setXAxisMin(series.getMaxX() + THREEDAYS);
-
-		mRenderer.setShowGrid(true); // we show the grid
+		mRenderer.setXAxisMin(minDia.getTime());
+		mRenderer.setShowGrid(true);
 
 		mRenderer.setYTitle("Litros");
 		mRenderer.setXTitle("Dias");
@@ -184,17 +199,23 @@ public class ProducionVista extends ActionBarActivity {
 		mRenderer.setLabelsTextSize(16);
 
 		mRenderer.setPanEnabled(true, true);
-		mRenderer.setPanLimits(new double[] { series.getMinX() + THREEDAYS,
-				series.getMaxX() - THREEDAYS, 0, series.getMaxY() });
+		mRenderer.setPanLimits(new double[] { series.getMinX() + DAYS,
+				series.getMaxX() - DAYS, 0, series.getMaxY() });
 
 		mRenderer.setClickEnabled(true);
 
+		// Layout de la vista
 		LinearLayout chartLyt = (LinearLayout) findViewById(R.id.chart);
+
+		// Crea el multi datos
 		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 		dataset.addSeries(series);
+
+		// Crea la vista del gráfico
 		final GraphicalView chartView = ChartFactory.getTimeChartView(
 				getApplicationContext(), dataset, mRenderer, "d/M/yy");
 
+		// Click en el gráfico
 		chartView.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -212,10 +233,17 @@ public class ProducionVista extends ActionBarActivity {
 				}
 			}
 		});
+		// Añadir la vista al layout
 		chartLyt.addView(chartView, 0);
-
 	}
 
+	/**
+	 * Método que se ejecuta cuando se pulsa el en botón de añadir. Muestra una
+	 * areta para añadir una nueva producción
+	 * 
+	 * @param v
+	 *            View
+	 */
 	public void onClickAñadirProduccion(View v) {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View layout = inflater.inflate(R.layout.aniadir_produccion, null);
@@ -226,19 +254,31 @@ public class ProducionVista extends ActionBarActivity {
 		dialogo.setPositiveButton("Añadir", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				añadirProduccion(layout);
+				if (comprobarFecha(layout)) {
+					añadirProduccion(layout);
+				}
 			}
 		});
 		dialogo.show();
 	}
 
+	/**
+	 * Método que añade una producción a la base de datos
+	 * 
+	 * @param layout
+	 *            View. Alerta que contiene los datos de añadir la producción
+	 */
+	@SuppressWarnings("deprecation")
 	public void añadirProduccion(View layout) {
 		int dia = Integer.parseInt(((EditText) layout
 				.findViewById(R.id.dia_produccion)).getText().toString());
 		int mes = Integer.parseInt(((EditText) layout
-				.findViewById(R.id.mes_produccion)).getText().toString());
+				.findViewById(R.id.mes_produccion)).getText().toString()) - 1;
+		System.out.println("MES"+mes);
 		int año = Integer.parseInt(((EditText) layout
-				.findViewById(R.id.anio_produccion)).getText().toString());
+				.findViewById(R.id.anio_produccion)).getText().toString()) - 1900;
+		System.out.println("año"+año);
+
 		Date fecha = new Date(año, mes, dia);
 		String tipo = ((Spinner) layout.findViewById(R.id.spinner_produccion))
 				.getSelectedItem().toString();
@@ -246,10 +286,19 @@ public class ProducionVista extends ActionBarActivity {
 				.findViewById(R.id.cantidad_produccion)).getText().toString());
 		SharedPreferences settings = getSharedPreferences("MisDatos",
 				Context.MODE_PRIVATE);
-		Produccion produccion = new Produccion(0,fecha, tipo,settings.getString("id_usuario", ""),cantidad);
+		Produccion produccion = new Produccion(0, fecha, tipo,
+				settings.getString("id_usuario", ""), cantidad);
 		pdbbdd.añadirProduccion(produccion);
 	}
 
+	/**
+	 * Rellena el spinner del tipo de producción para mostrar en añadir la
+	 * producción
+	 * 
+	 * @param layout
+	 *            View. Alerta que contiene los datos de añadir la producción
+	 */
+	@SuppressWarnings("rawtypes")
 	private void rellenarSpinner(View layout) {
 		Spinner spinner = (Spinner) layout
 				.findViewById(R.id.spinner_produccion);
@@ -259,14 +308,94 @@ public class ProducionVista extends ActionBarActivity {
 		spinner.setAdapter(adapter);
 	}
 
+	/**
+	 * Método que trae la lista de producción de carne de la base de datos
+	 */
 	public void getListaCarne() {
 		listaCarne = pdbbdd.getListaCarne();
 	}
 
+	/**
+	 * Método que trae la lista de producción de leche de la base de datos
+	 */
 	public void getListaLeche() {
 		listaLeche = pdbbdd.getListaLeche();
 	}
-	
+
+	/**
+	 * Método que comprueba si la fecha introducida por el usuario es correcta.
+	 * Comprueba que este entre los valores de los dias posibles, los meses
+	 * posibles y el año que no supere al año actual. También comprueba que se
+	 * introduzca algun valor en la fecha
+	 * 
+	 * @param layout
+	 * 
+	 * @return boolean Fecha correcta true fecha incorrecta false
+	 */
+	@SuppressWarnings("deprecation")
+	private boolean comprobarFecha(View layout) {
+		boolean fechaOk = false;
+
+		if (((TextView) layout.findViewById(R.id.dia_produccion)).getText()
+				.toString().equals("")
+				|| ((TextView) layout.findViewById(R.id.mes_produccion))
+						.getText().toString().equals("")
+				|| ((TextView) layout.findViewById(R.id.anio_produccion))
+						.getText().toString().equals("")) {
+			fechaOk = false;
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(ProducionVista.this, "Fecha incorrecta",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else {
+			int dia = Integer.parseInt(((TextView) layout
+					.findViewById(R.id.dia_produccion)).getText().toString());
+			int mes = Integer.parseInt(((TextView) layout
+					.findViewById(R.id.mes_produccion)).getText().toString());
+			int año = Integer.parseInt(((TextView) layout
+					.findViewById(R.id.anio_produccion)).getText().toString()) - 1900;
+			int añoActual = new java.util.Date().getYear();
+			int mesActual = new java.util.Date().getMonth();
+			int diaActual = new java.util.Date().getDate();
+			System.out.println(mes+"    "+mesActual);
+			System.out.println(año+"    "+añoActual);
+			if (dia <= 31 && mes <= 12 && año < añoActual) {
+				fechaOk = true;
+
+			} else if (año == añoActual) {
+				if (dia <= diaActual && mes == mesActual) {
+					fechaOk = true;
+				} else if (mes < mesActual && dia <= 31) {
+					fechaOk = true;
+				} else {
+					fechaOk = false;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(ProducionVista.this,
+									"Fecha incorrecta", Toast.LENGTH_SHORT)
+									.show();
+						}
+					});
+				}
+			} else {
+				fechaOk = false;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toast.makeText(ProducionVista.this, "Fecha incorrecta",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+		}
+
+		return fechaOk;
+	}
+
 	/**
 	 * Método que sincroniza base de datos interna con la cloud. Deja la base de
 	 * datos cloud como la base de datos interna.
@@ -337,6 +466,11 @@ public class ProducionVista extends ActionBarActivity {
 		hilo.start();
 	}
 
+	/**
+	 * Añade la vista de gráficos de la producción. Inicializa paráetros
+	 * 
+	 * @param savedInstanceState
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -350,9 +484,9 @@ public class ProducionVista extends ActionBarActivity {
 		mostrarGraficoLeche(getCurrentFocus());
 
 	}
-	
+
 	/**
-	 * Añade el menu a la vista login
+	 * Añade el menu a la vista producción
 	 * 
 	 * @param menu
 	 * */
@@ -399,9 +533,13 @@ public class ProducionVista extends ActionBarActivity {
 		} else if (id == R.id.ayuda) {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
-			alerta.setMessage("Ficha del animal."
+			alerta.setMessage("Graficos de producción de leche y carne."
 					+ "\n"
-					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos.");
+					+ "Para ver la producción de leche pulsar el botón de leche."
+					+ "\n"
+					+ "Para ver la producción de carne pulsar el botón de carne."
+					+ "\n"
+					+ "Para añadir una nueva producción pulsar el botón de añadir.");
 			alerta.show();
 			return true;
 		}

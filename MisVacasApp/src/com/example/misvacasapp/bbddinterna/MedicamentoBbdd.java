@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Clase que se encarga de ejecutar las operaciores sobre la base de datos.
  * Crearla o actualizarla
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class MedicamentoBbdd extends SQLiteOpenHelper {

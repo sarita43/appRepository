@@ -19,22 +19,24 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class VacaDatosBbdd {
 
-	//-----------------------------------Atributos------------------------------------------//
-	/**Sentecia sql crear la tabla de animales*/
-	public static String tablaVacas = "create table if not exists vaca " +
-			"(id_vaca varchar(15) primary key not null, raza varchar(50)," +
-			"fecha_nacimiento date,id_madre varchar(15),foto blob,id_usuario varchar(20),sexo char)";
-	/**Sentencia sql para crear un animal*/
+	// -----------------------------------Atributos------------------------------------------//
+	/** Sentecia sql crear la tabla de animales */
+	public static String tablaVacas = "create table if not exists vaca "
+			+ "(id_vaca varchar(15) primary key not null, raza varchar(50),"
+			+ "fecha_nacimiento date,id_madre varchar(15),foto blob,id_usuario varchar(20),sexo char)";
+	/** Sentencia sql para crear un animal */
 	public static String vaca;
 	/** Ejecuta las sentencias sql */
 	private VacaBbdd vbbdd;
 	/** Base de datos sql */
 	private SQLiteDatabase database;
 
-	//------------------------------------Métodos-------------------------------------------//
+	// ------------------------------------Métodos-------------------------------------------//
 	/**
 	 * Contructor de la clase
-	 * @param context Contexto
+	 * 
+	 * @param context
+	 *            Contexto
 	 */
 	public VacaDatosBbdd(Context context) {
 		vbbdd = new VacaBbdd(context);
@@ -42,9 +44,14 @@ public class VacaDatosBbdd {
 	}
 
 	/**
-	 * Constructor de la clase
-	 * @param context Contexto
-	 * @param lista ArrayList<Vaca> Lista de animales que para guardar en la base de datos
+	 * Constructor de la clase. Se le pasa una lista para rellenar la base de
+	 * datos, se elimina antes para rellenarla con los nuevos datos
+	 * 
+	 * @param context
+	 *            Contexto
+	 * @param lista
+	 *            ArrayList<Vaca> Lista de animales que para guardar en la base
+	 *            de datos
 	 */
 	public VacaDatosBbdd(Context context, ArrayList<Vaca> lista) {
 		vbbdd = new VacaBbdd(context);
@@ -57,7 +64,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Método que guarda en la base de datos los animales que tiene un usuario
-	 * @param lista ArrayList<Vaca> Lista de animales de un usuario
+	 * 
+	 * @param lista
+	 *            ArrayList<Vaca> Lista de animales de un usuario
 	 */
 	public void añadirVacas(ArrayList<Vaca> lista) {
 		for (int i = 0; i < lista.size(); i++) {
@@ -74,7 +83,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Método que añade un animal a la base de datos
-	 * @param vaca Vaca. Vaca a añadir
+	 * 
+	 * @param vaca
+	 *            Vaca. Vaca a añadir
 	 */
 	public void añadirVaca(Vaca vaca) {
 		VacaDatosBbdd.vaca = "insert into vaca values('" + vaca.getId_vaca()
@@ -86,7 +97,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Recoge la lista de animales de un usuario y las guarda en un array list
-	 * @param id_usuario String. Id usuario
+	 * 
+	 * @param id_usuario
+	 *            String. Id usuario
 	 * @return ArrayList<Vaca>. Lista de animales
 	 */
 	public ArrayList<Vaca> getListaVacas(String id_usuario) {
@@ -110,7 +123,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Devuelve una animal tenien su id.
-	 * @param id_vaca String. Id del animal
+	 * 
+	 * @param id_vaca
+	 *            String. Id del animal
 	 * @return Vaca
 	 */
 	@SuppressLint("SimpleDateFormat")
@@ -141,7 +156,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Método que elimina un animal de la base de datos
-	 * @param id_vaca String. Id vaca
+	 * 
+	 * @param id_vaca
+	 *            String. Id vaca
 	 */
 	public void eliminar(String id_vaca) {
 		vaca = "DELETE FROM vaca WHERE id_vaca='" + id_vaca + "';";
@@ -150,7 +167,9 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Método que actualiza la foto de un animal
-	 * @param vaca Vaca
+	 * 
+	 * @param vaca
+	 *            Vaca
 	 */
 	public void actualizarFoto(Vaca vaca) {
 		VacaDatosBbdd.vaca = "update vaca set foto='" + vaca.getFoto()
@@ -160,6 +179,7 @@ public class VacaDatosBbdd {
 
 	/**
 	 * Método que devuelve cuantos registros de animales hay en la base de datos
+	 * 
 	 * @return int. Registros de animales
 	 */
 	public int getRegistros() {
@@ -167,8 +187,11 @@ public class VacaDatosBbdd {
 	}
 
 	/**
-	 * Método que devuelve cuantos registros de animales de un usuario hay en la base de datos
-	 * @param id_usuario String. Id del usuario
+	 * Método que devuelve cuantos registros de animales de un usuario hay en la
+	 * base de datos
+	 * 
+	 * @param id_usuario
+	 *            String. Id del usuario
 	 * @return int. Registros de animales
 	 */
 	public int getRegistros(String id_usuario) {

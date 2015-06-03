@@ -5,7 +5,7 @@ import com.example.misvacasapp.modelo.Medicamento;
 /**
  * Clase iterador de medicamentos
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class IteratorListaMedicamento implements Iterator {

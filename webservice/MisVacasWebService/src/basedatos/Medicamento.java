@@ -12,10 +12,10 @@ import com.google.gson.GsonBuilder;
 /**
  * Clase medicameno
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Medicamento {
-	// Atributos
+	// ----------------------------Atributos-----------------------------//
 	/** Id medicamento */
 	private int id_medicamento;
 	/** Fecha de medicamentos */
@@ -27,7 +27,7 @@ public class Medicamento {
 	/** Id de la vaca */
 	private String id_vaca;
 
-	// Métodos
+	// ----------------------------------Métodos---------------------------------//
 	/** Constructor del medicamento sin atributos */
 	public Medicamento() {
 	}
@@ -229,7 +229,7 @@ public class Medicamento {
 	 *            Medicamento como String para deserializar
 	 * */
 	public void añadirMedicamento(String medicamento) {
-		System.out.println("MEDICAMENTO WEB SERVICE  "+medicamento);
+		System.out.println("MEDICAMENTO WEB SERVICE  " + medicamento);
 		Gson json = new GsonBuilder().setPrettyPrinting()
 				.setDateFormat("dd-MM-yyyy").create();
 		String INSERT_RECORD = "INSERT INTO medicamento(id_medicamento,fecha ,tipo ,descripcion ,id_vaca) VALUES(?,?,?,?,?)";

@@ -11,16 +11,16 @@ import org.xmlpull.v1.XmlPullParserException;
 /**
  * Clase que hace las llamadas al servicio web de los medicamentos
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class LlamadaMedicamentoWS {
-	// Atributos
+	// -----------------------------Atributos-------------------------------------//
 	/** Nombre del espacio de nombres */
 	private static final String NAMESPACE = "http://service.web";
 	/** URL donde se encuentra el servicio web */
-	 private static String URL =
-	 "http://10.0.2.2:8090/axis2/services/MedicamentoWebService?wsdl";
-//	private static String URL = "http://81.172.100.105:8090/axis2/services/MedicamentoWebService?wsdl";
+//	 private static String URL =
+//	 "http://10.0.2.2:8090/axis2/services/MedicamentoWebService?wsdl";
+	private static String URL = "http://81.172.100.105:8090/axis2/services/MedicamentoWebService?wsdl";
 	/** Nombre del método */
 	private static String METHOD_NAME;
 	/** SOAP Action */
@@ -32,7 +32,7 @@ public class LlamadaMedicamentoWS {
 	/** Resultado de la llamada */
 	private static SoapPrimitive resultsRequestSOAP = null;
 
-	// Métodos
+	// ----------------------------------Métodos---------------------------------------------//
 	/**
 	 * Método que devuelve el medicamento de una vaca (como String). El
 	 * medicamento que devuelve tiene que poder ser deserializado con

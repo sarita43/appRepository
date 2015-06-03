@@ -3,7 +3,7 @@ package com.example.misvacasapp.iterator;
 /**
  * Interfaz de los iteradores
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public interface Iterator {

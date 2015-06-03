@@ -4,7 +4,7 @@ import java.sql.Date;
 
 /**
  * Clase medicameno
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Medicamento {
 
@@ -32,7 +32,7 @@ public class Medicamento {
 	 * @param id_medicamento Id medicamento
 	 * @param fecha Fecha del medicamento
 	 * @param tipo Tipo de medicamento
-	 * @param descripcion DescripciÃ³n del medicamento
+	 * @param descripcion Descripción del medicamento
 	 * @param id_vaca Id de la vaca
 	 * */
 	public Medicamento(int id_medicamento, Date fecha, String tipo,

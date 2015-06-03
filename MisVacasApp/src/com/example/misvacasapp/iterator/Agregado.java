@@ -3,7 +3,7 @@ package com.example.misvacasapp.iterator;
 /**
  * Intefaz del agregado
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public interface Agregado {

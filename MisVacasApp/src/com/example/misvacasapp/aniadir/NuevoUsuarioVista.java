@@ -39,11 +39,12 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 
 				usuario = json.toJson(nuevoUsuario);
 				llamada.añadirUsuario(usuario);
-				
+
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						getUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
+						// TODO Enviar el correo cuando se registre
+						recordarUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
 								.getText().toString());
 						Toast.makeText(NuevoUsuarioVista.this, "No funciona",
 								Toast.LENGTH_SHORT).show();
@@ -83,7 +84,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 				.getText().toString();
 		String codigo_explotacion = ((TextView) findViewById(R.id.codigo_explotacion_nuevo_usuario))
 				.getText().toString();
-		if (comprobarDni() && comprobarCorreo()&& comprobarContraseña()) {
+		if (comprobarDni() && comprobarCorreo() && comprobarContraseña()) {
 			nuevoUsuario = new Usuario(nombre, apellido1, apellido2, direccion,
 					poblacion, telefono, dni, contraseña, 0, correo,
 					codigo_explotacion);
@@ -92,16 +93,25 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 		}
 	}
 
-	public void getUsuarioContraseña(final String correo){
+	/**
+	 * Método que recuerda el usuario y contraseña al usuario enviando al correo
+	 * pasado por parámetro el usuario y contraseña que estan asociados a ese
+	 * correo electrónico
+	 * 
+	 * @param correo
+	 *            String Correo electrónico de un usuario
+	 */
+	public void recordarUsuarioContraseña(final String correo) {
 		Thread hilo = new Thread() {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				llamada.getUsuarioContraseña(correo);
+				llamada.recordarUsuarioContraseña(correo);
 			}
 		};
 		hilo.start();
 	}
+
 	/**
 	 * Método que comprueba si el dni ya existe. Si existe quiere decir que el
 	 * usuario ya esta registrado
@@ -130,7 +140,8 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	/**
 	 * Método que comprueba si la contraseña esta vacia.
 	 * 
-	 * @return boolean True si la contraseña no esta vacia, False si la contraseña esta vacia
+	 * @return boolean True si la contraseña no esta vacia, False si la
+	 *         contraseña esta vacia
 	 */
 	private boolean comprobarContraseña() {
 		boolean contraseñaOk = true;
@@ -142,8 +153,9 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					Toast.makeText(NuevoUsuarioVista.this, "Contraseña no puede ser vacia",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(NuevoUsuarioVista.this,
+							"Contraseña no puede ser vacia", Toast.LENGTH_SHORT)
+							.show();
 				}
 			});
 
@@ -177,7 +189,9 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que recoge la lista de usuarios y la guarda en un arrayList
+	 * Método que recoge la lista de usuarios y la guarda en un arrayList. Se
+	 * utiliza para que al añadir el usuario puedas comprobar si ya existe en la
+	 * aplicación y si se puede añadir o no
 	 */
 	private void getListaUsuarios() {
 		Thread hilo = new Thread() {

@@ -498,7 +498,7 @@ public class UsuarioVista extends ActionBarActivity {
 			finish();
 			return true;
 		} else if (id == R.id.reproduccion) {
-			new LanzarVista(this).lanzarCalendarioReproduccion();
+			new LanzarVista(this).lanzarProduccion();
 			finish();
 			return true;
 		} else if (id == R.id.seleccionar_todo) {

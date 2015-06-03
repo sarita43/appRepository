@@ -11,16 +11,16 @@ import org.xmlpull.v1.XmlPullParserException;
 /**
  * Clase que hace las llamadas al servicio web del usuario
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class LlamadaUsuarioWS {
-	// Atributos
+	// ---------------------------------Atributos-------------------------------------//
 	/** Nombre del espacio de nombres */
 	private static final String NAMESPACE = "http://service.web";
 	/** URL donde se encuentra el servicio web */
-	 private static String URL =
-	 "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
-//	private static String URL = "http://81.172.100.105:8090/axis2/services/UsuarioWebService?wsdl";
+	// private static String URL =
+	// "http://10.0.2.2:8090/axis2/services/UsuarioWebService?wsdl";
+	private static String URL = "http://81.172.100.105:8090/axis2/services/UsuarioWebService?wsdl";
 	/** Nombre del método */
 	private static String METHOD_NAME;
 	/** SOAP Action */
@@ -32,7 +32,7 @@ public class LlamadaUsuarioWS {
 	/** Resultado de la llamada */
 	private static SoapPrimitive resultsRequestSOAP = null;
 
-	// Métodos
+	// ------------------------------------Métodos----------------------------------------//
 	/**
 	 * Método que devuelve el usuario (como String). El usuario que devuelve
 	 * tiene que poder ser deserializado con json.formJson Comprueba que el
@@ -146,7 +146,8 @@ public class LlamadaUsuarioWS {
 	}
 
 	/**
-	 * Método que añade un usuario. El usuario se pasa como parámetro como String
+	 * Método que añade un usuario. El usuario se pasa como parámetro como
+	 * String
 	 * 
 	 * @param usuario
 	 *            Usuario a añadir como String
@@ -188,7 +189,8 @@ public class LlamadaUsuarioWS {
 	 *            Teléfono del usuario
 	 * */
 	public void actualizarUsuario(String dni, String nombre, String apellido1,
-			String apellido2, String direccion, String poblacion, int telefono,String correo,String codigo_explotacion) {
+			String apellido2, String direccion, String poblacion, int telefono,
+			String correo, String codigo_explotacion) {
 		METHOD_NAME = "actualizarUsuario";
 		SOAP_ACTION = "urn:actualizarUsuario";
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
@@ -199,8 +201,8 @@ public class LlamadaUsuarioWS {
 		request.addProperty("direccion", direccion);
 		request.addProperty("poblacion", poblacion);
 		request.addProperty("telefono", telefono);
-		request.addProperty("correo",correo);
-		request.addProperty("codigo_explotacion",codigo_explotacion);
+		request.addProperty("correo", correo);
+		request.addProperty("codigo_explotacion", codigo_explotacion);
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
 		envelope.setOutputSoapObject(request);
@@ -212,7 +214,13 @@ public class LlamadaUsuarioWS {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Método que hace la llamada al servicio web para devolver la lista de
+	 * usuarios que hay en la aplicación. La lista se devuelve como String
+	 * 
+	 * @return String Lista de usuarios
+	 */
 	public String LlamadaListaUsuarios() {
 		String res = "";
 		METHOD_NAME = "listaUsuarios";
@@ -231,12 +239,20 @@ public class LlamadaUsuarioWS {
 		}
 		return res;
 	}
-	
-	public void getUsuarioContraseña(String correo){
+
+	/**
+	 * Método que hace una llamada al servicio web para enviar un correo al
+	 * correo pasado por parámetro enviando el usuario y contraseña que estan
+	 * asociados a ese correo electrónico, para que los recuerde
+	 * 
+	 * @param correo
+	 *            String Correo electrónico de un usuario
+	 */
+	public void recordarUsuarioContraseña(String correo) {
 		METHOD_NAME = "recordarUsuario";
 		SOAP_ACTION = "urn:recordarUsuario";
 		request = new SoapObject(NAMESPACE, METHOD_NAME);
-		request.addProperty("correo",correo);
+		request.addProperty("correo", correo);
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
 		envelope.setOutputSoapObject(request);

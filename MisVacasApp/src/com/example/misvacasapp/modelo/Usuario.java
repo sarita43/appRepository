@@ -3,7 +3,7 @@ package com.example.misvacasapp.modelo;
 /**
  * Clase usuario
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class Usuario {
 	// --------------------------------Atributos-------------------------------//

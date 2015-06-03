@@ -16,16 +16,17 @@ import android.database.sqlite.SQLiteDatabase;
  * Clase que crea las sentencias sql para que sean ejecutadas por la base de
  * datos
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class MedicamentoDatosBbdd {
 
 	// ------------------------------------Atributos----------------------------//
 	/** Sentencia sql para crear la tabla de medicamentos */
-	public static String tablaMedicamentos = "create table if not exists medicamento " +
-			"(id_medicamento varchar(30) not null,fecha date,tipo varchar(40)," +
-			"descripcion varchar(250),id_vaca varchar(20) not null,constraint pk_medicamento primary key (id_medicamento,id_vaca));";
+	public static String tablaMedicamentos = "create table if not exists medicamento "
+			+ "(id_medicamento varchar(30) not null,fecha date,tipo varchar(40),"
+			+ "descripcion varchar(250),id_vaca varchar(20) not null,"
+			+ "constraint pk_medicamento primary key (id_medicamento,id_vaca));";
 	/** Sentencia sql para crear un medicamento */
 	public static String medicamento;
 	/** Ejecuta las sentencias sql */
@@ -36,7 +37,7 @@ public class MedicamentoDatosBbdd {
 	/** Formato de la fecha */
 	@SuppressLint("SimpleDateFormat")
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	/** Fecha para hacer el cambio de fechas */
+	/** Fecha para hacer el cambio de fechas entre las bases de datos */
 	java.util.Date parsed = null;
 
 	// ----------------------------------------Métodos----------------------------------//
@@ -52,12 +53,14 @@ public class MedicamentoDatosBbdd {
 	}
 
 	/**
-	 * Constructor de la clase
+	 * Constructor de la clase. Se le pasa una lista para rellenar la base de
+	 * datos, se elimina antes para rellenarla con los nuevos datos
 	 * 
 	 * @param context
 	 *            Contexto
-	 * @param listaMedicamentos ArrayList<Medicamento>
-	 *            Lista de medicamentos para guardar en la base de datos
+	 * @param listaMedicamentos
+	 *            ArrayList<Medicamento> Lista de medicamentos para guardar en
+	 *            la base de datos
 	 */
 	public MedicamentoDatosBbdd(Context context,
 			ArrayList<Medicamento> listaMedicamentos) {
@@ -70,7 +73,7 @@ public class MedicamentoDatosBbdd {
 
 	/**
 	 * Guarda en la base de datos la lista de medicamentos que se pasan por
-	 * parametro
+	 * parámetro
 	 * 
 	 * @param listaMedicamentos
 	 *            ArrayList<Medicamento> Lista de medicamentos
@@ -88,7 +91,8 @@ public class MedicamentoDatosBbdd {
 	}
 
 	/**
-	 * Método que añade un medicamento en la base de datos
+	 * Método que añade un medicamento en la base de datos, pansadole por
+	 * parámetro el medicamento a añadir
 	 * 
 	 * @param m
 	 *            Medicamento. Medicamento a añadir

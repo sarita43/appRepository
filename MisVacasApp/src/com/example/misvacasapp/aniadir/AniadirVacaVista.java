@@ -45,7 +45,7 @@ import com.google.gson.GsonBuilder;
  * Clase de la actividad de añadir vaca. En ella se implementan los métodos que
  * se utilizan para manejar la vista de añadir vaca
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AniadirVacaVista extends ActionBarActivity {
 	//-----------------------------Atributos------------------------------------//
@@ -96,7 +96,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	
 
 	/**
-	 * Método que se ejecuta cuando se presiona el botón aceptar En el se llama
+	 * Método que se ejecuta cuando se presiona el botón aceptar. En el se llama
 	 * a las comprobaciones que se pueden hacer para añadir el animal
 	 * correctamente y añade el animal si todo es correcto
 	 * 
@@ -157,7 +157,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Comprueba que el id de la vaca nueva introducido sea correcto Para ello
+	 * Comprueba que el id de la vaca nueva introducido sea correcto. Para ello
 	 * comprueba que no sea vacio y que no exista ya ese animal
 	 * 
 	 * @see nuevaVaca
@@ -324,7 +324,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Redimensionar un Bitmap.
+	 * Redimensiona la foto y la devuelve en un Bitmap.
 	 * 
 	 * @param Bitmap
 	 *            mBitmap

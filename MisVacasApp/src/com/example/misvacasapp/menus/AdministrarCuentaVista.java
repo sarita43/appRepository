@@ -32,7 +32,7 @@ import android.widget.Toast;
  * administrar cuenta
  * </p>
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AdministrarCuentaVista extends ActionBarActivity {
 	// ----------------------------Atributos----------------------------------//

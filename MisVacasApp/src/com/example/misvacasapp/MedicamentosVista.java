@@ -32,13 +32,13 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Spinner;
 
 /**
- * Clase de la actividad de los medicamentos En ella se implementan los métodos
+ * Clase de la actividad de los medicamentos. En ella se implementan los métodos
  * que se utilizan para manejar la vista de los medicamentos de una vaca
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class MedicamentosVista extends ActionBarActivity {
-	//--------------------------Atributos----------------------------------//
+	// --------------------------Atributos----------------------------------//
 	/** Id vaca */
 	private String id_vaca;
 	/**
@@ -53,15 +53,14 @@ public class MedicamentosVista extends ActionBarActivity {
 	/** Lista de los medicamentos que tiene una vaca */
 	private ArrayList<Medicamento> listaMedicamentos;
 
-	/** Base de datos interna de los medicamentos del animale*/
+	/** Base de datos interna de los medicamentos del animale */
 	private MedicamentoDatosBbdd mdatos;
 
-	//------------------------------Métodos--------------------------------------//
+	// ------------------------------Métodos--------------------------------------//
 	/**
 	 * Método que rellena la lista con los medicamentos de la vaca Llama al
 	 * servicio web para recibir los datos
 	 * 
-	 * @see onCreate eliminar
 	 * */
 	private void mostrarListado() {
 		seleccionado = new TableSeleccionado();
@@ -93,7 +92,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		clickLista();
 		clickLargoLista();
 	}
-	
+
 	/**
 	 * Método que devuelve un "true" si el boton tiene que estar activado o un
 	 * "false" si no
@@ -110,7 +109,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	/**
-	* Recoge los medicamentos de un animal de la base de datos interna y los
+	 * Recoge los medicamentos de un animal de la base de datos interna y los
 	 * guarda en un arrayList
 	 * */
 	private void getListaMedicamentos() {
@@ -190,7 +189,6 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * Método que llama al servicio web para eliminar un medicamento. Para
 	 * eliminarlo utiliza el id de la vaca y el del medicamento
 	 * 
-	 * @see eliminarVaca
 	 * @param id_medicamento
 	 *            Id del medicamento a eliminar
 	 * */
@@ -209,7 +207,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Muestra un dialogo para introducir el id de la vaca a buscar
+	 * Muestra un dialogo para introducir el id del animal a buscar
 	 * 
 	 * @see buscarMedicamento
 	 * */
@@ -248,8 +246,10 @@ public class MedicamentosVista extends ActionBarActivity {
 	/**
 	 * Método que rellena los spinner de la alerta buscar
 	 * 
-	 * @param tipoSpinner Spinner
+	 * @param tipoSpinner
+	 *            Spinner
 	 */
+	@SuppressWarnings("rawtypes")
 	private void rellenarSpinnerBuscar(Spinner tipoSpinner) {
 		ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
 				R.array.lista_medicamentos,
@@ -486,8 +486,8 @@ public class MedicamentosVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Añade la vista de los medicamentos Recoge el id de la vaca de la vista de
-	 * la vista Inicializa parametros
+	 * Añade la vista de los medicamentos. Recoge el id de la vaca de la vista
+	 * de la vista. Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -22,10 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Clase de la actividad del medicamento En ella se implementan los métodos que
+ * Clase de la actividad del medicamento. En ella se implementan los métodos que
  * se utilizan para manejar la vista del medicamento
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class MedicamentoVista extends ActionBarActivity {
 	//-------------------------------Atributos-----------------------------------//
@@ -36,10 +36,8 @@ public class MedicamentoVista extends ActionBarActivity {
 
 	//--------------------------------Metodos-------------------------------------//
 	/**
-	 * Rellena los campos de la vista del medicamento Llama al servicio web para
-	 * recoger los campos
+	 * Rellena los campos de la vista del medicamento. Recogiendolos de la base de datos
 	 * 
-	 * @see onCreate
 	 * */
 	private void rellenarCampos() {
 		MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
@@ -130,8 +128,8 @@ public class MedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Añade la vista del medicamento Recoge el id del medicamento y el id de la
-	 * vaca de la vista medicamento Inicializa parametros
+	 * Añade la vista del medicamento. Recoge el id del medicamento y el id de la
+	 * vaca de la vista medicamento. Inicializa parametros
 	 * */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +142,7 @@ public class MedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Añade el menu a la vista login
+	 * Añade el menu a la vista medicamento
 	 * 
 	 * @param menu
 	 * */

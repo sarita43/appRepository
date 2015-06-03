@@ -7,7 +7,7 @@ import com.example.misvacasapp.modelo.Usuario;
 /**
  * Clase del agregado de los usuarios
  * 
- * @author sara
+ * @author Sara Martínez López
  * 
  */
 public class AgregadoUsuario implements Agregado {

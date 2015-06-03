@@ -30,10 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * Clase de la actividad de aniadir medicamento En ella se implementan los
+ * Clase de la actividad de aniadir medicamento. En ella se implementan los
  * métodos que se utilizan para manejar la vista de añadir medicamento
  * 
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AniadirMedicamentoVista extends ActionBarActivity {
 	// ----------------------------Atributos--------------------------------//
@@ -53,6 +53,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	/**
 	 * Rellena la lista de desplegable de los tipos medicamentos o vacunas
 	 * */
+	@SuppressWarnings("rawtypes")
 	private void rellenarSpinner() {
 		spinnerMedicamento = (Spinner) findViewById(R.id.tipo_medicamento_texto);
 		ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
@@ -61,6 +62,14 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 		spinnerMedicamento.setAdapter(adapter);
 	}
 
+	/**
+	 * Método que devuelve la lista de medicamentos de un animal de la base de
+	 * datos interna, pasando como parámetro el id del animal
+	 * 
+	 * @param id_vaca
+	 *            String id del animal
+	 * @return ArrayList<Medicamento> Lista de medicamentos
+	 */
 	private ArrayList<Medicamento> getMedicamentos(String id_vaca) {
 		return mdatos.getMedicamentos(id_vaca);
 	}
@@ -120,7 +129,7 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	}
 
 	/**
-	 * LLama a crear el id aleatorio y comprueba que ese id no exista Si existe
+	 * LLama a crear el id aleatorio y comprueba que ese id no exista. Si existe
 	 * vuelve a crear otro id aleatorio
 	 * */
 	private int crearIdMedicamento() {
@@ -138,7 +147,6 @@ public class AniadirMedicamentoVista extends ActionBarActivity {
 	 * Crea un id aleatorio que puede ser el maximo valor que puede tener un
 	 * entero
 	 * 
-	 * @see Integer.MAX_VALUE
 	 * @return int Id aleatorio
 	 * */
 	private int idAleatorio() {

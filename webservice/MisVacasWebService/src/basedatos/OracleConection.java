@@ -10,12 +10,12 @@ import java.sql.DriverManager;
  * @author Sara Martinez Lopez
  * */
 public class OracleConection {
-	// Atributos
+	//----------------------------------Atributos-------------------------------------//
 	/** Conexión */
 	private Connection conexion;
 
 	
-	// Métodos
+	//-----------------------------------Métodos---------------------------------------//
 //	public static void main(String[] args) {
 //		Usuario u = new Usuario("nombre", "apellido1", "apellido2", "direccion", "poblacion", 0000, "dni", "contraseña", 1, "sara_c43@hotmail.com", "codigo_explotacion");
 //		u.recordarContraseña(u);

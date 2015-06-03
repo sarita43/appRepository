@@ -22,11 +22,10 @@ import android.widget.TextView;
 /**
  * Clase adaptador de la lista de las vacas
  * 
- * @see BaseAdapter
- * @author Sara Martinez Lopez
+ * @author Sara Martínez López
  * */
 public class AdapterVaca extends BaseAdapter {
-	//-----------------------------Atributos-------------------------------//
+	// -----------------------------Atributos-------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;
 	/** Lista para mostrar el menu */
@@ -37,7 +36,7 @@ public class AdapterVaca extends BaseAdapter {
 	 */
 	private TableSeleccionado seleccionado;
 
-	//------------------------------Métodos----------------------------------//
+	// ------------------------------Métodos----------------------------------//
 	/**
 	 * Constructor
 	 * 
@@ -111,9 +110,10 @@ public class AdapterVaca extends BaseAdapter {
 		Vaca vaca = this.lista.get(position);
 		TextView cargo = (TextView) v.findViewById(R.id.idVaca_texto);
 		cargo.setText("Id: " + vaca.getId_vaca());
-		ImageView imagen =(ImageView)v.findViewById(R.id.imagenVaca);
+		ImageView imagen = (ImageView) v.findViewById(R.id.imagenVaca);
 		byte[] decodedString = Base64.decode(vaca.getFoto(), Base64.DEFAULT);
-		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+		Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0,
+				decodedString.length);
 		Drawable i = new BitmapDrawable(decodedByte);
 		imagen.setBackground(i);
 		v.setBackgroundResource(!getSeleccionado().getTable().get(position) ? R.drawable.abc_item_background_holo_dark
