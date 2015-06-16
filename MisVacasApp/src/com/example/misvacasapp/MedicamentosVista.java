@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 import com.example.misvacasapp.adapter.AdapterMedicamento;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Produccion;
 import com.example.misvacasapp.modelo.Vaca;
 import com.example.misvacasapp.singleton.TableSeleccionado;
 import com.google.gson.Gson;
@@ -425,6 +428,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				//Base de datos interna
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
@@ -434,6 +438,10 @@ public class MedicamentosVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
 
+				ProduccionDatosBbdd pdbbdd = new ProduccionDatosBbdd(getApplicationContext());
+				ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
+				
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -445,8 +453,7 @@ public class MedicamentosVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
-				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				
 				for (int i = 0; i < listaVacas.size(); i++) {
 					// Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos
@@ -457,6 +464,8 @@ public class MedicamentosVista extends ActionBarActivity {
 				}
 
 				// Eliminar vaca base de datos cloud
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				llamadaVaca.LLamadaEliminarVacas(usuario);
 
 				// Añadir vaca a base de datos cloud
@@ -471,7 +480,15 @@ public class MedicamentosVista extends ActionBarActivity {
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-
+				
+				SharedPreferences settings = getSharedPreferences("MisDatos",
+						Context.MODE_PRIVATE);
+				String id_usuarioGuardado = settings.getString("id_usuario", "");
+				//TODO añadir sincroinizacion produccion
+				listaProduccion = pdbbdd.getProducciones();
+				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuarioGuardado);
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -545,15 +562,19 @@ public class MedicamentosVista extends ActionBarActivity {
 					settings.getString("id_usuario", ""),
 					settings.getString("contraseña", ""));
 			return true;
+		} else if (id == R.id.produccion) {
+			new LanzarVista(this).lanzarProduccion();
+			finish();
+			return true;
 		} else if (id == R.id.ayuda) {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
 			alerta.setMessage("Para añadir un nuevo medicamento pincha sobre en botón de añadir (el verde)."
-					+ "\n"
-					+ "Para eliminar un medicamento hay que tener seleccionado un medicamento o varios, y despues pulsar sobre el botón eliminar (el rojo)."
-					+ "\n"
+					+ "\n\n"
+					+ "Para eliminar un medicamento hay que tener seleccionado un medicamento o varios, y después pulsar sobre el botón eliminar (el rojo)."
+					+ "\n\n"
 					+ "Para buscar un medicamento en la lista, hay que pulsar sobre el boton buscar(el azul) y seleccionar el tipo de medicamento que buscas."
-					+ "\n"
+					+ "\n\n"
 					+ "Para ver la ficha del medicamento, pulsa sobre el medicamento en la lista.");
 			alerta.show();
 			return true;

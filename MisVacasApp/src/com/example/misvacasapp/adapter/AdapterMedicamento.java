@@ -18,7 +18,7 @@ import android.widget.TextView;
  * 
  * @author Sara Martínez López
  * */
-public class AdapterMedicamento extends BaseAdapter {
+public class AdapterMedicamento extends BaseAdapter implements Adapter {
 	// -----------------------------Atributos-----------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;

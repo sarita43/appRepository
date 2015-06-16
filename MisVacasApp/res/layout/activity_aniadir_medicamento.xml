@@ -3,132 +3,153 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
+        android:layout_alignParentTop="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:baselineAligned="true" >
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/preidVaca"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.33"
-                android:text="@string/fecha"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_margin="15dp"
+                android:baselineAligned="true" >
 
-            <EditText
-                android:id="@+id/fecha_medicamento_dia"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/preidVaca"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.33"
+                    android:text="@string/fecha"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/fecha_medicamento_dia"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.41"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="dd"
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/fecha_medicamento_mes" >
+
+                    <requestFocus />
+                </EditText>
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/barra"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/fecha_medicamento_mes"
+                    android:layout_width="38dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.39"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="mm"
+                    android:inputType="number"
+                    android:nextFocusDown="@+id/fecha_medicamento_anio" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/barra"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <EditText
+                    android:id="@+id/fecha_medicamento_anio"
+                    android:layout_width="68dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.26"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="aaaa"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.41"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="dd"
-                android:inputType="number"
-                android:nextFocusDown="@+id/fecha_medicamento_mes" />
+                android:layout_margin="15dp" >
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/barra"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tipo"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <EditText
-                android:id="@+id/fecha_medicamento_mes"
-                android:layout_width="38dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.39"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="mm"
-                android:inputType="number"
-                android:nextFocusDown="@+id/fecha_medicamento_anio" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/barra"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/fecha_medicamento_anio"
-                android:layout_width="68dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.26"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="aaaa"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tipo"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <Spinner
-                android:id="@+id/tipo_medicamento_texto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="@string/descripcion"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ScrollView
-            android:id="@+id/scrollView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.88" >
+                <Spinner
+                    android:id="@+id/tipo_medicamento_texto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
 
-                <EditText
-                    android:id="@+id/descripcion_medicamento_texto"
+                <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:ems="10"
-                    android:inputType="textMultiLine"
-                    android:maxLength="249" />
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_weight="5.02"
+                    android:text="@string/descripcion"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Button
-            android:id="@+id/boton_aceptar_nuevo_medicamento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="15dp"
-            android:onClick="nuevoMedicamento"
-            android:text="@string/botonAceptar" />
-    </LinearLayout>
+                <ScrollView
+                    android:id="@+id/scrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.88" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" >
+
+                        <EditText
+                            android:id="@+id/descripcion_medicamento_texto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="15dp"
+                            android:layout_weight="5.02"
+                            android:ems="10"
+                            android:inputType="textMultiLine"
+                            android:maxLength="249" />
+                    </LinearLayout>
+                </ScrollView>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/boton_aceptar_nuevo_medicamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="15dp"
+                android:layout_weight="0.88"
+                android:onClick="nuevoMedicamento"
+                android:text="@string/botonAceptar" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

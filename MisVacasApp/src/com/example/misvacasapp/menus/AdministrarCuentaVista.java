@@ -5,14 +5,7 @@ import java.util.ArrayList;
 import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.adapter.AdapterListaMenu;
-import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
 import com.example.misvacasapp.llamadaWS.LlamadaUsuarioWS;
-import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
-import com.example.misvacasapp.modelo.Vaca;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,9 +35,6 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 	private String id_usuario;
 	/** Contraseña del usuario */
 	private String contraseña;
-	/** Lista de vacas del usuario */
-	private ArrayList<Vaca> listaVacas;
-
 	// -----------------------------Métodos-----------------------------------//
 	/**
 	 * Método que según el menu seleccionado se hace una cosa u otra Se puede
@@ -106,7 +96,7 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				eliminarVacas(id_usuario);
+				//eliminarVacas(id_usuario);
 				llamada.eliminarUsuario(id_usuario);
 				runOnUiThread(new Runnable() {
 					@Override
@@ -175,57 +165,5 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 				elegirMenu(item);
 			}
 		});
-	}
-
-	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
-	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
-	private void listaVacas(final String id_usuario) {
-		listaVacas = new ArrayList<Vaca>();
-
-		Thread hilo = new Thread() {
-			String res = "";
-			Gson json = new GsonBuilder().setPrettyPrinting()
-					.setDateFormat("dd-MM-yyyy").create();
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				res = llamada.LlamadaListaVacas(id_usuario);
-
-				listaVacas = json.fromJson(res,
-						new TypeToken<ArrayList<Vaca>>() {
-						}.getType());
-			}
-		};
-		hilo.start();
-	}
-
-	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
-	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
-	private void eliminarVacas(final String id_usuario) {
-		listaVacas(id_usuario);
-		for (int i = 0; i < listaVacas.size(); i++) {
-			eliminarMedicamentosVaca(listaVacas.get(i).getId_vaca());
-		}
-		Thread hilo = new Thread() {
-			LlamadaVacaWS llamada = new LlamadaVacaWS();
-
-			public void run() {
-				llamada.LLamadaEliminarVacas(id_usuario);
-			}
-		};
-		hilo.start();
-	}
-
-	// TODO En la base de datos cloud ay q eliminar los vacas y los medicamentos
-	// cuando se elimina el usuario. ESTE METODO NO ARIA FALTA
-	private void eliminarMedicamentosVaca(final String id_vaca) {
-		Thread hilo = new Thread() {
-			LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
-
-			public void run() {
-				llamadaMedicamento.LLamadaEliminarMedicamentos(id_vaca);
-			}
-		};
-		hilo.start();
 	}
 }

@@ -5,6 +5,10 @@
         android:title="@string/menu_mis_vacas">
     </item>
     <item
+        android:id="@+id/produccion"
+        android:title="@string/produccion">
+    </item>
+    <item
         android:id="@+id/administrar_cuenta"
         android:title="@string/menu_administrar_cuenta">
     </item>

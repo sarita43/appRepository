@@ -43,10 +43,9 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						// TODO Enviar el correo cuando se registre
 						recordarUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
 								.getText().toString());
-						Toast.makeText(NuevoUsuarioVista.this, "No funciona",
+						Toast.makeText(NuevoUsuarioVista.this, "Usuario creado. Mire en su correo",
 								Toast.LENGTH_SHORT).show();
 					}
 				});
@@ -138,10 +137,10 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que comprueba si la contraseña esta vacia.
+	 * Método que comprueba si la contraseña esta vacía.
 	 * 
-	 * @return boolean True si la contraseña no esta vacia, False si la
-	 *         contraseña esta vacia
+	 * @return boolean True si la contraseña no esta vacía, False si la
+	 *         contraseña esta vacía
 	 */
 	private boolean comprobarContraseña() {
 		boolean contraseñaOk = true;
@@ -210,7 +209,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 
 	/**
 	 * Añade la vista del nuevo usuario y recoge la lista de usuarios que hay en
-	 * la aplicacion
+	 * la aplicación
 	 * 
 	 * @param savedInstanceState
 	 */

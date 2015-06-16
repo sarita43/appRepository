@@ -3,10 +3,13 @@ package com.example.misvacasapp;
 import java.util.ArrayList;
 
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Produccion;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -105,6 +108,7 @@ public class VacaVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				//Base de datos interna
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
@@ -114,6 +118,10 @@ public class VacaVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
 
+				ProduccionDatosBbdd pdbbdd = new ProduccionDatosBbdd(getApplicationContext());
+				ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
+				
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -125,8 +133,7 @@ public class VacaVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
-				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				
 				for (int i = 0; i < listaVacas.size(); i++) {
 					// Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos
@@ -137,6 +144,8 @@ public class VacaVista extends ActionBarActivity {
 				}
 
 				// Eliminar vaca base de datos cloud
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				llamadaVaca.LLamadaEliminarVacas(usuario);
 
 				// Añadir vaca a base de datos cloud
@@ -151,7 +160,15 @@ public class VacaVista extends ActionBarActivity {
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-
+				
+				SharedPreferences settings = getSharedPreferences("MisDatos",
+						Context.MODE_PRIVATE);
+				String id_usuarioGuardado = settings.getString("id_usuario", "");
+				//TODO añadir sincroinizacion produccion
+				listaProduccion = pdbbdd.getProducciones();
+				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuarioGuardado);
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -202,13 +219,16 @@ public class VacaVista extends ActionBarActivity {
 		SharedPreferences settings = getSharedPreferences("MisDatos",
 				Context.MODE_PRIVATE);
 		if (id == R.id.cerrar_sesion) {
-
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("id_usuario", "");
 			editor.putString("contraseña", "");
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
+		} else if (id == R.id.produccion) {
+			new LanzarVista(this).lanzarProduccion();
+			finish();
+			return true;
 		} else if (id == R.id.mis_vacas) {
 			String id_usuarioGuardado = settings.getString("id_usuario", "");
 			String contraseñaGuardado = settings.getString("contraseña", "");
@@ -228,8 +248,11 @@ public class VacaVista extends ActionBarActivity {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
 			alerta.setMessage("Ficha del animal."
-					+ "\n"
-					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos.");
+					+ "\n\n"
+					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos."
+					+ "\n\n"
+					+ "Para cambiar la foto del animal pulsa sobre la foto, busca en la galeria " +
+					"la nueva foto y guarda los cambios");
 			alerta.show();
 			return true;
 		}

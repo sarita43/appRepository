@@ -48,17 +48,17 @@ import com.google.gson.GsonBuilder;
  * @author Sara Martínez López
  * */
 public class AniadirVacaVista extends ActionBarActivity {
-	//-----------------------------Atributos------------------------------------//
+	// -----------------------------Atributos------------------------------------//
 	/** Id del usuario */
 	private String id_usuario;
 	/** Lista de vacas del usuario */
 	private ArrayList<Vaca> listaVacas;
 	/** Lista desplegable que muestra los tipos de vacas que puedes introducir */
 	private Spinner spinnerRaza;
-	/**Base de datos interna de los animales*/
+	/** Base de datos interna de los animales */
 	private VacaDatosBbdd vdatos;
 
-	//------------------------------Métodos--------------------------------------//
+	// ------------------------------Métodos--------------------------------------//
 	/**
 	 * Rellena la lista de desplegable de los tipos de vacas
 	 * 
@@ -93,7 +93,6 @@ public class AniadirVacaVista extends ActionBarActivity {
 		vdatos = new VacaDatosBbdd(getApplicationContext());
 		listaVacas = vdatos.getListaVacas(id_usuario);
 	}
-	
 
 	/**
 	 * Método que se ejecuta cuando se presiona el botón aceptar. En el se llama
@@ -167,6 +166,16 @@ public class AniadirVacaVista extends ActionBarActivity {
 		boolean id_correcto = true;
 		String id_vaca = ((TextView) findViewById(R.id.id_vaca_nuevo_texto))
 				.getText().toString();
+		//El id no puede tener menos de 4 cifras
+		if (id_vaca.length() < 4) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Toast.makeText(AniadirVacaVista.this, "Id incorrecto",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
 		for (int i = 0; listaVacas.size() > i; i++) {
 			if (id_vaca.equals(listaVacas.get(i).getId_vaca())) {
 				id_correcto = false;
@@ -190,7 +199,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 		}
 		return id_correcto;
 	}
-	
+
 	/**
 	 * Comprueba que el sexo introducido por el usuario sea el correcto. El sexo
 	 * tiene que se M (Macho) o H (Hembra), si no es asi devuelve un false
@@ -289,6 +298,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 
 	/**
 	 * Método que comprueba que el id de la madre no sea vacio
+	 * 
 	 * @return boolean True si el id es correcto False si es vacio
 	 */
 	private boolean comprobarIdMadre() {
@@ -307,9 +317,11 @@ public class AniadirVacaVista extends ActionBarActivity {
 		}
 		return id_correcto;
 	}
-	
+
 	/**
-	 * Método que crea la foto que se va a guardar en la base de datos y la devuelve como String
+	 * Método que crea la foto que se va a guardar en la base de datos y la
+	 * devuelve como String
+	 * 
 	 * @return String Foto del animal
 	 */
 	private String crearImagen() {
@@ -361,18 +373,18 @@ public class AniadirVacaVista extends ActionBarActivity {
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(resultCode!=0){
-		Uri selectedImage = data.getData();
-		InputStream is;
-		try {
-			is = getContentResolver().openInputStream(selectedImage);
-			BufferedInputStream bis = new BufferedInputStream(is);
-			Bitmap bitmap = BitmapFactory.decodeStream(bis);
-			Button imagen = (Button) findViewById(R.id.foto_boton);
-			imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
+		if (resultCode != 0) {
+			Uri selectedImage = data.getData();
+			InputStream is;
+			try {
+				is = getContentResolver().openInputStream(selectedImage);
+				BufferedInputStream bis = new BufferedInputStream(is);
+				Bitmap bitmap = BitmapFactory.decodeStream(bis);
+				Button imagen = (Button) findViewById(R.id.foto_boton);
+				imagen.setBackgroundDrawable(new BitmapDrawable(bitmap));
 
-		} catch (FileNotFoundException e) {
-		}
+			} catch (FileNotFoundException e) {
+			}
 		}
 	}
 
@@ -386,13 +398,15 @@ public class AniadirVacaVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
-				VacaDatosBbdd vdatos = new VacaDatosBbdd(getApplicationContext());
+				VacaDatosBbdd vdatos = new VacaDatosBbdd(
+						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
 				listaVacas = vdatos.getListaVacas(usuario);
-				
-				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(getApplicationContext());
+
+				MedicamentoDatosBbdd mdatos = new MedicamentoDatosBbdd(
+						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
-				
+
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -407,29 +421,29 @@ public class AniadirVacaVista extends ActionBarActivity {
 				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
 				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				for (int i = 0; i < listaVacas.size(); i++) {
-					//Guarda los medicamentos en una lista
-					ArrayList<Medicamento> listaAux = mdatos.getMedicamentos(listaVacas.get(i).getId_vaca());
+					// Guarda los medicamentos en una lista
+					ArrayList<Medicamento> listaAux = mdatos
+							.getMedicamentos(listaVacas.get(i).getId_vaca());
 					for (int j = 0; j < listaAux.size(); j++) {
 						listaMedicamentosUsuario.add(listaAux.get(j));
 					}
 				}
-				
-				//Eliminar vaca base de datos cloud
+
+				// Eliminar vaca base de datos cloud
 				llamadaVaca.LLamadaEliminarVacas(usuario);
-				
-				//Añadir vaca a base de datos cloud
+
+				// Añadir vaca a base de datos cloud
 				for (int i = 0; i < listaVacas.size(); i++) {
 					String vaca = json.toJson(listaVacas.get(i));
-					llamadaVaca.LLamadaAñadirVaca(vaca);	
+					llamadaVaca.LLamadaAñadirVaca(vaca);
 				}
-				
-				//Añadir medicamentos a base de datos cloud
+
+				// Añadir medicamentos a base de datos cloud
 				for (int i = 0; i < listaMedicamentosUsuario.size(); i++) {
 					Medicamento m = listaMedicamentosUsuario.get(i);
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-				
 
 				runOnUiThread(new Runnable() {
 					@Override

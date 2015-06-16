@@ -15,10 +15,12 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
+import com.example.misvacasapp.VacaVista;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
 import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
 import com.example.misvacasapp.modelo.Produccion;
@@ -26,7 +28,6 @@ import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import android.R.layout;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -70,6 +72,10 @@ public class ProducionVista extends ActionBarActivity {
 	 *            View
 	 */
 	public void mostrarGraficoCarne(View v) {
+		Button boton1 = (Button) findViewById(R.id.button1);
+		Button boton2 = (Button) findViewById(R.id.button2);
+		boton2.setBackgroundColor(Color.rgb(237, 229, 229));
+		boton1.setBackgroundResource(R.drawable.fondo_blanco);
 		// Trae la lista de la producción de carne
 		getListaCarne();
 
@@ -87,20 +93,26 @@ public class ProducionVista extends ActionBarActivity {
 		renderer.setDisplayBoundingPoints(true);
 		renderer.setPointStyle(PointStyle.CIRCLE);
 		renderer.setFillPoints(true);
-		renderer.setDisplayChartValues(true);
+		renderer.setDisplayBoundingPoints(true);
 
 		// Crea el multi render
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 		mRenderer.addSeriesRenderer(renderer);
-		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent
+		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent Color.argb(0x00, 0xff, 0x00, 0x00)
 
 		mRenderer.setZoomButtonsVisible(true);
 
+		// Fecha minima a mostrar al inicializar el gráfico
+		java.util.Date minDia = new java.util.Date((long) series.getMaxX());
+		minDia = new java.util.Date(minDia.getYear(), minDia.getMonth() - 1,
+				minDia.getDay());
+
+		// Valores de los eje X e Y
 		mRenderer.setYAxisMax(series.getMaxY());
 		mRenderer.setYAxisMin(0);
-		mRenderer.setXAxisMax(series.getMaxX());
-		mRenderer.setXAxisMin(series.getMaxX() + DAYS);
-		mRenderer.setShowGrid(true); // we show the grid
+		mRenderer.setXAxisMax(series.getMaxX()+10);
+		mRenderer.setXAxisMin((double) minDia.getTime());
+		mRenderer.setShowGrid(true);
 
 		mRenderer.setYTitle("Kg");
 		mRenderer.setXTitle("Dias");
@@ -157,38 +169,45 @@ public class ProducionVista extends ActionBarActivity {
 	 *            View
 	 */
 	public void mostrarGraficoLeche(View v) {
+		Button boton1 = (Button) findViewById(R.id.button1);
+		Button boton2 = (Button) findViewById(R.id.button2);
+		boton1.setBackgroundColor(Color.rgb(237, 229, 229));
+		boton2.setBackgroundResource(R.drawable.fondo_blanco);
 		// Trae la lista de la leche
 		getListaLeche();
-		java.util.Date minDia = new java.util.Date();
 		// Rellena los valores de la gráfica con la lista de la producción de la
 		// leche
 		TimeSeries series = new TimeSeries("Leche(L)");
 		for (int i = 0; i < listaLeche.size(); i++) {
-			System.out.println(listaLeche.get(i).getFecha());
-			System.out.println(listaLeche.get(i).getCantidad());
 			series.add(listaLeche.get(i).getFecha(), listaLeche.get(i)
 					.getCantidad());
 		}
 
 		// Crea el render de la gráfica
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
-		renderer.setLineWidth(2);
+		renderer.setLineWidth(3);
 		renderer.setColor(Color.BLUE);
 		renderer.setDisplayBoundingPoints(true);
 		renderer.setPointStyle(PointStyle.CIRCLE);
 		renderer.setFillPoints(true);
-		renderer.setDisplayChartValues(true);
+        renderer.setDisplayChartValuesDistance(10);
 
 		// Crea el multi render
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 		mRenderer.addSeriesRenderer(renderer);
-		mRenderer.setMarginsColor(Color.argb(0x00, 0xff, 0x00, 0x00)); // transparent
+		mRenderer.setMarginsColor(Color.rgb(255, 255, 255));// transparent
 		mRenderer.setZoomButtonsVisible(true);
 
+		// Fecha minima a mostrar al inicializar el gráfico
+		java.util.Date minDia = new java.util.Date((long) series.getMaxX());
+		minDia = new java.util.Date(minDia.getYear(), minDia.getMonth() - 1,
+				minDia.getDay());
+
+		// Valores de los eje X e Y
 		mRenderer.setYAxisMax(series.getMaxY());
 		mRenderer.setYAxisMin(0);
 		mRenderer.setXAxisMax(series.getMaxX());
-		mRenderer.setXAxisMin(minDia.getTime());
+		mRenderer.setXAxisMin((double) minDia.getTime());
 		mRenderer.setShowGrid(true);
 
 		mRenderer.setYTitle("Litros");
@@ -196,7 +215,7 @@ public class ProducionVista extends ActionBarActivity {
 		mRenderer.setYLabelsColor(0, Color.BLACK);
 		mRenderer.setXLabelsColor(Color.BLACK);
 		mRenderer.setLabelsColor(Color.BLACK);
-		mRenderer.setLabelsTextSize(16);
+		mRenderer.setLabelsTextSize(18);
 
 		mRenderer.setPanEnabled(true, true);
 		mRenderer.setPanLimits(new double[] { series.getMinX() + DAYS,
@@ -274,10 +293,8 @@ public class ProducionVista extends ActionBarActivity {
 				.findViewById(R.id.dia_produccion)).getText().toString());
 		int mes = Integer.parseInt(((EditText) layout
 				.findViewById(R.id.mes_produccion)).getText().toString()) - 1;
-		System.out.println("MES"+mes);
 		int año = Integer.parseInt(((EditText) layout
 				.findViewById(R.id.anio_produccion)).getText().toString()) - 1900;
-		System.out.println("año"+año);
 
 		Date fecha = new Date(año, mes, dia);
 		String tipo = ((Spinner) layout.findViewById(R.id.spinner_produccion))
@@ -289,6 +306,11 @@ public class ProducionVista extends ActionBarActivity {
 		Produccion produccion = new Produccion(0, fecha, tipo,
 				settings.getString("id_usuario", ""), cantidad);
 		pdbbdd.añadirProduccion(produccion);
+		if (tipo.compareTo("Leche") == 0) {
+			mostrarGraficoLeche(layout);
+		} else {
+			mostrarGraficoCarne(layout);
+		}
 	}
 
 	/**
@@ -354,14 +376,12 @@ public class ProducionVista extends ActionBarActivity {
 			int dia = Integer.parseInt(((TextView) layout
 					.findViewById(R.id.dia_produccion)).getText().toString());
 			int mes = Integer.parseInt(((TextView) layout
-					.findViewById(R.id.mes_produccion)).getText().toString());
+					.findViewById(R.id.mes_produccion)).getText().toString()) - 1;
 			int año = Integer.parseInt(((TextView) layout
 					.findViewById(R.id.anio_produccion)).getText().toString()) - 1900;
 			int añoActual = new java.util.Date().getYear();
 			int mesActual = new java.util.Date().getMonth();
 			int diaActual = new java.util.Date().getDate();
-			System.out.println(mes+"    "+mesActual);
-			System.out.println(año+"    "+añoActual);
 			if (dia <= 31 && mes <= 12 && año < añoActual) {
 				fechaOk = true;
 
@@ -406,6 +426,7 @@ public class ProducionVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				//Base de datos interna
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
@@ -415,6 +436,10 @@ public class ProducionVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
 
+				ProduccionDatosBbdd pdbbdd = new ProduccionDatosBbdd(getApplicationContext());
+				ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
+				
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
@@ -426,8 +451,7 @@ public class ProducionVista extends ActionBarActivity {
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
-				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				
 				for (int i = 0; i < listaVacas.size(); i++) {
 					// Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos
@@ -438,6 +462,8 @@ public class ProducionVista extends ActionBarActivity {
 				}
 
 				// Eliminar vaca base de datos cloud
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				llamadaVaca.LLamadaEliminarVacas(usuario);
 
 				// Añadir vaca a base de datos cloud
@@ -452,7 +478,15 @@ public class ProducionVista extends ActionBarActivity {
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-
+				
+				SharedPreferences settings = getSharedPreferences("MisDatos",
+						Context.MODE_PRIVATE);
+				String id_usuarioGuardado = settings.getString("id_usuario", "");
+				//TODO añadir sincroinizacion produccion
+				listaProduccion = pdbbdd.getProducciones();
+				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuarioGuardado);
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -514,6 +548,10 @@ public class ProducionVista extends ActionBarActivity {
 			editor.commit();
 			new LanzarVista(this).lanzarLogin();
 			finish();
+		} else if (id == R.id.produccion) {
+			new LanzarVista(this).lanzarProduccion();
+			finish();
+			return true;
 		} else if (id == R.id.mis_vacas) {
 
 			String id_usuarioGuardado = settings.getString("id_usuario", "");
@@ -534,11 +572,11 @@ public class ProducionVista extends ActionBarActivity {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
 			alerta.setMessage("Graficos de producción de leche y carne."
-					+ "\n"
+					+ "\n\n"
 					+ "Para ver la producción de leche pulsar el botón de leche."
-					+ "\n"
+					+ "\n\n"
 					+ "Para ver la producción de carne pulsar el botón de carne."
-					+ "\n"
+					+ "\n\n"
 					+ "Para añadir una nueva producción pulsar el botón de añadir.");
 			alerta.show();
 			return true;

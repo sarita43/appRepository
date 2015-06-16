@@ -24,7 +24,7 @@ import android.widget.TextView;
  * 
  * @author Sara Martínez López
  * */
-public class AdapterVaca extends BaseAdapter {
+public class AdapterVaca extends BaseAdapter implements Adapter{
 	// -----------------------------Atributos-------------------------------//
 	/** Actividad donde se va a mostrar el adapter */
 	private Activity activity;

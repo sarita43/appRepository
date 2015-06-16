@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/fondo_blanco" >
 
     <Button
         android:id="@+id/button3"
@@ -19,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal" >
 
         <Button
@@ -27,7 +28,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="15dp"
             android:text="Leche" 
+            android:background="#FFFFFF"
             android:onClick="mostrarGraficoLeche"/>
 
         <Button
@@ -35,7 +38,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="15dp"
             android:text="Carne" 
+            android:background="#EDE5E5"
             android:onClick="mostrarGraficoCarne"/>
     </LinearLayout>
 

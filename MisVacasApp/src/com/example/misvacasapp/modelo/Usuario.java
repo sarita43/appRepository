@@ -162,7 +162,7 @@ public class Usuario {
 	/**
 	 * Guarda la población
 	 * 
-	 * @param población
+	 * @param población String
 	 * */
 	public void setPoblacion(String poblacion) {
 		this.poblacion = poblacion;

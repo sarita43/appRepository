@@ -190,7 +190,7 @@ public class MedicamentoVista extends ActionBarActivity {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
 			alerta.setMessage("Ficha del animal."
-					+ "\n"
+					+ "\n\n"
 					+ "Para ver sus medicamentos, pulse sobre el botón de medicamentos.");
 			alerta.show();
 			return true;

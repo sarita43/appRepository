@@ -16,7 +16,7 @@ import android.widget.TextView;
  * 
  * @author Sara Martínez López
  * */
-public class AdapterListaMenu extends BaseAdapter {
+public class AdapterListaMenu extends BaseAdapter implements Adapter{
 	//------------------------Atributos--------------------------------//
 	/** Lista para mostrar el menu */
 	private ArrayList<String> lista = new ArrayList<String>();

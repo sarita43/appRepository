@@ -497,7 +497,7 @@ public class UsuarioVista extends ActionBarActivity {
 			new LanzarVista(this).lanzarUsuarioVista(id_usuario, contraseña);
 			finish();
 			return true;
-		} else if (id == R.id.reproduccion) {
+		} else if (id == R.id.produccion) {
 			new LanzarVista(this).lanzarProduccion();
 			finish();
 			return true;
@@ -510,12 +510,12 @@ public class UsuarioVista extends ActionBarActivity {
 		} else if (id == R.id.ayuda) {
 			AlertDialog.Builder alerta = new AlertDialog.Builder(this);
 			alerta.setTitle("Ayuda");
-			alerta.setMessage("Para añadir un nuevo animal pinchando sobre en botón de añadir (el verde)."
-					+ "\n"
-					+ "Para eliminar un animal hay que tener seleccionado un animal o varios, y despues pulsar sobre el botón eliminar (el rojo)."
-					+ "\n"
-					+ "Para buscar un animal en la lista, hay que pulsar sobre el boton buscar(el azul) y poner el id del animal a buscar"
-					+ "\n"
+			alerta.setMessage("Para añadir un nuevo animal pulsa sobre en botón de añadir (el verde)."
+					+ "\n\n"
+					+ "Para eliminar un animal hay que tener seleccionado un animal o varios, y después pulsa sobre el botón eliminar (el rojo)."
+					+ "\n\n"
+					+ "Para buscar un animal en la lista, hay que pulsar sobre el botón buscar(el azul) y poner el id del animal a buscar"
+					+ "\n\n"
 					+ "Para ver la ficha del animal, pulsa sobre el animal en la lista");
 			alerta.show();
 			return true;
