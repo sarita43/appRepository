@@ -63,6 +63,7 @@ public class IteratorListaVacaTest extends TestCase{
 	public void testHasNextFalse() {
 		iterador =  new IteratorListaVaca(agregado);
 		iterador.next();
+		iterador.next();
 		assertFalse(iterador.hasNext());
 	}
 	

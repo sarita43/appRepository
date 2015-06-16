@@ -3,19 +3,16 @@ package web.service;
 import basedatos.Usuario;
 
 public class UsuarioWebService {
+	
 	/**
-	 * Método que si existe el usuario devuelve un true y si no un false
+	 * Método que devuelve la lista de usuarios como String
 	 * 
-	 * @param dni
-	 *            DNI o id del usuario
-	 * @param contraseña
-	 *            Contraseña del usuario
-	 * @return boolean Existe o no el usuario
-	 * */
-	public boolean usuarioExistente(String dni, String contraseña) {
-		return new Usuario().usuarioExistente(dni, contraseña);
+	 * @return String Lista de usuarios
+	 */
+	public String listaUsuarios() {
+		return new Usuario().listaUsuariosString();
 	}
-
+	
 	/**
 	 * Método que devuelve el usuario como String.
 	 * 
@@ -27,6 +24,20 @@ public class UsuarioWebService {
 	 * */
 	public String Usuario(String dni, String contraseña) {
 		return new Usuario().usuarioString(dni, contraseña);
+	}
+
+	
+	/**
+	 * Método que si existe el usuario devuelve un true y si no un false
+	 * 
+	 * @param dni
+	 *            DNI o id del usuario
+	 * @param contraseña
+	 *            Contraseña del usuario
+	 * @return boolean Existe o no el usuario
+	 * */
+	public boolean usuarioExistente(String dni, String contraseña) {
+		return new Usuario().usuarioExistente(dni, contraseña);
 	}
 
 	/**
@@ -77,15 +88,6 @@ public class UsuarioWebService {
 	}
 
 	/**
-	 * Método que devuelve la lista de usuarios como String
-	 * 
-	 * @return String Lista de usuarios
-	 */
-	public String listaUsuarios() {
-		return new Usuario().listaUsuariosString();
-	}
-
-	/**
 	 * Método que añade un nuevo usuario
 	 * 
 	 * @param usuario
@@ -95,6 +97,10 @@ public class UsuarioWebService {
 		new Usuario().añadirUsuario(usuario);
 	}
 	
+	/**
+	 * Método que envia un correo al usuario para recordarle cual es su usuario y contraseña
+	 * @param correo String correo del usuario
+	 */
 	public void recordarUsuario(String correo){
 		new Usuario().recordarContraseña(correo);
 	}

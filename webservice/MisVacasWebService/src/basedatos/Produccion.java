@@ -133,6 +133,23 @@ public class Produccion {
 		}
 
 	}
+	
+	/**
+	 * Método que elimina la producción del usuario de la base de datos
+	 * @param id_usuario String 
+	 */
+	public void eliminarProduccion(String id_usuario){
+		OracleConection c = new OracleConection();
+		c.Conectar();
+		if (c.getConexion() != null) {
+			try {
+				Statement select = c.getConexion().createStatement();
+				select.executeQuery("DELETE produccion where id_usuario='" + id_usuario
+						+ "'");
+			} catch (SQLException e) {
+			}
+		}
+	}
 
 	/**
 	 * Devuelve el identificador de la producción

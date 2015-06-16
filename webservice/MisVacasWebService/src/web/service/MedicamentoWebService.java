@@ -3,7 +3,7 @@ package web.service;
 import basedatos.Medicamento;
 
 public class MedicamentoWebService {
-	// Métodos
+	
 	/**
 	 * Método que devuelve la lista de medicamentos como String.
 	 * 

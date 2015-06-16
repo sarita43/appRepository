@@ -82,14 +82,14 @@ public class Usuario {
 	}
 
 	/**
-	 * Devuelve el arrayList de los Usuarios que tiene hay en la base de datos.
+	 * Devuelve el arrayList de los usuarios que hay en la base de datos.
 	 * Crea la conexión a la base de datos, llama a la base de datos recogiendo
 	 * todos los usuarios de ella y los guarda en un arrayList lista que
 	 * contiene ususarios.
 	 * 
 	 * @return ArrayList<EUsuario> Lista de de usuarios
 	 * */
-	public ArrayList<Usuario> listaUsuarios() {
+	private ArrayList<Usuario> listaUsuarios() {
 		OracleConection c = new OracleConection();
 		ArrayList<Usuario> lista = new ArrayList<Usuario>();
 		c.Conectar();
@@ -117,6 +117,18 @@ public class Usuario {
 		}
 		return lista;
 	}
+	
+	/**
+	 * Método que devuelve la lista de usuarios como String
+	 * 
+	 * @return String Lista de usuarios.
+	 */
+	public String listaUsuariosString() {
+		ArrayList<Usuario> lista = listaUsuarios();
+		Gson gson = new Gson();
+		String usuarios = gson.toJson(lista);
+		return usuarios;
+	}
 
 	/**
 	 * Devuelve un usuario la base de datos. Crea la conexión a la base de
@@ -129,7 +141,7 @@ public class Usuario {
 	 *            Contraseña del usuario
 	 * @return Usuario Usuario encontrado en la base de datos
 	 * */
-	public Usuario getUsuario(String dni, String contraseña) {
+	private Usuario getUsuario(String dni, String contraseña) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		Usuario usuario = new Usuario();
@@ -169,7 +181,7 @@ public class Usuario {
 	 *            Contraseña del usuario
 	 * @return Usuario Usuario encontrado en la base de datos
 	 * */
-	public Usuario getUsuario(String correo) {
+	private Usuario getUsuario(String correo) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		Usuario usuario = new Usuario();
@@ -197,12 +209,6 @@ public class Usuario {
 		return usuario;
 	}
 
-	public String listaUsuariosString() {
-		ArrayList<Usuario> lista = listaUsuarios();
-		Gson gson = new Gson();
-		String usuarios = gson.toJson(lista);
-		return usuarios;
-	}
 
 	/**
 	 * Método que devuelve el usuario que hay en la base de datos como String.
@@ -333,6 +339,8 @@ public class Usuario {
 				Statement select = c.getConexion().createStatement();
 				//Elimina las vacas del usuario
 				new Vaca().eliminarVacas(id_usuario);
+				//Elimina la producción
+				new Produccion().eliminarProduccion(id_usuario);
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
 			} catch (SQLException e) {
@@ -377,8 +385,8 @@ public class Usuario {
 	}
 
 	/**
-	 * 
-	 * @param u
+	 * Método que envia un correo al usuario para recordarle cual es su usuario y contraseña
+	 * @param correo String correo del usuario
 	 */
 	public void recordarContraseña(String correo) {
 		Usuario u = getUsuario(correo);

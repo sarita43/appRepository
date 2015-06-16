@@ -80,7 +80,7 @@ public class Vaca {
 	 *            Id del usuario para buscar sus animales
 	 * @return ArrayList<Vaca> Lista de animales del usuario
 	 * */
-	public ArrayList<Vaca> listaVacas(String id_usuario) {
+	private ArrayList<Vaca> listaVacas(String id_usuario) {
 		OracleConection c = new OracleConection();
 		ArrayList<Vaca> lista = new ArrayList<Vaca>();
 		c.Conectar();
@@ -111,7 +111,32 @@ public class Vaca {
 		}
 		return lista;
 	}
+	
+	/**
+	 * Método que devuelve la lista de animales como String. Recoge los animales
+	 * de listaVaca y los serializa con json.toJson. Si el usuario no tiene
+	 * animales en la lista se le añade un animal a la lista con el id=0
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
+	 * @return String Lista de medicamentos como String
+	 * */
+	public String listaVacasString(String id_usuario) {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		ArrayList<Vaca> lista = listaVacas(id_usuario);
+		if (lista.size() == 0) {
+			lista.add(new Vaca());
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		} else {
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		}
+	}
 
+
+	//TODO
 	public ArrayList<Vaca> listaVacas() {
 		OracleConection c = new OracleConection();
 		ArrayList<Vaca> lista = new ArrayList<Vaca>();
@@ -141,6 +166,20 @@ public class Vaca {
 		}
 		return lista;
 	}
+	//TODO
+	public String listaVacasString() {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		ArrayList<Vaca> lista = listaVacas();
+		if (lista.size() == 0) {
+			lista.add(new Vaca());
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		} else {
+			String listaVacas = json.toJson(lista);
+			return listaVacas;
+		}
+	}
 
 	/**
 	 * Devuelve el animal que tiene un usuario en la base de datos. Crea la
@@ -153,7 +192,7 @@ public class Vaca {
 	 *            Id del usuario
 	 * @return Vaca Animal encontrado en la base de datos
 	 * */
-	public Vaca getVaca(String id_vaca, String id_usuario) {
+	private Vaca getVaca(String id_vaca, String id_usuario) {
 		OracleConection c = new OracleConection();
 		c.Conectar();
 		Vaca vaca = new Vaca();
@@ -202,42 +241,6 @@ public class Vaca {
 		return vaca;
 	}
 
-	/**
-	 * Método que devuelve la lista de animales como String. Recoge los animales
-	 * de listaVaca y los serializa con json.toJson. Si el usuario no tiene
-	 * animales en la lista se le añade un animal a la lista con el id=0
-	 * 
-	 * @param id_vaca
-	 *            Id de la vaca
-	 * @return String Lista de medicamentos como String
-	 * */
-	public String listaVacasString(String id_usuario) {
-		Gson json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
-		ArrayList<Vaca> lista = listaVacas(id_usuario);
-		if (lista.size() == 0) {
-			lista.add(new Vaca());
-			String listaVacas = json.toJson(lista);
-			return listaVacas;
-		} else {
-			String listaVacas = json.toJson(lista);
-			return listaVacas;
-		}
-	}
-
-	public String listaVacasString() {
-		Gson json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
-		ArrayList<Vaca> lista = listaVacas();
-		if (lista.size() == 0) {
-			lista.add(new Vaca());
-			String listaVacas = json.toJson(lista);
-			return listaVacas;
-		} else {
-			String listaVacas = json.toJson(lista);
-			return listaVacas;
-		}
-	}
 
 	/**
 	 * Método que añade un animal a la base de datos. Hace la conexión con la
@@ -291,6 +294,7 @@ public class Vaca {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
+				//Elimina los medicamentos del animal
 				select.executeQuery("DELETE FROM medicamento WHERE id_vaca='"
 						+ id_vaca + "'");
 				select.executeQuery("DELETE FROM vaca WHERE id_vaca='"

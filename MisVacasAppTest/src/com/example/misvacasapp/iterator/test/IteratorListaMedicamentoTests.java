@@ -63,6 +63,8 @@ public class IteratorListaMedicamentoTests extends TestCase{
 	public void testHasNextFalse() {
 		iterador = new IteratorListaMedicamento(agregado);
 		iterador.next();
+		iterador.next();
+		iterador.next();
 		assertFalse(iterador.hasNext());
 	}
 	

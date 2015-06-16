@@ -1,0 +1,11 @@
+android.support.v7.appcompat
+com.example.misvacasapp
+com.example.misvacasapp.adapter
+com.example.misvacasapp.aniadir
+com.example.misvacasapp.bbddinterna
+com.example.misvacasapp.graficos
+com.example.misvacasapp.iterator
+com.example.misvacasapp.llamadaWS
+com.example.misvacasapp.menus
+com.example.misvacasapp.modelo
+com.example.misvacasapp.singleton

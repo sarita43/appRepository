@@ -55,6 +55,7 @@ public class IteratorListaUsuarioTests extends TestCase {
 	@Test
 	public void testHasNextFalse() {
 		IteratorListaUsuario i = new IteratorListaUsuario(agregado);
+		i.next();
 		assertFalse(i.hasNext());
 	}
 

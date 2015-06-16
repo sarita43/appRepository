@@ -65,7 +65,7 @@ public class Medicamento {
 	 *            Id de la vaca para buscar sus medicamentos
 	 * @return ArrayList<Medicamento> Lista de medicamentos del animal
 	 * */
-	public ArrayList<Medicamento> listaMedicamento(String id_vaca) {
+	private ArrayList<Medicamento> listaMedicamento(String id_vaca) {
 		OracleConection c = new OracleConection();
 		ArrayList<Medicamento> lista = new ArrayList<Medicamento>();
 		c.Conectar();
@@ -93,6 +93,30 @@ public class Medicamento {
 		}
 		return lista;
 	}
+	
+	/**
+	 * Método que devuelve la lista de medicamentos como String. Recoge los
+	 * medicamentos de listaMedicamento y los serializa con json.toJson. Si el
+	 * animal no tiene medicamentos en la lista se le añade un medicamento a la
+	 * lista vacio
+	 * 
+	 * @param id_vaca
+	 *            Id de la vaca
+	 * @return String Lista de medicamentos como String
+	 * */
+	public String listaMedicamentoString(String id_vaca) {
+		Gson json = new GsonBuilder().setPrettyPrinting()
+				.setDateFormat("dd-MM-yyyy").create();
+		ArrayList<Medicamento> lista = listaMedicamento(id_vaca);
+		if (lista.size() == 0) {
+			lista.add(new Medicamento());
+			String listaMedicamentos = json.toJson(lista);
+			return listaMedicamentos;
+		} else {
+			String listaMedicamentos = json.toJson(lista);
+			return listaMedicamentos;
+		}
+	}
 
 	/**
 	 * Devuelve el medicamento que tiene un animal en la base de datos. Crea la
@@ -105,7 +129,7 @@ public class Medicamento {
 	 *            Id del medicamento
 	 * @return Medicamento Medicamento encontrado en la base de datos
 	 * */
-	public Medicamento getMedicamento(String id_vaca, String id_medicamento) {
+	private Medicamento getMedicamento(String id_vaca, String id_medicamento) {
 		OracleConection c = new OracleConection();
 		Medicamento medicamento = new Medicamento();
 		c.Conectar();
@@ -132,30 +156,6 @@ public class Medicamento {
 			}
 		}
 		return medicamento;
-	}
-
-	/**
-	 * Método que devuelve la lista de medicamentos como String. Recoge los
-	 * medicamentos de listaMedicamento y los serializa con json.toJson. Si el
-	 * animal no tiene medicamentos en la lista se le añade un medicamento a la
-	 * lista vacio
-	 * 
-	 * @param id_vaca
-	 *            Id de la vaca
-	 * @return String Lista de medicamentos como String
-	 * */
-	public String listaMedicamentoString(String id_vaca) {
-		Gson json = new GsonBuilder().setPrettyPrinting()
-				.setDateFormat("dd-MM-yyyy").create();
-		ArrayList<Medicamento> lista = listaMedicamento(id_vaca);
-		if (lista.size() == 0) {
-			lista.add(new Medicamento());
-			String listaMedicamentos = json.toJson(lista);
-			return listaMedicamentos;
-		} else {
-			String listaMedicamentos = json.toJson(lista);
-			return listaMedicamentos;
-		}
 	}
 
 	/**
