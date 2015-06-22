@@ -15,8 +15,8 @@ import com.example.misvacasapp.modelo.Vaca;
 
 public class AgregadoVacaTests extends TestCase {
 
-	AgregadoVaca agregado;
-	ArrayList<Vaca> listaVacas;
+	private AgregadoVaca agregado;
+	private ArrayList<Vaca> listaVacas;
 	
 	@SuppressWarnings("deprecation")
 	@Before

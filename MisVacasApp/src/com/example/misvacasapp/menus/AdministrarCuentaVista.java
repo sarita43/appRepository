@@ -96,7 +96,6 @@ public class AdministrarCuentaVista extends ActionBarActivity {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 
 			public void run() {
-				//eliminarVacas(id_usuario);
 				llamada.eliminarUsuario(id_usuario);
 				runOnUiThread(new Runnable() {
 					@Override

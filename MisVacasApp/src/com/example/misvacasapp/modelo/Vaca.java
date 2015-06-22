@@ -46,16 +46,16 @@ public class Vaca {
 	 *            Id del usuario del animal
 	 * @param sexo
 	 *            Sexo del animal
-	 * @param bitmapdata
+	 * @param foto
 	 *            Foto del animal
 	 * */
 	public Vaca(String id_vaca, String raza, Date fecha_nacimiento,
-			String id_madre, String id_usuario, String sexo, String bitmapdata) {
+			String id_madre, String id_usuario, String sexo, String foto) {
 		setId_vaca(id_vaca);
 		setRaza(raza);
 		setFecha_nacimiento(fecha_nacimiento);
 		setId_madre(id_madre);
-		setFoto(bitmapdata);
+		setFoto(foto);
 		setId_usuario(id_usuario);
 		setSexo(sexo);
 	}

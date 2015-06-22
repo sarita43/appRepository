@@ -33,10 +33,13 @@ import com.example.misvacasapp.LanzarVista;
 import com.example.misvacasapp.R;
 import com.example.misvacasapp.UsuarioVista;
 import com.example.misvacasapp.bbddinterna.MedicamentoDatosBbdd;
+import com.example.misvacasapp.bbddinterna.ProduccionDatosBbdd;
 import com.example.misvacasapp.bbddinterna.VacaDatosBbdd;
 import com.example.misvacasapp.llamadaWS.LlamadaMedicamentoWS;
+import com.example.misvacasapp.llamadaWS.LlamadaProduccionWS;
 import com.example.misvacasapp.llamadaWS.LlamadaVacaWS;
 import com.example.misvacasapp.modelo.Medicamento;
+import com.example.misvacasapp.modelo.Produccion;
 import com.example.misvacasapp.modelo.Vaca;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -398,6 +401,7 @@ public class AniadirVacaVista extends ActionBarActivity {
 	public void sincronizar(final String usuario) {
 		Thread hilo = new Thread() {
 			public void run() {
+				//Base de datos interna
 				VacaDatosBbdd vdatos = new VacaDatosBbdd(
 						getApplicationContext());
 				ArrayList<Vaca> listaVacas = new ArrayList<Vaca>();
@@ -407,19 +411,22 @@ public class AniadirVacaVista extends ActionBarActivity {
 						getApplicationContext());
 				ArrayList<Medicamento> listaMedicamentosUsuario = new ArrayList<Medicamento>();
 
+				ProduccionDatosBbdd pdbbdd = new ProduccionDatosBbdd(getApplicationContext());
+				ArrayList<Produccion> listaProduccion = new ArrayList<Produccion>();
+				
+				
 				Gson json = new GsonBuilder().setPrettyPrinting()
 						.setDateFormat("dd-MM-yyyy").create();
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
 						Toast.makeText(
-								AniadirVacaVista.this,
+								getApplicationContext(),
 								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
 								Toast.LENGTH_LONG).show();
 					}
 				});
-				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
-				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
+				
 				for (int i = 0; i < listaVacas.size(); i++) {
 					// Guarda los medicamentos en una lista
 					ArrayList<Medicamento> listaAux = mdatos
@@ -430,6 +437,8 @@ public class AniadirVacaVista extends ActionBarActivity {
 				}
 
 				// Eliminar vaca base de datos cloud
+				LlamadaVacaWS llamadaVaca = new LlamadaVacaWS();
+				LlamadaMedicamentoWS llamadaMedicamento = new LlamadaMedicamentoWS();
 				llamadaVaca.LLamadaEliminarVacas(usuario);
 
 				// Añadir vaca a base de datos cloud
@@ -444,11 +453,16 @@ public class AniadirVacaVista extends ActionBarActivity {
 					String medicamento = json.toJson(m);
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
-
+				
+				//Añadir produccion a la base de datos cloud
+				listaProduccion = pdbbdd.getProducciones();
+				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),usuario);
+				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(AniadirVacaVista.this,
+						Toast.makeText(getApplicationContext(),
 								"La cuenta ha siendo sincronizada",
 								Toast.LENGTH_LONG).show();
 					}

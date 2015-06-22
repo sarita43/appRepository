@@ -337,10 +337,10 @@ public class Usuario {
 		if (c.getConexion() != null) {
 			try {
 				Statement select = c.getConexion().createStatement();
-				//Elimina las vacas del usuario
-				new Vaca().eliminarVacas(id_usuario);
 				//Elimina la producción
 				new Produccion().eliminarProduccion(id_usuario);
+				//Elimina las vacas del usuario
+				new Vaca().eliminarVacas(id_usuario);
 				select.executeQuery("DELETE usuario where dni='" + id_usuario
 						+ "'");
 			} catch (SQLException e) {

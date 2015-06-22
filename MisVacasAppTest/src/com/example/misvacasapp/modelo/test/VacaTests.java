@@ -1,6 +1,5 @@
 package com.example.misvacasapp.modelo.test;
 
-
 import java.sql.Date;
 
 import junit.framework.TestCase;
@@ -10,21 +9,22 @@ import org.junit.Test;
 
 import com.example.misvacasapp.modelo.Vaca;
 
-
-public class VacaTests extends TestCase{
+public class VacaTests extends TestCase {
 
 	Vaca v;
-	
+
 	@SuppressWarnings("deprecation")
 	@Before
 	public void setUp() throws Exception {
-		v = new Vaca("ES11111", "frisona", new Date(1, 4, 2012), "ES22222", "71460692Z", "M", null);
+		v = new Vaca("ES11111", "frisona", new Date(1, 4, 2012), "ES22222",
+				"71460692Z", "M", "");
 	}
 
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testVaca() {
-		v = new Vaca("ES1212", "belga", new Date(2, 5, 2009), "ES2323", "71460692Z", "M", null);
+		v = new Vaca("ES1212", "belga", new Date(2, 5, 2009), "ES2323",
+				"71460692Z", "M", null);
 		assertEquals(v.getId_vaca(), "ES1212");
 	}
 

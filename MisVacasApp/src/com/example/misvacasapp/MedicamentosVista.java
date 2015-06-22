@@ -57,7 +57,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	private ArrayList<Medicamento> listaMedicamentos;
 
 	/** Base de datos interna de los medicamentos del animale */
-	private MedicamentoDatosBbdd mdatos;
+	private MedicamentoDatosBbdd mdbbdd;
 
 	// ------------------------------Métodos--------------------------------------//
 	/**
@@ -116,8 +116,8 @@ public class MedicamentosVista extends ActionBarActivity {
 	 * guarda en un arrayList
 	 * */
 	private void getListaMedicamentos() {
-		mdatos = new MedicamentoDatosBbdd(getApplicationContext());
-		listaMedicamentos = mdatos.getMedicamentos(id_vaca);
+		mdbbdd = new MedicamentoDatosBbdd(getApplicationContext());
+		listaMedicamentos = mdbbdd.getMedicamentos(id_vaca);
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class MedicamentosVista extends ActionBarActivity {
 	 *            Id del medicamento a eliminar
 	 * */
 	public void eliminar(int id_medicamento) {
-		mdatos.eliminarMedicamento(id_medicamento, id_vaca);
+		mdbbdd.eliminarMedicamento(id_medicamento, id_vaca);
 	}
 
 	/**
@@ -258,59 +258,6 @@ public class MedicamentosVista extends ActionBarActivity {
 				R.array.lista_medicamentos,
 				android.R.layout.simple_spinner_dropdown_item);
 		tipoSpinner.setAdapter(adapter);
-		//
-		// ArrayList<String> listaDias = new
-		// ArrayList<String>(Arrays.asList("-",
-		// "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-		// "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
-		// "23", "24", "25", "26", "27", "28", "29", "30", "31"));
-		// adapter = new ArrayAdapter<>(getApplicationContext(),
-		// android.R.layout.simple_spinner_dropdown_item, listaDias);
-		// diaSpinner.setAdapter(adapter);
-		//
-		// ArrayList<String> listaMeses = new
-		// ArrayList<String>(Arrays.asList("-",
-		// "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"));
-		// adapter = new ArrayAdapter<>(getApplicationContext(),
-		// android.R.layout.simple_spinner_dropdown_item, listaMeses);
-		// diaSpinner.setAdapter(adapter);
-		//
-		// int añoActual = new java.util.Date().getYear() + 1900;
-		// ArrayList<String> listaAnio = new
-		// ArrayList<String>(Arrays.asList("-",
-		// Integer.toString(añoActual - 30),
-		// Integer.toString(añoActual - 29),
-		// Integer.toString(añoActual - 28),
-		// Integer.toString(añoActual - 27),
-		// Integer.toString(añoActual - 26),
-		// Integer.toString(añoActual - 25),
-		// Integer.toString(añoActual - 24),
-		// Integer.toString(añoActual - 23),
-		// Integer.toString(añoActual - 22),
-		// Integer.toString(añoActual - 21),
-		// Integer.toString(añoActual - 20),
-		// Integer.toString(añoActual - 19),
-		// Integer.toString(añoActual - 18),
-		// Integer.toString(añoActual - 17),
-		// Integer.toString(añoActual - 16),
-		// Integer.toString(añoActual - 15),
-		// Integer.toString(añoActual - 14),
-		// Integer.toString(añoActual - 13),
-		// Integer.toString(añoActual - 12),
-		// Integer.toString(añoActual - 11),
-		// Integer.toString(añoActual - 10),
-		// Integer.toString(añoActual - 9),
-		// Integer.toString(añoActual - 8),
-		// Integer.toString(añoActual - 7),
-		// Integer.toString(añoActual - 6),
-		// Integer.toString(añoActual - 5),
-		// Integer.toString(añoActual - 4),
-		// Integer.toString(añoActual - 3),
-		// Integer.toString(añoActual - 2),
-		// Integer.toString(añoActual - 1), Integer.toString(añoActual)));
-		// adapter = new ArrayAdapter<>(getApplicationContext(),
-		// android.R.layout.simple_spinner_dropdown_item, listaAnio);
-		// diaSpinner.setAdapter(adapter);
 	}
 
 	/**
@@ -448,7 +395,7 @@ public class MedicamentosVista extends ActionBarActivity {
 					@Override
 					public void run() {
 						Toast.makeText(
-								MedicamentosVista.this,
+								getApplicationContext(),
 								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
 								Toast.LENGTH_LONG).show();
 					}
@@ -481,18 +428,15 @@ public class MedicamentosVista extends ActionBarActivity {
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
 				
-				SharedPreferences settings = getSharedPreferences("MisDatos",
-						Context.MODE_PRIVATE);
-				String id_usuarioGuardado = settings.getString("id_usuario", "");
-				//TODO añadir sincroinizacion produccion
+				//Añadir produccion a la base de datos cloud
 				listaProduccion = pdbbdd.getProducciones();
 				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
-				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuarioGuardado);
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),usuario);
 				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(MedicamentosVista.this,
+						Toast.makeText(getApplicationContext(),
 								"La cuenta ha siendo sincronizada",
 								Toast.LENGTH_LONG).show();
 					}
@@ -501,7 +445,7 @@ public class MedicamentosVista extends ActionBarActivity {
 		};
 		hilo.start();
 	}
-
+	
 	/**
 	 * Añade la vista de los medicamentos. Recoge el id de la vaca de la vista
 	 * de la vista. Inicializa parametros

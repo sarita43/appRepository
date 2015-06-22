@@ -43,7 +43,7 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						recordarUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
+						enviarUsuarioContraseña(((TextView) findViewById(R.id.correo_nuevo_usuario))
 								.getText().toString());
 						Toast.makeText(NuevoUsuarioVista.this, "Usuario creado. Mire en su correo",
 								Toast.LENGTH_SHORT).show();
@@ -93,14 +93,14 @@ public class NuevoUsuarioVista extends ActionBarActivity {
 	}
 
 	/**
-	 * Método que recuerda el usuario y contraseña al usuario enviando al correo
+	 * Método que envia el usuario y contraseña al usuario enviando al correo
 	 * pasado por parámetro el usuario y contraseña que estan asociados a ese
 	 * correo electrónico
 	 * 
 	 * @param correo
 	 *            String Correo electrónico de un usuario
 	 */
-	public void recordarUsuarioContraseña(final String correo) {
+	public void enviarUsuarioContraseña(final String correo) {
 		Thread hilo = new Thread() {
 			LlamadaUsuarioWS llamada = new LlamadaUsuarioWS();
 

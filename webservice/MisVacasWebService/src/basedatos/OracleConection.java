@@ -17,8 +17,7 @@ public class OracleConection {
 	
 	//-----------------------------------Métodos---------------------------------------//
 //	public static void main(String[] args) {
-//		Usuario u = new Usuario("nombre", "apellido1", "apellido2", "direccion", "poblacion", 0000, "dni", "contraseña", 1, "sara_c43@hotmail.com", "codigo_explotacion");
-//		u.recordarContraseña(u);
+//		new Usuario().eliminarUsuario("dni");
 //	}
 //
 //	private static void enviar(String emailTo, String nameTo, String emailFrom,

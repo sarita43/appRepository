@@ -13,7 +13,6 @@ public class TableSeleccionado {
 	/** Tabla hash de seleccionados */
 	private Hashtable<Integer, Boolean> seleccionado;
 
-	// private static TableSeleccionado _uniqueInstance;
 	// ---------------------------Métodos-------------------------------//
 	/**
 	 * Constructor Crea una nueva tabla hash vacia que introduce en el primer
@@ -25,11 +24,6 @@ public class TableSeleccionado {
 		this.seleccionado = new Hashtable<Integer, Boolean>();
 	}
 
-	// public static TableSeleccionado getInstance() {
-	// if (_uniqueInstance == null)
-	// _uniqueInstance = new TableSeleccionado();
-	// return _uniqueInstance;
-	// }
 	/**
 	 * Devuelve la tabla hash de seleccionados
 	 * 

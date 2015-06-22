@@ -145,34 +145,6 @@ public class LlamadaMedicamentoWS {
 	}
 
 	/**
-	 * Método que devuelve la lista de ids de medicamentos(como String) de una
-	 * vaca
-	 * 
-	 * @param id_vaca
-	 *            Id de la vaca
-	 * @return String Lista de ids
-	 * */
-	public String LLamadaGetId_Medicamentos(String id_vaca) {
-		String resultado = "";
-		METHOD_NAME = "getId_medicamentos";
-		SOAP_ACTION = "urn:getId_medicamentos";
-		request = new SoapObject(NAMESPACE, METHOD_NAME);
-		request.addProperty("id_vaca", id_vaca);
-		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-		envelope.dotNet = false;
-		envelope.setOutputSoapObject(request);
-		HttpTransportSE transporte = new HttpTransportSE(URL);
-		try {
-			transporte.call(SOAP_ACTION, envelope);
-			resultsRequestSOAP = (SoapPrimitive) envelope.getResponse();
-			resultado = resultsRequestSOAP.toString();
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-		}
-		return resultado;
-	}
-
-	/**
 	 * Método que elimina todos los medicamentos de un animal
 	 * 
 	 * @param id_vaca

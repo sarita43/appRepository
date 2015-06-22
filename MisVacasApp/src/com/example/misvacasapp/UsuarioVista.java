@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -80,7 +79,6 @@ public class UsuarioVista extends ActionBarActivity {
 		Button botonEliminar = (Button) findViewById(R.id.eliminar);
 		botonEliminar.setBackgroundResource(R.drawable.boton_eliminar_5);
 		botonEliminar.setEnabled(false);
-
 	}
 
 	/**
@@ -239,16 +237,6 @@ public class UsuarioVista extends ActionBarActivity {
 				} else {
 					seleccionarEnLista(texto.getText().toString());
 				}
-			}
-		});
-		/** Método del botón cancelar del dialogo */
-		dialogo.setNegativeButton("Buscar", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				//TODO no funciona
-				Intent captura = new Intent("com.example.misvacasapp.SCAN");
-				captura.putExtra("SCAN_MODE", "QR_CODE_MODE");//Solo capturará códigos QR
-				startActivityForResult(captura, 0);
 			}
 		});
 		dialogo.show();
@@ -428,7 +416,7 @@ public class UsuarioVista extends ActionBarActivity {
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
 				
-				//TODO añadir sincroinizacion produccion
+				//Añadir produccion a la base de datos cloud
 				listaProduccion = pdbbdd.getProducciones();
 				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
 				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuario);

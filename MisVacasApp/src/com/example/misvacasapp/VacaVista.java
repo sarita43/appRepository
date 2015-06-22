@@ -128,7 +128,7 @@ public class VacaVista extends ActionBarActivity {
 					@Override
 					public void run() {
 						Toast.makeText(
-								VacaVista.this,
+								getApplicationContext(),
 								"La cuenta esta siendo sincronizada. Esto puede tardar unos minutos",
 								Toast.LENGTH_LONG).show();
 					}
@@ -161,18 +161,15 @@ public class VacaVista extends ActionBarActivity {
 					llamadaMedicamento.LLamadaAñadirMedicamento(medicamento);
 				}
 				
-				SharedPreferences settings = getSharedPreferences("MisDatos",
-						Context.MODE_PRIVATE);
-				String id_usuarioGuardado = settings.getString("id_usuario", "");
-				//TODO añadir sincroinizacion produccion
+				//Añadir produccion a la base de datos cloud
 				listaProduccion = pdbbdd.getProducciones();
 				LlamadaProduccionWS llamadaProducciones = new LlamadaProduccionWS();
-				llamadaProducciones.setProducciones(json.toJson(listaProduccion),id_usuarioGuardado);
+				llamadaProducciones.setProducciones(json.toJson(listaProduccion),usuario);
 				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(VacaVista.this,
+						Toast.makeText(getApplicationContext(),
 								"La cuenta ha siendo sincronizada",
 								Toast.LENGTH_LONG).show();
 					}
